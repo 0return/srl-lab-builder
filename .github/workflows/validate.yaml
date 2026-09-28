@@ -1,0 +1,39 @@
+name: validate-configs
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  yang:
+    name: SR Linux ${{ matrix.srl }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        srl: [v24.10.4, v25.10.3, v26.7.2]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install pyang
+        run: pip install pyang==2.7.1
+      - name: Build config schema from the SR Linux YANG models
+        run: |
+          git clone --depth 1 --branch ${{ matrix.srl }} https://github.com/nokia/srlinux-yang-models yang
+          cd yang/srlinux-yang-models
+          P="$(find srl_nokia/models -type d | tr '\n' ':')ietf:iana:openconfig"
+          pyang --plugindir "$GITHUB_WORKSPACE/tools" -f srlschema -p "$P" \
+            $(find srl_nokia/models -name '*.yang' | grep -v tools- | grep -v /common/) > "$GITHUB_WORKSPACE/schema.json"
+      - name: Generate every template
+        run: node tools/gen-presets.js
+      - name: Validate generated CLI
+        run: python3 tools/validate.py schema.json out/*/configs/*.cli
+      - name: index.html is up to date with src/
+        run: |
+          python3 build.py
+          git diff --exit-code index.html
