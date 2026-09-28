@@ -2,6 +2,10 @@
   'use strict';
   const S = window.SRL;
   const STORE = 'srl-lab-builder:v1';
+  const AUTHOR = 'Jesús David Gómez Zavala';
+  const AUTHOR_URL = 'https://www.linkedin.com/in/jes%C3%BAs-g%C3%B3mez-53702a220/';
+  const REPO_URL = 'https://github.com/0return/srl-lab-builder';
+  const extLink = (href, text) => href ? h('a', { href, target: '_blank', rel: 'noopener' }, text) : text;
 
   // ───────────── tiny DOM helper ─────────────
   function h(tag, attrs, ...kids) {
@@ -119,7 +123,7 @@
     const dl = btn('Download ZIP', downloadZip, { icon: 'down', cls: 'primary', title: 'Topology, configs/*.cli, README and project.json in one archive' });
     dlLabel = dl.lastChild;
     topEl.replaceChildren(
-      h('div', { class: 'brand' }, h('b', null, 'SRL ', h('i', null, 'Lab'), ' Builder'), h('small', null, 'SR Linux · containerlab')),
+      h('div', { class: 'brand' }, h('b', null, 'SRL ', h('i', null, 'Lab'), ' Builder'), h('span', { class: 'by' }, 'by ', extLink(AUTHOR_URL, AUTHOR))),
       h('div', { class: 'labname' }, h('label', { for: 'labname' }, 'Lab'), labInput),
       h('div', { class: 'grow' }),
       h('div', { class: 'actions' },
@@ -726,6 +730,15 @@
     document.body.append(toastEl);
     toastT = setTimeout(() => { if (toastEl) toastEl.remove(); toastEl = null; }, actionLabel ? 7000 : 3200);
   }
+
+  // ───────────── footer ─────────────
+  const footEl = document.getElementById('foot');
+  if (footEl) footEl.replaceChildren(
+    h('span', null, 'Created by ', extLink(AUTHOR_URL, AUTHOR)),
+    h('span', { class: 'sep', 'aria-hidden': 'true' }, '·'),
+    h('span', null, extLink(REPO_URL, 'Source on GitHub')),
+    h('span', { class: 'sep', 'aria-hidden': 'true' }, '·'),
+    h('span', null, 'Independent project, not an official Nokia tool.'));
 
   // ───────────── boot ─────────────
   regen();

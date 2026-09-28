@@ -21,6 +21,7 @@ BODY = f'''<style>
   <section class="pane" id="editor" aria-label="Lab editor"></section>
   <aside class="pane preview" id="preview" aria-label="Generated lab"></aside>
 </main>
+<footer class="foot" id="foot"></footer>
 <script>
 {engine}
 </script>

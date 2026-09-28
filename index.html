@@ -12,15 +12,16 @@
 <body>
 <style>
 :root{
-  --bg:#EDF0F2; --surface:#FFFFFF; --surface-2:#F5F7F8; --sunken:#E6EAED;
-  --line:#D3DAE0; --line-2:#E3E8EC;
-  --ink:#15212B; --ink-2:#465665; --muted:#77868F;
-  --accent:#00788A; --accent-ink:#FFFFFF; --accent-soft:#D8EEF1;
-  --wire:#0F8A7E; --wire-2:#9AA7B2;
-  --ok:#2C7A3F; --warn:#A8670F; --err:#B83227; --info:#51606D;
-  --ok-soft:#E1F1E5; --warn-soft:#FBEFD9; --err-soft:#F9E1DE; --info-soft:#E8ECEF;
-  --chassis:#1E262F; --chassis-2:#2A343F; --chassis-ink:#C9D3DC;
-  --code-bg:#F7F9FA; --code-ink:#1E2A34; --c-com:#7D8B96; --c-kw:#9AA6B0; --c-str:#9A4E14; --c-num:#1F6F43; --c-if:#00788A; --c-key:#5B3FA6;
+  --bg:#EDEFEE; --surface:#FFFFFF; --surface-2:#F6F7F6; --sunken:#E6E9E7;
+  --line:#D3D9D5; --line-2:#E3E7E4;
+  --ink:#141D18; --ink-2:#46534C; --muted:#76837C;
+  --accent:#1C7F4A; --accent-ink:#FFFFFF; --accent-soft:#DCF0E3;
+  --alt:#2D63B0; --alt-soft:#E1EAF7;
+  --wire:#1C7F4A; --wire-2:#9CA7A1;
+  --ok:#1C7F4A; --warn:#A8670F; --err:#B83227; --info:#52605A;
+  --ok-soft:#DCF0E3; --warn-soft:#FBEFD9; --err-soft:#F9E1DE; --info-soft:#E7EBE9;
+  --chassis:#1A211D; --chassis-2:#28302C; --chassis-ink:#C8D2CC;
+  --code-bg:#F6F8F7; --code-ink:#1C2621; --c-com:#7B8982; --c-kw:#9AA59F; --c-str:#9A4E14; --c-num:#2D5FA8; --c-if:#1C7F4A; --c-key:#6A3FB0;
   --m-rj45:#7D8995; --m-sfpp:#6F8A2A; --m-sfp28:#2F8A55; --m-sfpdd:#23847B; --m-qsfp28:#2A6FB0; --m-qsfpdd:#6A4FB3; --m-qsfp56:#7E4AB0; --m-qsfp112:#9A4AA3; --m-osfp:#B25638;
   --radius:6px;
   --f-ui:"Barlow", "Segoe UI", system-ui, -apple-system, sans-serif;
@@ -30,29 +31,31 @@
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
     color-scheme:dark;
-    --bg:#0E1419; --surface:#151D24; --surface-2:#1A232B; --sunken:#10171D;
-    --line:#2A3641; --line-2:#222D36;
-    --ink:#E1E7EC; --ink-2:#A9B5BF; --muted:#7A8995;
-    --accent:#3DB5C3; --accent-ink:#06181B; --accent-soft:#16343A;
-    --wire:#3FBFAE; --wire-2:#5D6C78;
-    --ok:#5CC179; --warn:#E0A443; --err:#EE6B5E; --info:#98A6B2;
-    --ok-soft:#173222; --warn-soft:#3A2A10; --err-soft:#3E1C19; --info-soft:#1F2931;
-    --chassis:#0A0F13; --chassis-2:#1B242C; --chassis-ink:#B6C2CC;
-    --code-bg:#0F161C; --code-ink:#D7DFE5; --c-com:#667682; --c-kw:#5F6E7A; --c-str:#E3A26A; --c-num:#7FD19B; --c-if:#5CCAD6; --c-key:#B9A2F2;
+    --bg:#0C110E; --surface:#131915; --surface-2:#18201B; --sunken:#0E1410;
+    --line:#26302A; --line-2:#1E2722;
+    --ink:#DFE7E2; --ink-2:#A6B2AB; --muted:#79867F;
+    --accent:#4DD68A; --accent-ink:#052012; --accent-soft:#153423;
+    --alt:#7EAEF2; --alt-soft:#172536;
+    --wire:#4DD68A; --wire-2:#5C6A62;
+    --ok:#4DD68A; --warn:#E0A443; --err:#EE6B5E; --info:#98A69E;
+    --ok-soft:#153423; --warn-soft:#3A2A10; --err-soft:#3E1C19; --info-soft:#1D2722;
+    --chassis:#080C0A; --chassis-2:#19211C; --chassis-ink:#B4C0B9;
+    --code-bg:#0D1310; --code-ink:#D6DFDA; --c-com:#65746C; --c-kw:#5D6B63; --c-str:#E3A26A; --c-num:#8CB8F2; --c-if:#5FDB95; --c-key:#B9A2F2;
     --m-rj45:#8995A0; --m-sfpp:#9BB54A; --m-sfp28:#57B97D; --m-sfpdd:#4DB6AB; --m-qsfp28:#5A9BE0; --m-qsfpdd:#9A82E6; --m-qsfp56:#AC7BE0; --m-qsfp112:#CB7BD2; --m-osfp:#E0845F;
   }
 }
 :root[data-theme="dark"]{
   color-scheme:dark;
-  --bg:#0E1419; --surface:#151D24; --surface-2:#1A232B; --sunken:#10171D;
-  --line:#2A3641; --line-2:#222D36;
-  --ink:#E1E7EC; --ink-2:#A9B5BF; --muted:#7A8995;
-  --accent:#3DB5C3; --accent-ink:#06181B; --accent-soft:#16343A;
-  --wire:#3FBFAE; --wire-2:#5D6C78;
-  --ok:#5CC179; --warn:#E0A443; --err:#EE6B5E; --info:#98A6B2;
-  --ok-soft:#173222; --warn-soft:#3A2A10; --err-soft:#3E1C19; --info-soft:#1F2931;
-  --chassis:#0A0F13; --chassis-2:#1B242C; --chassis-ink:#B6C2CC;
-  --code-bg:#0F161C; --code-ink:#D7DFE5; --c-com:#667682; --c-kw:#5F6E7A; --c-str:#E3A26A; --c-num:#7FD19B; --c-if:#5CCAD6; --c-key:#B9A2F2;
+  --bg:#0C110E; --surface:#131915; --surface-2:#18201B; --sunken:#0E1410;
+  --line:#26302A; --line-2:#1E2722;
+  --ink:#DFE7E2; --ink-2:#A6B2AB; --muted:#79867F;
+  --accent:#4DD68A; --accent-ink:#052012; --accent-soft:#153423;
+  --alt:#7EAEF2; --alt-soft:#172536;
+  --wire:#4DD68A; --wire-2:#5C6A62;
+  --ok:#4DD68A; --warn:#E0A443; --err:#EE6B5E; --info:#98A69E;
+  --ok-soft:#153423; --warn-soft:#3A2A10; --err-soft:#3E1C19; --info-soft:#1D2722;
+  --chassis:#080C0A; --chassis-2:#19211C; --chassis-ink:#B4C0B9;
+  --code-bg:#0D1310; --code-ink:#D6DFDA; --c-com:#65746C; --c-kw:#5D6B63; --c-str:#E3A26A; --c-num:#8CB8F2; --c-if:#5FDB95; --c-key:#B9A2F2;
   --m-rj45:#8995A0; --m-sfpp:#9BB54A; --m-sfp28:#57B97D; --m-sfpdd:#4DB6AB; --m-qsfp28:#5A9BE0; --m-qsfpdd:#9A82E6; --m-qsfp56:#AC7BE0; --m-qsfp112:#CB7BD2; --m-osfp:#E0845F;
 }
 
@@ -66,7 +69,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 /* ── top bar ── */
 .top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line);
   display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;padding-block:10px;padding-inline:16px}
-.brand{display:flex;align-items:baseline;gap:10px;min-width:0}
+.brand{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 10px;min-width:0}
 .brand b{font:700 21px/1 var(--f-cond);letter-spacing:.2px;white-space:nowrap}
 .brand b i{font-style:normal;color:var(--accent)}
 .brand small{font:500 12px/1.2 var(--f-cond);letter-spacing:.8px;text-transform:uppercase;color:var(--muted);white-space:nowrap}
@@ -82,6 +85,11 @@ button,input,select,textarea{font:inherit;color:inherit}
   .top .labname input{width:150px}
   .tab{padding:9px 10px 8px;font-size:14px}
 }
+.brand .by{font:500 13px/1.2 var(--f-ui);color:var(--ink-2);white-space:nowrap}
+.brand .by a,.foot a{color:var(--accent);text-decoration:none;font-weight:600}
+.brand .by a:hover,.foot a:hover{text-decoration:underline}
+.foot{max-width:1720px;margin:0 auto;padding-block:6px 22px;padding-inline:16px;display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13px;color:var(--muted)}
+.foot .sep{color:var(--line)}
 /* ── layout ── */
 .wrap{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:16px;padding-block:16px;padding-inline:16px;max-width:1720px;margin:0 auto}
 @media (max-width:1060px){.wrap{grid-template-columns:minmax(0,1fr)}}
@@ -189,7 +197,7 @@ select{cursor:pointer}
 .link.bad{border-color:var(--err)}
 .kind{font:700 11px/1 var(--f-cond);letter-spacing:.9px;text-transform:uppercase;padding:4px 7px;border-radius:3px;white-space:nowrap}
 .kind.fabric{background:var(--accent-soft);color:var(--accent)}
-.kind.access{background:var(--ok-soft);color:var(--ok)}
+.kind.access{background:var(--alt-soft);color:var(--alt)}
 .kind.other{background:var(--info-soft);color:var(--info)}
 @media (max-width:640px){
   .link{grid-template-columns:1fr 1fr 30px}
@@ -228,7 +236,7 @@ select{cursor:pointer}
 .topo .tier{font-size:10.5px;fill:var(--muted);letter-spacing:1.4px;text-transform:uppercase;font-weight:600}
 .topo .l{stroke-width:1.6;fill:none}
 .topo .l.fabric{stroke:var(--wire)}
-.topo .l.access{stroke:var(--wire-2)}
+.topo .l.access{stroke:var(--alt);opacity:.75}
 .topo .l.bond{stroke:var(--warn);stroke-dasharray:5 3}
 .topo .esband{fill:var(--warn-soft);stroke:var(--warn);stroke-dasharray:3 3}
 .topo .eslabel{font-size:10px;fill:var(--warn);font-weight:600;letter-spacing:.5px}
@@ -273,6 +281,7 @@ pre.code .h{color:var(--ink);font-weight:600}
   <section class="pane" id="editor" aria-label="Lab editor"></section>
   <aside class="pane preview" id="preview" aria-label="Generated lab"></aside>
 </main>
+<footer class="foot" id="foot"></footer>
 <script>
 /* SRL Lab Builder — deterministic engine.
  * Hardware catalog for every SR Linux type containerlab can boot, the lab
@@ -1375,6 +1384,10 @@ pre.code .h{color:var(--ink);font-weight:600}
   'use strict';
   const S = window.SRL;
   const STORE = 'srl-lab-builder:v1';
+  const AUTHOR = 'Jesús David Gómez Zavala';
+  const AUTHOR_URL = 'https://www.linkedin.com/in/jes%C3%BAs-g%C3%B3mez-53702a220/';
+  const REPO_URL = 'https://github.com/0return/srl-lab-builder';
+  const extLink = (href, text) => href ? h('a', { href, target: '_blank', rel: 'noopener' }, text) : text;
 
   // ───────────── tiny DOM helper ─────────────
   function h(tag, attrs, ...kids) {
@@ -1492,7 +1505,7 @@ pre.code .h{color:var(--ink);font-weight:600}
     const dl = btn('Download ZIP', downloadZip, { icon: 'down', cls: 'primary', title: 'Topology, configs/*.cli, README and project.json in one archive' });
     dlLabel = dl.lastChild;
     topEl.replaceChildren(
-      h('div', { class: 'brand' }, h('b', null, 'SRL ', h('i', null, 'Lab'), ' Builder'), h('small', null, 'SR Linux · containerlab')),
+      h('div', { class: 'brand' }, h('b', null, 'SRL ', h('i', null, 'Lab'), ' Builder'), h('span', { class: 'by' }, 'by ', extLink(AUTHOR_URL, AUTHOR))),
       h('div', { class: 'labname' }, h('label', { for: 'labname' }, 'Lab'), labInput),
       h('div', { class: 'grow' }),
       h('div', { class: 'actions' },
@@ -2099,6 +2112,15 @@ pre.code .h{color:var(--ink);font-weight:600}
     document.body.append(toastEl);
     toastT = setTimeout(() => { if (toastEl) toastEl.remove(); toastEl = null; }, actionLabel ? 7000 : 3200);
   }
+
+  // ───────────── footer ─────────────
+  const footEl = document.getElementById('foot');
+  if (footEl) footEl.replaceChildren(
+    h('span', null, 'Created by ', extLink(AUTHOR_URL, AUTHOR)),
+    h('span', { class: 'sep', 'aria-hidden': 'true' }, '·'),
+    h('span', null, extLink(REPO_URL, 'Source on GitHub')),
+    h('span', { class: 'sep', 'aria-hidden': 'true' }, '·'),
+    h('span', null, 'Independent project, not an official Nokia tool.'));
 
   // ───────────── boot ─────────────
   regen();
