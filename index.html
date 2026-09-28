@@ -1477,10 +1477,10 @@ pre.code .h{color:var(--ink);font-weight:600}
     const tpls = h('div', { class: 'tpls' },
       h('div', { class: 'tpl' },
         h('h4', null, 'EVPN-VXLAN Clos'),
-        h('p', null, 'Spines and leaves, eBGP or IGP underlay, spines as EVPN route reflectors, one dual-homed host on an all-active ES, two MAC-VRFs routed through one IP-VRF.'),
+        h('p', null, 'Spines and leafs, eBGP or IGP underlay, spines as EVPN route reflectors, one dual-homed host on an all-active ES, two MAC-VRFs routed through one IP-VRF.'),
         h('div', { class: 'mini' },
           field('Spines', sel('w-sp', w.spines, n(1, 4), v => { w.spines = +v; })),
-          field('Leaves', sel('w-lf', w.leaves, n(2, 8), v => { w.leaves = +v; })),
+          field('Leafs', sel('w-lf', w.leaves, n(2, 8), v => { w.leaves = +v; })),
           field('Spine type', sel('w-st', w.spineType, fixedTypes(), v => { w.spineType = v; })),
           field('Leaf type', sel('w-lt', w.leafType, fixedTypes(), v => { w.leafType = v; })),
           field('Hosts / leaf', sel('w-h', w.hostsPerLeaf, n(0, 3), v => { w.hostsPerLeaf = +v; })),
@@ -1489,7 +1489,7 @@ pre.code .h{color:var(--ink);font-weight:600}
         btn('Build this fabric', () => replaceProject(S.buildClos(Object.assign({}, w)), `Built a ${w.spines}×${w.leaves} Clos.`), { cls: 'primary' })),
       h('div', { class: 'tpl' },
         h('h4', null, 'DC fabric · IXR-H + border leaf'),
-        h('p', null, '7220 IXR-H5-64D spines, IXR-H4-32D leaves and a 7250 IXR-X3b border leaf. BGP unnumbered underlay over IPv6 link-local, EVPN-VXLAN overlay.'),
+        h('p', null, '7220 IXR-H5-64D spines, IXR-H4-32D leafs and a 7250 IXR-X3b border leaf. BGP unnumbered underlay over IPv6 link-local, EVPN-VXLAN overlay.'),
         btn('Load template', () => replaceProject(S.buildAiFabric(), 'Loaded the IXR-H fabric template.'))),
       h('div', { class: 'tpl' },
         h('h4', null, 'Empty lab'),
@@ -1544,7 +1544,7 @@ pre.code .h{color:var(--ink);font-weight:600}
         fieldDiv('EVPN overlay', seg(d.overlay, [{ v: 'ibgp', l: 'iBGP EVPN' }, { v: 'none', l: 'None' }], v => { d.overlay = v; }, 'Overlay')),
         field('Overlay AS', txt('d-oas', d.overlayAsn, v => { d.overlayAsn = v; }, { mono: true, num: true }))),
       h('p', { class: 'lede' }, d.overlay === 'ibgp'
-        ? 'Nodes marked RR reflect EVPN routes to every leaf. With no RR the leaves form a full iBGP mesh. Services ride VXLAN on vxlan1. ' + (isEbgp ? 'The overlay group uses local-as so it stays iBGP on top of per-node underlay ASNs.' : '')
+        ? 'Nodes marked RR reflect EVPN routes to every leaf. With no RR the leafs form a full iBGP mesh. Services ride VXLAN on vxlan1. ' + (isEbgp ? 'The overlay group uses local-as so it stays iBGP on top of per-node underlay ASNs.' : '')
         : 'No overlay: services stay local to each leaf.'));
 
     return h('div', { class: 'stack' },
@@ -1774,7 +1774,7 @@ pre.code .h{color:var(--ink);font-weight:600}
             const on = (s.extra || []).includes(n.id);
             return h('button', { type: 'button', class: 'chip', 'aria-pressed': String(on), onclick: () => { s.extra = on ? s.extra.filter(x => x !== n.id) : [...(s.extra || []), n.id]; commit(); } }, n.name);
           })),
-          h('em', null, s.kind === 'ip-vrf' ? 'Nodes with attachments (or IRB MAC-VRFs) get it automatically. Add border leaves here.' : 'Nodes with attachments get it automatically.')),
+          h('em', null, s.kind === 'ip-vrf' ? 'Nodes with attachments (or IRB MAC-VRFs) get it automatically. Add border leafs here.' : 'Nodes with attachments get it automatically.')),
         h('div', { class: 'attached' }, attached.length ? 'Attached: ' + attached.join(' · ') : 'No access links use this service yet (Links tab).'));
     });
     return h('div', { class: 'stack' },

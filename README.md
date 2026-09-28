@@ -62,7 +62,7 @@ ssh admin@clab-my-lab-leaf1          # password NokiaSrl1!
 sudo containerlab destroy -t my-lab.clab.yml --cleanup
 ```
 
-The example in [`examples/evpn-vxlan-fabric`](examples/evpn-vxlan-fabric) (2 × IXR-D3L spines, 4 × IXR-D2L leaves,
+The example in [`examples/evpn-vxlan-fabric`](examples/evpn-vxlan-fabric) (2 × IXR-D3L spines, 4 × IXR-D2L leafs,
 3 hosts, one on an all-active ESI LAG) deploys as-is:
 
 ```bash
