@@ -27,7 +27,7 @@ jobs:
           git clone --depth 1 --branch ${{ matrix.srl }} https://github.com/nokia/srlinux-yang-models yang
           cd yang/srlinux-yang-models
           P="$(find srl_nokia/models -type d | tr '\n' ':')ietf:iana:openconfig"
-          pyang --plugindir "$GITHUB_WORKSPACE/tools" -f srlschema -p "$P" \
+          pyang -W none --plugindir "$GITHUB_WORKSPACE/tools/pyang" -f srlschema -p "$P" \
             $(find srl_nokia/models -name '*.yang' | grep -v tools- | grep -v /common/) > "$GITHUB_WORKSPACE/schema.json"
       - name: Generate every template
         run: node tools/gen-presets.js

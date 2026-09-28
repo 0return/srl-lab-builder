@@ -70,7 +70,7 @@ sudo containerlab deploy -t evpn-vxlan-fabric.clab.yml
 
 `tools/validate.py` checks every `set / ...` line against a schema extracted from the official
 SR Linux YANG models ([nokia/srlinux-yang-models](https://github.com/nokia/srlinux-yang-models)) by the
-`tools/srlschema.py` pyang plugin. The GitHub Actions workflow in `.github/workflows/validate.yml`
+`tools/pyang/srlschema.py` pyang plugin. The GitHub Actions workflow in `.github/workflows/validate.yml`
 runs it for SR Linux 24.10, 25.10 and 26.7 on every push.
 
 Schema validation covers paths, list keys, enums and identities. It does not evaluate YANG
