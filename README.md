@@ -1,6 +1,6 @@
 # SRL Lab Builder
 
-Created by [Jesús David Gómez Zavala](https://www.linkedin.com/in/jes%C3%BAs-g%C3%B3mez-53702a220/).
+Created by [Jesús Gómez](https://www.linkedin.com/in/jes%C3%BAs-g%C3%B3mez-53702a220/).
 
 Design Nokia SR Linux labs for containerlab in the browser: pick the hardware for every node,
 wire the links, define EVPN services, and download a ready-to-deploy lab
