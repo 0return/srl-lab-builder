@@ -42,10 +42,12 @@ Hardware missing from the breakout table (IMM3 cards, IXR-X4, IXR-H6, SXR-1-32D)
 
 ## What gets generated
 
+The builder targets data center fabrics: EVPN with VXLAN transport.
+
+
 - Underlay: eBGP (numbered /31 or /30), eBGP unnumbered (IPv6 link-local + RFC 8950), IS-IS, OSPFv2, optional BFD
 - Overlay: iBGP EVPN with route reflectors (or full mesh), `local-as` on top of per-node underlay ASNs
 - Services: MAC-VRF, IP-VRF (EVPN IFL), IRB anycast gateway (symmetric IRB), all-active ESI LAGs from host bonds
-- MPLS (7250 / 7730): LDP and/or SR-MPLS (IS-IS node SIDs), EVPN-MPLS MAC-VRF / IP-VRF, IP-VPN (VPN-IPv4)
 - Linux hosts: addresses, VLAN sub-interfaces, LACP bonds and routes through containerlab `exec`
 
 ## Run a generated lab

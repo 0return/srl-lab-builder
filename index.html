@@ -356,70 +356,70 @@ pre.code .h{color:var(--ink);font-weight:600}
   const H5_BO = n => [{ ports: `odd 1-${n - 1}`, modes: ['8x100G', '4x100G'] }, { ports: `1-${n}`, modes: ['2x200G', '2x100G'] }];
 
   const PLATFORMS = [
-    { type: 'ixs-a1', family: '7215 IXS', name: '7215 IXS-A1', license: 'unknown', mpls: false,
+    { type: 'ixs-a1', family: '7215 IXS', name: '7215 IXS-A1', license: 'unknown',
       ports: [G(1, 48, 'RJ45', '1G'), G(49, 52, 'SFP+', '10G')], breakout: [] },
 
-    { type: 'ixr-d1', family: '7220 IXR-D', name: '7220 IXR-D1', license: false, mpls: false,
+    { type: 'ixr-d1', family: '7220 IXR-D', name: '7220 IXR-D1', license: false,
       ports: [G(1, 48, 'RJ45', '1G'), G(49, 52, 'SFP+', '10G')], breakout: [] },
-    { type: 'ixr-d2', family: '7220 IXR-D', name: '7220 IXR-D2', license: false, mpls: false,
+    { type: 'ixr-d2', family: '7220 IXR-D', name: '7220 IXR-D2', license: false,
       ports: [G(1, 48, 'SFP28', '25G'), G(49, 56, 'QSFP28', '100G')], breakout: [] },
-    { type: 'ixr-d2l', family: '7220 IXR-D', name: '7220 IXR-D2L', license: false, mpls: false,
+    { type: 'ixr-d2l', family: '7220 IXR-D', name: '7220 IXR-D2L', license: false,
       ports: [G(1, 48, 'SFP28', '25G'), G(49, 56, 'QSFP28', '100G'), G(57, 58, 'SFP+', '10G')], breakout: [] },
-    { type: 'ixr-d3', family: '7220 IXR-D', name: '7220 IXR-D3', license: false, mpls: false,
+    { type: 'ixr-d3', family: '7220 IXR-D', name: '7220 IXR-D3', license: false,
       ports: [G(1, 32, 'QSFP28', '100G'), G(33, 34, 'SFP+', '10G')], breakout: [{ ports: '1-32', modes: ['4x25G', '4x10G'] }] },
-    { type: 'ixr-d3l', family: '7220 IXR-D', name: '7220 IXR-D3L', license: false, mpls: false,
+    { type: 'ixr-d3l', family: '7220 IXR-D', name: '7220 IXR-D3L', license: false,
       ports: [G(1, 32, 'QSFP28', '100G'), G(33, 34, 'SFP+', '10G')], breakout: [{ ports: '1-32', modes: ['4x25G', '4x10G', '2x50G'] }] },
-    { type: 'ixr-d4', family: '7220 IXR-D', name: '7220 IXR-D4', license: false, mpls: false,
+    { type: 'ixr-d4', family: '7220 IXR-D', name: '7220 IXR-D4', license: false,
       ports: [G(1, 28, 'QSFP28', '100G'), G(29, 36, 'QSFP-DD', '400G')],
       breakout: [{ ports: '29-32', modes: ['4x100G', '4x25G', '4x10G'] }, { ports: '9,23-27', modes: ['4x25G', '4x10G'] }] },
-    { type: 'ixr-d5', family: '7220 IXR-D', name: '7220 IXR-D5', license: false, mpls: false,
+    { type: 'ixr-d5', family: '7220 IXR-D', name: '7220 IXR-D5', license: false,
       ports: [G(1, 32, 'QSFP-DD', '400G'), G(33, 34, 'SFP+', '10G')],
       breakout: [{ ports: '1-32', modes: ['4x100G', '2x200G', '2x100G', '4x50G', '2x50G', '4x25G', '4x10G'] }] },
 
-    { type: 'ixr-h2', family: '7220 IXR-H', name: '7220 IXR-H2', license: false, mpls: false,
+    { type: 'ixr-h2', family: '7220 IXR-H', name: '7220 IXR-H2', license: false,
       ports: [G(1, 128, 'QSFP28', '100G')], breakout: [] },
-    { type: 'ixr-h3', family: '7220 IXR-H', name: '7220 IXR-H3', license: false, mpls: false,
+    { type: 'ixr-h3', family: '7220 IXR-H', name: '7220 IXR-H3', license: false,
       ports: [G(1, 32, 'QSFP-DD', '400G'), G(33, 34, 'SFP+', '10G')],
       breakout: [{ ports: '1-32', modes: ['4x100G', '2x200G', '2x100G', '4x25G', '4x10G'] }] },
-    { type: 'ixr-h4', family: '7220 IXR-H', name: '7220 IXR-H4', license: false, mpls: false,
+    { type: 'ixr-h4', family: '7220 IXR-H', name: '7220 IXR-H4', license: false,
       ports: [G(1, 64, 'QSFP-DD', '400G'), G(65, 66, 'SFP+', '10G')], breakout: [{ ports: '1-64', modes: ['4x100G', '2x200G'] }] },
-    { type: 'ixr-h4-32d', family: '7220 IXR-H', name: '7220 IXR-H4-32D', license: false, mpls: false,
+    { type: 'ixr-h4-32d', family: '7220 IXR-H', name: '7220 IXR-H4-32D', license: false,
       ports: [G(1, 32, 'QSFP-DD', '400G'), G(33, 33, 'SFP+', '10G')], breakout: [{ ports: '1-32', modes: ['4x100G', '2x200G', '2x100G'] }] },
-    { type: 'ixr-h5-32d', family: '7220 IXR-H', name: '7220 IXR-H5-32D', license: false, mpls: false,
+    { type: 'ixr-h5-32d', family: '7220 IXR-H', name: '7220 IXR-H5-32D', license: false,
       ports: [G(1, 32, 'QSFP112-DD', '800G'), G(33, 34, 'SFP+', '10G')], breakout: H5_BO(32) },
-    { type: 'ixr-h5-64d', family: '7220 IXR-H', name: '7220 IXR-H5-64D', license: false, mpls: false,
+    { type: 'ixr-h5-64d', family: '7220 IXR-H', name: '7220 IXR-H5-64D', license: false,
       ports: [G(1, 64, 'QSFP112-DD', '800G'), G(65, 66, 'SFP+', '10G')], breakout: H5_BO(64) },
-    { type: 'ixr-h5-64o', family: '7220 IXR-H', name: '7220 IXR-H5-64O', license: false, mpls: false,
+    { type: 'ixr-h5-64o', family: '7220 IXR-H', name: '7220 IXR-H5-64O', license: false,
       ports: [G(1, 64, 'OSFP', '800G'), G(65, 66, 'SFP+', '10G')], breakout: H5_BO(64) },
-    { type: 'ixr-h6', family: '7220 IXR-H', name: '7220 IXR-H6-64', license: false, mpls: false,
+    { type: 'ixr-h6', family: '7220 IXR-H', name: '7220 IXR-H6-64', license: false,
       ports: [G(1, 64, 'OSFP', '1.6T')], breakout: null, portsNote: 'Port layout taken from launch material (102.4T, 64 × 1.6TE); not yet in the SR Linux hardware tables.' },
 
-    { type: 'ixr-x1b', family: '7250 IXR-X', name: '7250 IXR-X1b', license: true, mpls: true,
+    { type: 'ixr-x1b', family: '7250 IXR-X', name: '7250 IXR-X1b', license: true,
       ports: [G(1, 24, 'QSFP28', '100G'), G(25, 36, 'QSFP-DD', '400G')],
       breakout: [{ ports: '1-24', modes: ['4x25G', '4x10G'], note: 'port-group restrictions apply' }, { ports: '25-36', modes: ['4x100G', '4x25G', '4x10G'] }] },
-    { type: 'ixr-x3b', family: '7250 IXR-X', name: '7250 IXR-X3b', license: true, mpls: true,
+    { type: 'ixr-x3b', family: '7250 IXR-X', name: '7250 IXR-X3b', license: true,
       ports: [G(1, 36, 'QSFP56-DD', '400G')], breakout: [{ ports: '1-36', modes: ['4x100G', '4x25G', '4x10G'] }] },
-    { type: 'ixr-x4', family: '7250 IXR-X', name: '7250 IXR-X4 (QSFP-DD)', license: true, mpls: true,
+    { type: 'ixr-x4', family: '7250 IXR-X', name: '7250 IXR-X4 (QSFP-DD)', license: true,
       ports: [G(1, 32, 'QSFP112-DD', '800G')], breakout: null },
 
-    { type: 'ixr-6e', family: '7250 IXR-e', name: '7250 IXR-6e', license: true, mpls: true, modular: true,
+    { type: 'ixr-6e', family: '7250 IXR-e', name: '7250 IXR-6e', license: true, modular: true,
       cards: ['imm36-400g-qsfpdd', 'imm60-100g-qsfp28', 'imm2-36-400g-sync-qsfpdd', 'imm3-36-800g-qsfpdd', 'imm3-36-800g-osfp'], defaultCard: 'imm36-400g-qsfpdd' },
-    { type: 'ixr-10e', family: '7250 IXR-e', name: '7250 IXR-10e', license: true, mpls: true, modular: true,
+    { type: 'ixr-10e', family: '7250 IXR-e', name: '7250 IXR-10e', license: true, modular: true,
       cards: ['imm36-400g-qsfpdd', 'imm60-100g-qsfp28', 'imm2-36-400g-sync-qsfpdd', 'imm3-36-800g-qsfpdd', 'imm3-36-800g-osfp'], defaultCard: 'imm36-400g-qsfpdd' },
-    { type: 'ixr-18e', family: '7250 IXR-e', name: '7250 IXR-18e', license: true, mpls: true, modular: true,
+    { type: 'ixr-18e', family: '7250 IXR-e', name: '7250 IXR-18e', license: true, modular: true,
       cards: ['imm3-18-800g-qsfpdd', 'imm3-36-800g-sync-qsfpdd', 'imm3-36-800g-osfp'], defaultCard: 'imm3-18-800g-qsfpdd' },
-    { type: 'ixr-6', family: '7250 IXR (gen1)', name: '7250 IXR-6', license: true, mpls: true, modular: true,
+    { type: 'ixr-6', family: '7250 IXR (gen1)', name: '7250 IXR-6', license: true, modular: true,
       cards: ['imm32-100g-qsfp28+4-400g-qsfpdd'], defaultCard: 'imm32-100g-qsfp28+4-400g-qsfpdd', fixedCard: true },
-    { type: 'ixr-10', family: '7250 IXR (gen1)', name: '7250 IXR-10', license: true, mpls: true, modular: true,
+    { type: 'ixr-10', family: '7250 IXR (gen1)', name: '7250 IXR-10', license: true, modular: true,
       cards: ['imm32-100g-qsfp28+4-400g-qsfpdd'], defaultCard: 'imm32-100g-qsfp28+4-400g-qsfpdd', fixedCard: true },
 
-    { type: 'sxr-1d-32d', family: '7730 SXR', name: '7730 SXR-1d-32D', license: true, mpls: true,
+    { type: 'sxr-1d-32d', family: '7730 SXR', name: '7730 SXR-1d-32D', license: true,
       ports: [G(1, 16, 'QSFP28', '100G'), G(17, 20, 'QSFP-DD', '400G'), G(21, 32, 'QSFP28', '100G')],
       breakout: [{ ports: '17-20', modes: ['4x100G', '4x25G', '4x10G'] }, { ports: '1-16,21-32', modes: ['4x25G', '4x10G'], note: 'port-group restrictions apply' }] },
-    { type: 'sxr-1-32d', family: '7730 SXR', name: '7730 SXR-1-32D', license: true, mpls: true,
+    { type: 'sxr-1-32d', family: '7730 SXR', name: '7730 SXR-1-32D', license: true,
       ports: [G(1, 16, 'QSFP28', '100G'), G(17, 20, 'QSFP-DD', '400G'), G(21, 32, 'QSFP28', '100G')],
       breakout: null, portsNote: 'Same 28×QSFP28 + 4×QSFP-DD mix as the SXR-1d-32D; port order assumed identical.' },
-    { type: 'sxr-1x-44s', family: '7730 SXR', name: '7730 SXR-1x-44S', license: true, mpls: true,
+    { type: 'sxr-1x-44s', family: '7730 SXR', name: '7730 SXR-1x-44S', license: true,
       ports: [G(1, 20, 'SFP-DD', '100G'), G(21, 22, 'QSFP-DD', '400G'), G(23, 42, 'SFP-DD', '100G'), G(43, 44, 'QSFP-DD', '400G')],
       breakout: [{ ports: '21,22,43,44', modes: ['4x100G', '4x25G', '4x10G'] }] },
   ];
@@ -482,8 +482,8 @@ pre.code .h{color:var(--ink);font-weight:600}
   }
 
   // ───────────────────────── model defaults ─────────────────────────
-  const ROLES = ['superspine', 'spine', 'leaf', 'borderleaf', 'pe', 'p'];
-  const ROLE_TIER = { superspine: 0, spine: 1, p: 1, leaf: 2, borderleaf: 2, pe: 2, host: 3 };
+  const ROLES = ['superspine', 'spine', 'leaf', 'borderleaf'];
+  const ROLE_TIER = { superspine: 0, spine: 1, leaf: 2, borderleaf: 2, host: 3 };
 
   function defaultDesign() {
     return {
@@ -493,15 +493,27 @@ pre.code .h{color:var(--ink);font-weight:600}
       underlay: 'ebgp', isisArea: '49.0001', isisLevel: 'L2', ospfArea: '0.0.0.0', bfd: false,
       asnSpine: 65100, asnSuperspine: 65200, asnLeafBase: 65001,
       overlay: 'ibgp', overlayAsn: 65500,
-      transport: 'vxlan', ldp: true, srmpls: true, srgbStart: 16000, srgbEnd: 23999,
     };
+  }
+
+  // Bring older saved projects (which had an MPLS option and PE/P roles)
+  // in line with the EVPN-VXLAN-only model.
+  function normalize(project) {
+    const p = project || {};
+    const d = Object.assign(defaultDesign(), p.design || {});
+    ['transport', 'ldp', 'srmpls', 'srgbStart', 'srgbEnd'].forEach(k => { delete d[k]; });
+    p.design = d;
+    (p.nodes || []).forEach(n => { if (n.role === 'pe') n.role = 'leaf'; if (n.role === 'p') n.role = 'spine'; });
+    (p.services || []).forEach(sv => { if (sv.kind === 'ip-vrf') sv.signaling = 'evpn'; });
+    return p;
   }
 
   // ───────────────────────── resolution ─────────────────────────
   // Turns the editable project into a fully-addressed plan that every
   // generator reads. Issues found on the way are collected, never thrown.
   function resolve(project) {
-    const d = Object.assign(defaultDesign(), project.design || {});
+    normalize(project);
+    const d = project.design;
     const nodes = project.nodes || [];
     const links = project.links || [];
     const services = project.services || [];
@@ -698,15 +710,13 @@ pre.code .h{color:var(--ink);font-weight:600}
       if (!/^[A-Za-z0-9][A-Za-z0-9_.-]*$/.test(s.name || '')) issues.push({ level: 'error', msg: `Service name “${s.name}” is not a valid network-instance name.` });
     });
 
-    if (d.transport !== 'mpls') {
-      const vniSeen = new Map();
-      services.forEach(s => {
-        const v = Number(s.vni) || Number(s.evi);
-        if (!(v >= 1 && v <= 16777215)) issues.push({ level: 'error', msg: `${s.name}: VNI must be 1–16777215.` });
-        if (vniSeen.has(v)) issues.push({ level: 'error', msg: `${s.name} and ${vniSeen.get(v)} use the same VNI ${v}.` });
-        vniSeen.set(v, s.name);
-      });
-    }
+    const vniSeen = new Map();
+    services.forEach(s => {
+      const v = Number(s.vni) || Number(s.evi);
+      if (!(v >= 1 && v <= 16777215)) issues.push({ level: 'error', msg: `${s.name}: VNI must be 1–16777215.` });
+      if (vniSeen.has(v)) issues.push({ level: 'error', msg: `${s.name} and ${vniSeen.get(v)} use the same VNI ${v}.` });
+      vniSeen.set(v, s.name);
+    });
 
     // Host addressing per attachment (bonds counted once)
     const hostCfg = new Map(); // host id -> {ifaces:[{dev, parent, vlan, ip, gw, svc}], bonds:[]}
@@ -748,7 +758,7 @@ pre.code .h{color:var(--ink);font-weight:600}
     // overlay peering
     const rr = srl.filter(n => n.rr);
     const svcNodes = new Set(); svcPlan.forEach(p => p.nodes.forEach(id => svcNodes.add(id)));
-    const clients = srl.filter(n => !n.rr && (svcNodes.has(n.id) || ['leaf', 'borderleaf', 'pe'].includes(n.role)));
+    const clients = srl.filter(n => !n.rr && (svcNodes.has(n.id) || ['leaf', 'borderleaf'].includes(n.role)));
     const overlayPeers = new Map();
     if (d.overlay === 'ibgp') {
       if (rr.length) {
@@ -760,20 +770,6 @@ pre.code .h{color:var(--ink);font-weight:600}
       }
     }
     if (services.length && d.overlay !== 'ibgp') issues.push({ level: 'warn', msg: 'Services need the iBGP EVPN overlay to exchange routes between nodes.' });
-
-    // transport checks
-    if (d.transport === 'mpls') {
-      if (d.underlay !== 'isis' && d.underlay !== 'ospf') issues.push({ level: 'error', msg: 'MPLS transport needs an IGP underlay (IS-IS or OSPF).' });
-      if (d.srmpls && d.underlay !== 'isis') issues.push({ level: 'error', msg: 'SR-MPLS in this builder is signalled with IS-IS; select the IS-IS underlay.' });
-      if (!d.ldp && !d.srmpls) issues.push({ level: 'error', msg: 'MPLS transport needs LDP, SR-MPLS or both.' });
-      srl.forEach(n => {
-        const p = PLATFORM[n.type];
-        if (p && !p.mpls) issues.push({ level: 'warn', msg: `${n.name}: ${p.name} does not run an MPLS datapath in the SR Linux container (7250 IXR and 7730 SXR types do).`, node: n.id });
-        const h = hw(n);
-        if (h && h.gen === 'gen3') issues.push({ level: 'info', msg: `${n.name}: Gen3 IMMs can require the per-type label blocks under “system mpls services network-instance dynamic-label-blocks” (26.3+). The generated config uses the shared dynamic-label-block form.`, node: n.id });
-      });
-    }
-    if (d.underlay === 'ebgp-unnumbered' && d.transport === 'mpls') issues.push({ level: 'error', msg: 'BGP unnumbered underlay is for VXLAN fabrics here; use IS-IS for MPLS.' });
 
     hosts.forEach(h => { if (!resolvedLinks.some(r => r.A === h || r.B === h)) issues.push({ level: 'info', msg: `${h.name} has no links.`, node: h.id }); });
 
@@ -791,7 +787,6 @@ pre.code .h{color:var(--ink);font-weight:600}
     const underAsn = plan.asn.get(node.id);
     const isEbgp = d.underlay === 'ebgp' || d.underlay === 'ebgp-unnumbered';
     const unnumbered = d.underlay === 'ebgp-unnumbered';
-    const mpls = d.transport === 'mpls';
     const ov = plan.overlayPeers.get(node.id);
 
     L.push(`# ${node.name} — ${h ? h.platform.name + (h.card ? ' / ' + h.card : '') : node.type} — SR Linux ${d.version}`);
@@ -933,28 +928,6 @@ pre.code .h{color:var(--ink);font-weight:600}
       });
     }
 
-    // MPLS label blocks
-    if (mpls) {
-      sec('MPLS label blocks');
-      if (d.srmpls) {
-        S('system mpls label-ranges static SRGB shared true');
-        S(`system mpls label-ranges static SRGB start-label ${d.srgbStart}`);
-        S(`system mpls label-ranges static SRGB end-label ${d.srgbEnd}`);
-        S('system mpls label-ranges dynamic SRLB start-label 24000');
-        S('system mpls label-ranges dynamic SRLB end-label 24999');
-      }
-      if (d.ldp) {
-        S('system mpls label-ranges dynamic D-LDP start-label 100000');
-        S('system mpls label-ranges dynamic D-LDP end-label 109999');
-      }
-      S('system mpls label-ranges dynamic D-SVC-NI start-label 110000');
-      S('system mpls label-ranges dynamic D-SVC-NI end-label 114999');
-      S('system mpls label-ranges dynamic D-SVC-EVPN start-label 115000');
-      S('system mpls label-ranges dynamic D-SVC-EVPN end-label 119999');
-      S('system mpls services network-instance dynamic-label-block D-SVC-NI');
-      S('system mpls services evpn dynamic-label-block D-SVC-EVPN');
-    }
-
     // Underlay
     const ni = 'network-instance default protocols';
     if (d.underlay === 'isis') {
@@ -972,12 +945,6 @@ pre.code .h{color:var(--ink);font-weight:600}
         S(`${I} interface ${f.port}.0 circuit-type point-to-point`);
         if (d.bfd) S(`${I} interface ${f.port}.0 ipv4-unicast enable-bfd true`);
       });
-      if (mpls && d.srmpls) {
-        S(`${ni} isis dynamic-label-block SRLB`);
-        S('network-instance default segment-routing mpls global-block label-range SRGB');
-        S(`${I} segment-routing mpls`);
-        S(`${I} interface system0.0 segment-routing mpls ipv4-node-sid index ${plan.srl.indexOf(node) + 1}`);
-      }
     } else if (d.underlay === 'ospf') {
       sec('Underlay: OSPFv2');
       const I = `${ni} ospf instance main`;
@@ -991,15 +958,6 @@ pre.code .h{color:var(--ink);font-weight:600}
         S(`${A} interface ${f.port}.0 admin-state enable`);
         S(`${A} interface ${f.port}.0 interface-type point-to-point`);
         if (d.bfd) S(`${A} interface ${f.port}.0 failure-detection enable-bfd true`);
-      });
-    }
-
-    if (mpls && d.ldp) {
-      sec('LDP');
-      S(`${ni} ldp admin-state enable`);
-      S(`${ni} ldp dynamic-label-block D-LDP`);
-      myFabric.forEach(f => {
-        S(`${ni} ldp discovery interfaces interface ${f.port}.0 ipv4 admin-state enable`);
       });
     }
 
@@ -1052,8 +1010,6 @@ pre.code .h{color:var(--ink);font-weight:600}
         S(`${og} transport local-address ${sysIp}`);
         S(`${og} afi-safi evpn admin-state enable`);
         S(`${og} afi-safi ipv4-unicast admin-state disable`);
-        const needVpn = mpls && [...plan.svcPlan.values()].some(p => p.svc.kind === 'ip-vrf' && p.svc.signaling === 'ipvpn' && (p.nodes.has(node.id) || ov.rrClient));
-        if (needVpn) S(`${og} afi-safi l3vpn-ipv4-unicast admin-state enable`);
         if (ov.rrClient) {
           S(`${og} route-reflector client true`);
           S(`${og} route-reflector cluster-id ${sysIp}`);
@@ -1070,14 +1026,13 @@ pre.code .h{color:var(--ink);font-weight:600}
     const mySvcs = [...plan.svcPlan.values()].filter(p => p.nodes.has(node.id));
     const macs = mySvcs.filter(p => p.svc.kind === 'mac-vrf');
     const ipvrfs = mySvcs.filter(p => p.svc.kind === 'ip-vrf');
-    const allowed = [d.ldp && 'ldp', d.srmpls && 'sr-isis'].filter(Boolean).join(' ');
     const rt = s => `target:${d.overlayAsn}:${s.evi}`;
     const vpn = (name, s) => {
       S(`network-instance ${name} protocols bgp-vpn bgp-instance 1 route-distinguisher rd ${sysIp}:${s.evi}`);
       S(`network-instance ${name} protocols bgp-vpn bgp-instance 1 route-target export-rt ${rt(s)}`);
       S(`network-instance ${name} protocols bgp-vpn bgp-instance 1 route-target import-rt ${rt(s)}`);
     };
-    if (!mpls && (macs.length || ipvrfs.some(p => p.svc.signaling !== 'ipvpn'))) {
+    if (macs.length || ipvrfs.length) {
       sec('VXLAN tunnel interfaces');
       macs.forEach(p => {
         const vni = Number(p.svc.vni) || Number(p.svc.evi);
@@ -1093,7 +1048,7 @@ pre.code .h{color:var(--ink);font-weight:600}
     macs.forEach(p => {
       const s = p.svc, N = `network-instance ${s.name}`;
       const vni = Number(s.vni) || Number(s.evi);
-      sec(`MAC-VRF ${s.name} (EVI ${s.evi}${mpls ? ', EVPN-MPLS' : ', VNI ' + vni})`);
+      sec(`MAC-VRF ${s.name} (EVI ${s.evi}, VNI ${vni})`);
       const irbVrf = s.irb && plan.svcById.get(s.irb);
       if (irbVrf && p.gwCidr) {
         const ii = `interface irb0 subinterface ${s.evi}`;
@@ -1113,13 +1068,10 @@ pre.code .h{color:var(--ink);font-weight:600}
       S(`${N} description ${q(s.description || 'L2 EVI ' + s.evi)}`);
       svcSubifs(s).forEach(x => S(`${N} interface ${x}`));
       if (irbVrf && p.gwCidr) S(`${N} interface irb0.${s.evi}`);
-      if (!mpls) S(`${N} vxlan-interface vxlan1.${vni}`);
+      S(`${N} vxlan-interface vxlan1.${vni}`);
       const bi = `${N} protocols bgp-evpn bgp-instance 1`;
       S(`${bi} admin-state enable`);
-      if (mpls) {
-        S(`${bi} encapsulation-type mpls`);
-        S(`${bi} mpls next-hop-resolution allowed-tunnel-types [ ${allowed} ]`);
-      } else S(`${bi} vxlan-interface vxlan1.${vni}`);
+      S(`${bi} vxlan-interface vxlan1.${vni}`);
       S(`${bi} evi ${s.evi}`);
       S(`${bi} ecmp 4`);
       vpn(s.name, s);
@@ -1127,28 +1079,19 @@ pre.code .h{color:var(--ink);font-weight:600}
     ipvrfs.forEach(p => {
       const s = p.svc, N = `network-instance ${s.name}`;
       const vni = Number(s.vni) || Number(s.evi);
-      const ipvpn = mpls && s.signaling === 'ipvpn';
-      sec(`IP-VRF ${s.name} (${ipvpn ? 'IP-VPN' : 'EVPN IFL'} ${mpls ? 'over MPLS' : 'VNI ' + vni})`);
+      sec(`IP-VRF ${s.name} (EVPN IFL, VNI ${vni})`);
       S(`${N} type ip-vrf`);
       S(`${N} admin-state enable`);
       S(`${N} description ${q(s.description || 'L3 VRF ' + s.evi)}`);
       svcSubifs(s).forEach(x => S(`${N} interface ${x}`));
       [...plan.svcPlan.values()].filter(m => m.svc.kind === 'mac-vrf' && m.svc.irb === s.id && m.nodes.has(node.id) && m.gwCidr)
         .forEach(m => S(`${N} interface irb0.${m.svc.evi}`));
-      if (ipvpn) {
-        S(`${N} protocols bgp-ipvpn bgp-instance 1 admin-state enable`);
-        S(`${N} protocols bgp-ipvpn bgp-instance 1 mpls next-hop-resolution allowed-tunnel-types [ ${allowed} ]`);
-      } else {
-        if (!mpls) S(`${N} vxlan-interface vxlan1.${vni}`);
-        const bi = `${N} protocols bgp-evpn bgp-instance 1`;
-        S(`${bi} admin-state enable`);
-        if (mpls) {
-          S(`${bi} encapsulation-type mpls`);
-          S(`${bi} mpls next-hop-resolution allowed-tunnel-types [ ${allowed} ]`);
-        } else S(`${bi} vxlan-interface vxlan1.${vni}`);
-        S(`${bi} evi ${s.evi}`);
-        S(`${bi} ecmp 8`);
-      }
+      S(`${N} vxlan-interface vxlan1.${vni}`);
+      const bi = `${N} protocols bgp-evpn bgp-instance 1`;
+      S(`${bi} admin-state enable`);
+      S(`${bi} vxlan-interface vxlan1.${vni}`);
+      S(`${bi} evi ${s.evi}`);
+      S(`${bi} ecmp 8`);
       vpn(s.name, s);
     });
 
@@ -1240,8 +1183,6 @@ pre.code .h{color:var(--ink);font-weight:600}
     if (d.underlay.startsWith('ebgp') || d.overlay === 'ibgp') cmd.push('show network-instance default protocols bgp neighbor');
     if (d.underlay === 'isis') cmd.push('show network-instance default protocols isis adjacency');
     if (d.underlay === 'ospf') cmd.push('show network-instance default protocols ospf neighbor');
-    if (d.transport === 'mpls' && d.ldp) cmd.push('show network-instance default protocols ldp neighbor');
-    if (d.transport === 'mpls') cmd.push('show network-instance default tunnel-table all');
     cmd.push('show network-instance default route-table ipv4-unicast summary');
     if (d.overlay === 'ibgp') cmd.push('show network-instance default protocols bgp routes evpn route-type summary');
     plan.svcPlan.forEach(p => {
@@ -1327,32 +1268,8 @@ pre.code .h{color:var(--ink);font-weight:600}
         links.push(mkLink(lf, nextHostPort(lf), host, 'eth1', { svc: svc.id }));
       }
     });
-    const design = Object.assign(defaultDesign(), { lab: 'evpn-vxlan-fabric', underlay: opt.underlay, transport: 'vxlan' });
+    const design = Object.assign(defaultDesign(), { lab: 'evpn-vxlan-fabric', underlay: opt.underlay });
     return { design, nodes, links, services: [macA, macB, vrf] };
-  }
-
-  function buildMplsCore() {
-    const p1 = mkNode('p1', 'srl', 'ixr-x3b', 'p', { rr: true });
-    const p2 = mkNode('p2', 'srl', 'ixr-x3b', 'p', { rr: true });
-    const pe1 = mkNode('pe1', 'srl', 'ixr-x1b', 'pe', { rr: false });
-    const pe2 = mkNode('pe2', 'srl', 'sxr-1d-32d', 'pe', { rr: false });
-    const pe3 = mkNode('pe3', 'srl', 'ixr-6e', 'pe', { rr: false, card: 'imm60-100g-qsfp28' });
-    const ce1 = mkNode('ce1', 'linux'), ce2 = mkNode('ce2', 'linux'), ce3 = mkNode('ce3', 'linux');
-    const nodes = [p1, p2, pe1, pe2, pe3, ce1, ce2, ce3];
-    const links = [
-      mkLink(p1, 'ethernet-1/1', p2, 'ethernet-1/1'),
-      mkLink(pe1, 'ethernet-1/25', p1, 'ethernet-1/2'), mkLink(pe1, 'ethernet-1/26', p2, 'ethernet-1/2'),
-      mkLink(pe2, 'ethernet-1/17', p1, 'ethernet-1/3'), mkLink(pe2, 'ethernet-1/18', p2, 'ethernet-1/3'),
-      mkLink(pe3, 'ethernet-1/1', p1, 'ethernet-1/4'), mkLink(pe3, 'ethernet-1/2', p2, 'ethernet-1/4'),
-    ];
-    const l2 = { id: nid('s'), kind: 'mac-vrf', name: 'evpn-l2-300', evi: 300, vni: 300, subnet: '10.30.0.0/24', gw: '', irb: '', extra: [], description: 'E-LAN over EVPN-MPLS' };
-    const l3 = { id: nid('s'), kind: 'ip-vrf', name: 'vpn-blue', evi: 400, vni: 400, signaling: 'ipvpn', extra: [], description: 'L3VPN (VPN-IPv4)' };
-    links.push(mkLink(pe1, 'ethernet-1/1', ce1, 'eth1', { svc: l2.id, vlan: '300' }));
-    links.push(mkLink(pe2, 'ethernet-1/1', ce2, 'eth1', { svc: l2.id, vlan: '300' }));
-    links.push(mkLink(pe1, 'ethernet-1/2', ce1, 'eth2', { svc: l3.id }));
-    links.push(mkLink(pe3, 'ethernet-1/3', ce3, 'eth1', { svc: l3.id }));
-    const design = Object.assign(defaultDesign(), { lab: 'mpls-core', underlay: 'isis', transport: 'mpls', ldp: true, srmpls: true, overlayAsn: 65000, loopbacks: '10.255.0.0/24', p2p: '10.254.0.0/24' });
-    return { design, nodes, links, services: [l2, l3] };
   }
 
   function buildAiFabric() {
@@ -1371,8 +1288,8 @@ pre.code .h{color:var(--ink);font-weight:600}
   const SRL = {
     PLATFORMS, PLATFORM, FAMILIES, LINECARDS, ROLES, ROLE_TIER, SRL_VERSIONS, GENERIC_BREAKOUTS,
     hw, portList, portCount, portGroup, breakoutOptions, parseMode, parsePort, parsePortSpec, parseCidr, int2ip, ip2int,
-    defaultDesign, resolve, generate, nodeConfig, clabYaml, readme, hostExec,
-    mkNode, mkLink, buildClos, buildMplsCore, buildAiFabric, leafPorts, nid,
+    defaultDesign, normalize, resolve, generate, nodeConfig, clabYaml, readme, hostExec,
+    mkNode, mkLink, buildClos, buildAiFabric, leafPorts, nid,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = SRL;
   else root.SRL = SRL;
@@ -1430,8 +1347,7 @@ pre.code .h{color:var(--ink);font-weight:600}
   function saveLocal() { try { localStorage.setItem(STORE, JSON.stringify(project)); } catch (e) { /* storage unavailable */ } }
   function isProject(p) { return p && typeof p === 'object' && Array.isArray(p.nodes) && Array.isArray(p.links) && Array.isArray(p.services) && p.design && typeof p.design === 'object'; }
 
-  let project = loadLocal() || S.buildClos();
-  project.design = Object.assign(S.defaultDesign(), project.design);
+  let project = S.normalize(loadLocal() || S.buildClos());
   const ui = { tab: 'design', portSel: {}, open: new Set(), file: null, focus: null, prev: null,
     wiz: { spines: 2, leaves: 4, spineType: 'ixr-d3l', leafType: 'ixr-d2l', hostsPerLeaf: 1, dualHomed: true, underlay: 'ebgp' } };
   try { const t = localStorage.getItem(STORE + ':tab'); if (['design', 'nodes', 'links', 'services'].includes(t)) ui.tab = t; } catch (e) { }
@@ -1494,7 +1410,7 @@ pre.code .h{color:var(--ink);font-weight:600}
   }
   const MEDIA_VAR = { 'RJ45': '--m-rj45', 'SFP+': '--m-sfpp', 'SFP28': '--m-sfp28', 'SFP-DD': '--m-sfpdd', 'QSFP28': '--m-qsfp28', 'QSFP-DD': '--m-qsfpdd', 'QSFP56-DD': '--m-qsfp56', 'QSFP112-DD': '--m-qsfp112', 'OSFP': '--m-osfp' };
   const mediaColor = m => `var(${MEDIA_VAR[m] || '--m-rj45'})`;
-  const ROLE_LABEL = { superspine: 'Super-spine', spine: 'Spine', leaf: 'Leaf', borderleaf: 'Border leaf', pe: 'PE', p: 'P' };
+  const ROLE_LABEL = { superspine: 'Super-spine', spine: 'Spine', leaf: 'Leaf', borderleaf: 'Border leaf' };
 
   // ───────────── top bar ─────────────
   const topEl = document.getElementById('top');
@@ -1547,7 +1463,7 @@ pre.code .h{color:var(--ink);font-weight:600}
   // ── Design tab ──
   function replaceProject(p, msg) {
     ui.prev = JSON.parse(JSON.stringify(project));
-    project = p; project.design = Object.assign(S.defaultDesign(), p.design);
+    project = S.normalize(p);
     ui.file = null; ui.open.clear(); ui.portSel = {};
     commit(); renderTop();
     toast(msg, 'Undo', () => { if (ui.prev) { project = ui.prev; ui.prev = null; commit(); renderTop(); } });
@@ -1575,10 +1491,6 @@ pre.code .h{color:var(--ink);font-weight:600}
         h('h4', null, 'DC fabric · IXR-H + border leaf'),
         h('p', null, '7220 IXR-H5-64D spines, IXR-H4-32D leaves and a 7250 IXR-X3b border leaf. BGP unnumbered underlay over IPv6 link-local, EVPN-VXLAN overlay.'),
         btn('Load template', () => replaceProject(S.buildAiFabric(), 'Loaded the IXR-H fabric template.'))),
-      h('div', { class: 'tpl' },
-        h('h4', null, 'MPLS core · IS-IS SR + LDP'),
-        h('p', null, '7250 IXR-X3b P routers as route reflectors; IXR-X1b, 7730 SXR-1d-32D and IXR-6e PEs. EVPN-MPLS E-LAN and a VPN-IPv4 L3VPN.'),
-        btn('Load template', () => replaceProject(S.buildMplsCore(), 'Loaded the MPLS core template.'))),
       h('div', { class: 'tpl' },
         h('h4', null, 'Empty lab'),
         h('p', null, 'Two 7220 IXR-D2L nodes and nothing else. Add nodes, links and services by hand.'),
@@ -1619,34 +1531,21 @@ pre.code .h{color:var(--ink);font-weight:600}
       isEbgp ? h('div', { class: 'grid2' },
         field('Spine AS', txt('d-as-s', d.asnSpine, v => { d.asnSpine = v; }, { mono: true, num: true })),
         field('Super-spine AS', txt('d-as-ss', d.asnSuperspine, v => { d.asnSuperspine = v; }, { mono: true, num: true })),
-        field('First leaf / PE AS', txt('d-as-l', d.asnLeafBase, v => { d.asnLeafBase = v; }, { mono: true, num: true }), 'Increments per node')) : null,
+        field('First leaf AS', txt('d-as-l', d.asnLeafBase, v => { d.asnLeafBase = v; }, { mono: true, num: true }), 'Increments per node')) : null,
       d.underlay === 'isis' ? h('div', { class: 'grid2' },
         field('Area', txt('d-isa', d.isisArea, v => { d.isisArea = v; }, { mono: true })),
         field('Level', sel('d-isl', d.isisLevel, [{ v: 'L2', l: 'Level 2' }, { v: 'L1', l: 'Level 1' }, { v: 'L1L2', l: 'Level 1-2' }], v => { d.isisLevel = v; }))) : null,
       d.underlay === 'ospf' ? h('div', { class: 'grid2' }, field('Area', txt('d-osa', d.ospfArea, v => { d.ospfArea = v; }, { mono: true }))) : null,
       d.underlay !== 'none' ? chk('d-bfd', d.bfd, v => { d.bfd = v; }, 'BFD on fabric links (100 ms × 3)') : null);
 
-    const mpls = d.transport === 'mpls';
     const over = h('div', { class: 'block' },
-      h('h2', null, 'Overlay and transport'),
+      h('h2', null, 'EVPN-VXLAN overlay'),
       h('div', { class: 'row' },
         fieldDiv('EVPN overlay', seg(d.overlay, [{ v: 'ibgp', l: 'iBGP EVPN' }, { v: 'none', l: 'None' }], v => { d.overlay = v; }, 'Overlay')),
-        field('Overlay AS', txt('d-oas', d.overlayAsn, v => { d.overlayAsn = v; }, { mono: true, num: true })),
-        fieldDiv('Service transport', seg(d.transport, [{ v: 'vxlan', l: 'VXLAN' }, { v: 'mpls', l: 'MPLS' }], v => {
-          d.transport = v;
-          if (v === 'mpls' && (d.underlay !== 'isis' && d.underlay !== 'ospf')) { d.underlay = 'isis'; toast('MPLS needs an IGP: underlay switched to IS-IS.'); }
-        }, 'Transport'))),
+        field('Overlay AS', txt('d-oas', d.overlayAsn, v => { d.overlayAsn = v; }, { mono: true, num: true }))),
       h('p', { class: 'lede' }, d.overlay === 'ibgp'
-        ? 'Nodes marked RR reflect EVPN (and VPN-IPv4 with IP-VPN) to every leaf or PE. With no RR the service nodes form a full mesh. ' + (isEbgp ? 'The overlay group uses local-as so it stays iBGP on top of per-node underlay ASNs.' : '')
-        : 'No overlay: services stay local to each node.'),
-      mpls ? h('div', { class: 'stack' },
-        h('div', { class: 'row' },
-          chk('d-ldp', d.ldp, v => { d.ldp = v; }, 'LDP'),
-          chk('d-sr', d.srmpls, v => { d.srmpls = v; }, 'SR-MPLS (IS-IS node SIDs)')),
-        d.srmpls ? h('div', { class: 'grid2' },
-          field('SRGB start', txt('d-sgs', d.srgbStart, v => { d.srgbStart = v; }, { mono: true, num: true })),
-          field('SRGB end', txt('d-sge', d.srgbEnd, v => { d.srgbEnd = v; }, { mono: true, num: true }))) : null,
-        h('p', { class: 'note' }, 'Label blocks: SRGB static (shared), SRLB 24000–24999, LDP 100000–109999, services 110000–119999. In the SR Linux container the MPLS datapath runs on 7250 IXR and 7730 SXR types.')) : null);
+        ? 'Nodes marked RR reflect EVPN routes to every leaf. With no RR the leaves form a full iBGP mesh. Services ride VXLAN on vxlan1. ' + (isEbgp ? 'The overlay group uses local-as so it stays iBGP on top of per-node underlay ASNs.' : '')
+        : 'No overlay: services stay local to each leaf.'));
 
     return h('div', { class: 'stack' },
       h('div', { class: 'block' }, h('h2', null, 'Start from a template'), h('p', { class: 'lede' }, 'Templates replace the current lab. Everything stays editable afterwards, and Undo brings the previous lab back.'), tpls),
@@ -1722,7 +1621,7 @@ pre.code .h{color:var(--ink);font-weight:600}
     const card = h('div', { class: 'node' + (ui.focus === n.id ? ' focus' : ''), id: 'node-' + n.id },
       h('div', { class: 'node-h' },
         field('Name', txt(`n-${n.id}-name`, n.name, v => { n.name = v.trim(); }, { mono: true })),
-        field('Role', sel(`n-${n.id}-role`, n.role, S.ROLES.map(r => ({ v: r, l: ROLE_LABEL[r] })), v => { n.role = v; n.rr = v === 'spine' || v === 'superspine' || (v === 'p' && n.rr); })),
+        field('Role', sel(`n-${n.id}-role`, n.role, S.ROLES.map(r => ({ v: r, l: ROLE_LABEL[r] })), v => { n.role = v; n.rr = v === 'spine' || v === 'superspine'; })),
         field('Hardware (containerlab type)', sel(`n-${n.id}-type`, n.type, platformOptions(), v => { n.type = v; n.card = null; n.breakouts = {}; ui.portSel[n.id] = undefined; })),
         h('div', { class: 'tail' },
           h('button', { type: 'button', class: 'btn small ghost', 'aria-expanded': String(open), onclick: () => { open ? ui.open.delete(n.id) : ui.open.add(n.id); renderEditor(); } }, icon('ports'), open ? 'Hide ports' : 'Ports'),
@@ -1733,7 +1632,7 @@ pre.code .h{color:var(--ink);font-weight:600}
           field('System IP', txt(`n-${n.id}-sys`, n.sys, v => { n.sys = v.trim(); }, { mono: true, ph: plan && plan.sys.get(n.id) ? plan.sys.get(n.id) + ' (auto)' : 'auto' })),
           isEbgp ? field('Underlay AS', txt(`n-${n.id}-asn`, n.asn, v => { n.asn = v.trim(); }, { mono: true, num: true, ph: plan && plan.asn.get(n.id) ? plan.asn.get(n.id) + ' (auto)' : 'auto' })) : null,
           d.overlay === 'ibgp' ? h('div', { class: 'f' }, h('span', null, 'EVPN'), chk(`n-${n.id}-rr`, n.rr, v => { n.rr = v; }, 'Route reflector')) : null,
-          h('div', { class: 'f' }, h('span', null, 'Platform'), h('div', { class: 'kindtag' }, p ? `${p.family} · ${p.license === true ? 'license needed' : p.license === false ? 'no license' : 'license: check'}${p.mpls ? ' · MPLS' : ''}` : '—'))),
+          h('div', { class: 'f' }, h('span', null, 'Platform'), h('div', { class: 'kindtag' }, p ? `${p.family} · ${p.license === true ? 'license needed' : p.license === false ? 'no license' : 'license: check'}` : '—'))),
         open ? faceplate(n) : null));
     return card;
   }
@@ -1840,7 +1739,6 @@ pre.code .h{color:var(--ink);font-weight:600}
   function nextEvi() { const used = new Set(project.services.map(s => Number(s.evi))); let e = 10; while (used.has(e)) e += 10; return e; }
   function renderServices() {
     const d = project.design;
-    const mpls = d.transport === 'mpls';
     const plan = gen && gen.plan;
     const ipvrfs = project.services.filter(s => s.kind === 'ip-vrf');
     const cards = project.services.map(s => {
@@ -1848,7 +1746,7 @@ pre.code .h{color:var(--ink);font-weight:600}
       const sp = plan && plan.svcPlan.get(s.id);
       const common = [
         field('EVI', txt(`s-${s.id}-evi`, s.evi, v => { s.evi = v.trim(); }, { mono: true, num: true }), 'Also the RT: target:' + d.overlayAsn + ':' + s.evi),
-        !mpls ? field('VNI', txt(`s-${s.id}-vni`, s.vni, v => { s.vni = v.trim(); }, { mono: true, num: true, ph: String(s.evi) })) : null,
+        field('VNI', txt(`s-${s.id}-vni`, s.vni, v => { s.vni = v.trim(); }, { mono: true, num: true, ph: String(s.evi) })),
         field('Description', txt(`s-${s.id}-desc`, s.description, v => { s.description = v; })),
       ];
       const specific = s.kind === 'mac-vrf' ? [
@@ -1856,7 +1754,7 @@ pre.code .h{color:var(--ink);font-weight:600}
         field('IRB into', sel(`s-${s.id}-irb`, s.irb, [{ v: '', l: 'None (pure L2)' }, ...ipvrfs.map(v => ({ v: v.id, l: v.name }))], v => { s.irb = v; })),
         s.irb ? field('Anycast gateway', txt(`s-${s.id}-gw`, s.gw, v => { s.gw = v.trim(); }, { mono: true, ph: sp && sp.gw ? sp.gw + ' (auto)' : 'auto' })) : null,
       ] : [
-        fieldDiv('Signalling', seg(mpls && s.signaling === 'ipvpn' ? 'ipvpn' : 'evpn', [{ v: 'evpn', l: 'EVPN IFL (RT5)' }, { v: 'ipvpn', l: 'IP-VPN', disabled: !mpls, title: mpls ? null : 'IP-VPN needs MPLS transport' }], v => { s.signaling = v; }, 'Signalling')),
+        h('div', { class: 'f' }, h('span', null, 'Signalling'), h('div', { class: 'kindtag', style: 'padding-top:8px' }, 'EVPN IFL (RT5) over VXLAN')),
       ];
       return h('div', { class: 'svc' },
         h('div', { class: 'svc-h' },
@@ -1881,10 +1779,10 @@ pre.code .h{color:var(--ink);font-weight:600}
     });
     return h('div', { class: 'stack' },
       h('div', { class: 'bar' },
-        h('p', { class: 'lede', style: 'margin:0' }, mpls ? 'Services ride EVPN-MPLS (MAC-VRF, IP-VRF) or VPN-IPv4 (IP-VRF with IP-VPN) over LDP / SR-MPLS tunnels.' : 'Services ride EVPN-VXLAN on vxlan1. A MAC-VRF with an IRB gets a distributed anycast gateway in its IP-VRF (symmetric IRB).'),
+        h('p', { class: 'lede', style: 'margin:0' }, 'Services ride EVPN-VXLAN on vxlan1. A MAC-VRF with an IRB gets a distributed anycast gateway in its IP-VRF (symmetric IRB).'),
         h('div', { class: 'actions' },
           btn('MAC-VRF', () => { const e = nextEvi(); project.services.push({ id: S.nid('s'), kind: 'mac-vrf', name: `mac-vrf-${e}`, evi: e, vni: e, subnet: `172.16.${e % 256}.0/24`, gw: '', irb: ipvrfs[0] ? ipvrfs[0].id : '', extra: [], description: '' }); commit(); }, { icon: 'plus' }),
-          btn('IP-VRF', () => { const e = nextEvi(); project.services.push({ id: S.nid('s'), kind: 'ip-vrf', name: `ip-vrf-${e}`, evi: e, vni: e, signaling: mpls ? 'ipvpn' : 'evpn', extra: [], description: '' }); commit(); }, { icon: 'plus' }))),
+          btn('IP-VRF', () => { const e = nextEvi(); project.services.push({ id: S.nid('s'), kind: 'ip-vrf', name: `ip-vrf-${e}`, evi: e, vni: e, signaling: 'evpn', extra: [], description: '' }); commit(); }, { icon: 'plus' }))),
       cards.length ? h('div', { class: 'stack' }, cards) : h('div', { class: 'empty' }, 'No services yet.'));
   }
 
@@ -1919,7 +1817,7 @@ pre.code .h{color:var(--ink);font-weight:600}
     if (!project.nodes.length) return '';
     const pos = new Map();
     const H = tiers.length * rowH + 16;
-    const TL = { 0: 'Super-spine', 1: 'Spine / P', 2: 'Leaf / PE', 3: 'Hosts' };
+    const TL = { 0: 'Super-spine', 1: 'Spine', 2: 'Leaf', 3: 'Hosts' };
     let out = '';
     tiers.forEach((t, ri) => {
       const ns = project.nodes.filter(n => tierOf(n) === t);

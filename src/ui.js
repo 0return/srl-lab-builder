@@ -48,8 +48,7 @@
   function saveLocal() { try { localStorage.setItem(STORE, JSON.stringify(project)); } catch (e) { /* storage unavailable */ } }
   function isProject(p) { return p && typeof p === 'object' && Array.isArray(p.nodes) && Array.isArray(p.links) && Array.isArray(p.services) && p.design && typeof p.design === 'object'; }
 
-  let project = loadLocal() || S.buildClos();
-  project.design = Object.assign(S.defaultDesign(), project.design);
+  let project = S.normalize(loadLocal() || S.buildClos());
   const ui = { tab: 'design', portSel: {}, open: new Set(), file: null, focus: null, prev: null,
     wiz: { spines: 2, leaves: 4, spineType: 'ixr-d3l', leafType: 'ixr-d2l', hostsPerLeaf: 1, dualHomed: true, underlay: 'ebgp' } };
   try { const t = localStorage.getItem(STORE + ':tab'); if (['design', 'nodes', 'links', 'services'].includes(t)) ui.tab = t; } catch (e) { }
@@ -112,7 +111,7 @@
   }
   const MEDIA_VAR = { 'RJ45': '--m-rj45', 'SFP+': '--m-sfpp', 'SFP28': '--m-sfp28', 'SFP-DD': '--m-sfpdd', 'QSFP28': '--m-qsfp28', 'QSFP-DD': '--m-qsfpdd', 'QSFP56-DD': '--m-qsfp56', 'QSFP112-DD': '--m-qsfp112', 'OSFP': '--m-osfp' };
   const mediaColor = m => `var(${MEDIA_VAR[m] || '--m-rj45'})`;
-  const ROLE_LABEL = { superspine: 'Super-spine', spine: 'Spine', leaf: 'Leaf', borderleaf: 'Border leaf', pe: 'PE', p: 'P' };
+  const ROLE_LABEL = { superspine: 'Super-spine', spine: 'Spine', leaf: 'Leaf', borderleaf: 'Border leaf' };
 
   // ───────────── top bar ─────────────
   const topEl = document.getElementById('top');
@@ -165,7 +164,7 @@
   // ── Design tab ──
   function replaceProject(p, msg) {
     ui.prev = JSON.parse(JSON.stringify(project));
-    project = p; project.design = Object.assign(S.defaultDesign(), p.design);
+    project = S.normalize(p);
     ui.file = null; ui.open.clear(); ui.portSel = {};
     commit(); renderTop();
     toast(msg, 'Undo', () => { if (ui.prev) { project = ui.prev; ui.prev = null; commit(); renderTop(); } });
@@ -193,10 +192,6 @@
         h('h4', null, 'DC fabric · IXR-H + border leaf'),
         h('p', null, '7220 IXR-H5-64D spines, IXR-H4-32D leaves and a 7250 IXR-X3b border leaf. BGP unnumbered underlay over IPv6 link-local, EVPN-VXLAN overlay.'),
         btn('Load template', () => replaceProject(S.buildAiFabric(), 'Loaded the IXR-H fabric template.'))),
-      h('div', { class: 'tpl' },
-        h('h4', null, 'MPLS core · IS-IS SR + LDP'),
-        h('p', null, '7250 IXR-X3b P routers as route reflectors; IXR-X1b, 7730 SXR-1d-32D and IXR-6e PEs. EVPN-MPLS E-LAN and a VPN-IPv4 L3VPN.'),
-        btn('Load template', () => replaceProject(S.buildMplsCore(), 'Loaded the MPLS core template.'))),
       h('div', { class: 'tpl' },
         h('h4', null, 'Empty lab'),
         h('p', null, 'Two 7220 IXR-D2L nodes and nothing else. Add nodes, links and services by hand.'),
@@ -237,34 +232,21 @@
       isEbgp ? h('div', { class: 'grid2' },
         field('Spine AS', txt('d-as-s', d.asnSpine, v => { d.asnSpine = v; }, { mono: true, num: true })),
         field('Super-spine AS', txt('d-as-ss', d.asnSuperspine, v => { d.asnSuperspine = v; }, { mono: true, num: true })),
-        field('First leaf / PE AS', txt('d-as-l', d.asnLeafBase, v => { d.asnLeafBase = v; }, { mono: true, num: true }), 'Increments per node')) : null,
+        field('First leaf AS', txt('d-as-l', d.asnLeafBase, v => { d.asnLeafBase = v; }, { mono: true, num: true }), 'Increments per node')) : null,
       d.underlay === 'isis' ? h('div', { class: 'grid2' },
         field('Area', txt('d-isa', d.isisArea, v => { d.isisArea = v; }, { mono: true })),
         field('Level', sel('d-isl', d.isisLevel, [{ v: 'L2', l: 'Level 2' }, { v: 'L1', l: 'Level 1' }, { v: 'L1L2', l: 'Level 1-2' }], v => { d.isisLevel = v; }))) : null,
       d.underlay === 'ospf' ? h('div', { class: 'grid2' }, field('Area', txt('d-osa', d.ospfArea, v => { d.ospfArea = v; }, { mono: true }))) : null,
       d.underlay !== 'none' ? chk('d-bfd', d.bfd, v => { d.bfd = v; }, 'BFD on fabric links (100 ms × 3)') : null);
 
-    const mpls = d.transport === 'mpls';
     const over = h('div', { class: 'block' },
-      h('h2', null, 'Overlay and transport'),
+      h('h2', null, 'EVPN-VXLAN overlay'),
       h('div', { class: 'row' },
         fieldDiv('EVPN overlay', seg(d.overlay, [{ v: 'ibgp', l: 'iBGP EVPN' }, { v: 'none', l: 'None' }], v => { d.overlay = v; }, 'Overlay')),
-        field('Overlay AS', txt('d-oas', d.overlayAsn, v => { d.overlayAsn = v; }, { mono: true, num: true })),
-        fieldDiv('Service transport', seg(d.transport, [{ v: 'vxlan', l: 'VXLAN' }, { v: 'mpls', l: 'MPLS' }], v => {
-          d.transport = v;
-          if (v === 'mpls' && (d.underlay !== 'isis' && d.underlay !== 'ospf')) { d.underlay = 'isis'; toast('MPLS needs an IGP: underlay switched to IS-IS.'); }
-        }, 'Transport'))),
+        field('Overlay AS', txt('d-oas', d.overlayAsn, v => { d.overlayAsn = v; }, { mono: true, num: true }))),
       h('p', { class: 'lede' }, d.overlay === 'ibgp'
-        ? 'Nodes marked RR reflect EVPN (and VPN-IPv4 with IP-VPN) to every leaf or PE. With no RR the service nodes form a full mesh. ' + (isEbgp ? 'The overlay group uses local-as so it stays iBGP on top of per-node underlay ASNs.' : '')
-        : 'No overlay: services stay local to each node.'),
-      mpls ? h('div', { class: 'stack' },
-        h('div', { class: 'row' },
-          chk('d-ldp', d.ldp, v => { d.ldp = v; }, 'LDP'),
-          chk('d-sr', d.srmpls, v => { d.srmpls = v; }, 'SR-MPLS (IS-IS node SIDs)')),
-        d.srmpls ? h('div', { class: 'grid2' },
-          field('SRGB start', txt('d-sgs', d.srgbStart, v => { d.srgbStart = v; }, { mono: true, num: true })),
-          field('SRGB end', txt('d-sge', d.srgbEnd, v => { d.srgbEnd = v; }, { mono: true, num: true }))) : null,
-        h('p', { class: 'note' }, 'Label blocks: SRGB static (shared), SRLB 24000–24999, LDP 100000–109999, services 110000–119999. In the SR Linux container the MPLS datapath runs on 7250 IXR and 7730 SXR types.')) : null);
+        ? 'Nodes marked RR reflect EVPN routes to every leaf. With no RR the leaves form a full iBGP mesh. Services ride VXLAN on vxlan1. ' + (isEbgp ? 'The overlay group uses local-as so it stays iBGP on top of per-node underlay ASNs.' : '')
+        : 'No overlay: services stay local to each leaf.'));
 
     return h('div', { class: 'stack' },
       h('div', { class: 'block' }, h('h2', null, 'Start from a template'), h('p', { class: 'lede' }, 'Templates replace the current lab. Everything stays editable afterwards, and Undo brings the previous lab back.'), tpls),
@@ -340,7 +322,7 @@
     const card = h('div', { class: 'node' + (ui.focus === n.id ? ' focus' : ''), id: 'node-' + n.id },
       h('div', { class: 'node-h' },
         field('Name', txt(`n-${n.id}-name`, n.name, v => { n.name = v.trim(); }, { mono: true })),
-        field('Role', sel(`n-${n.id}-role`, n.role, S.ROLES.map(r => ({ v: r, l: ROLE_LABEL[r] })), v => { n.role = v; n.rr = v === 'spine' || v === 'superspine' || (v === 'p' && n.rr); })),
+        field('Role', sel(`n-${n.id}-role`, n.role, S.ROLES.map(r => ({ v: r, l: ROLE_LABEL[r] })), v => { n.role = v; n.rr = v === 'spine' || v === 'superspine'; })),
         field('Hardware (containerlab type)', sel(`n-${n.id}-type`, n.type, platformOptions(), v => { n.type = v; n.card = null; n.breakouts = {}; ui.portSel[n.id] = undefined; })),
         h('div', { class: 'tail' },
           h('button', { type: 'button', class: 'btn small ghost', 'aria-expanded': String(open), onclick: () => { open ? ui.open.delete(n.id) : ui.open.add(n.id); renderEditor(); } }, icon('ports'), open ? 'Hide ports' : 'Ports'),
@@ -351,7 +333,7 @@
           field('System IP', txt(`n-${n.id}-sys`, n.sys, v => { n.sys = v.trim(); }, { mono: true, ph: plan && plan.sys.get(n.id) ? plan.sys.get(n.id) + ' (auto)' : 'auto' })),
           isEbgp ? field('Underlay AS', txt(`n-${n.id}-asn`, n.asn, v => { n.asn = v.trim(); }, { mono: true, num: true, ph: plan && plan.asn.get(n.id) ? plan.asn.get(n.id) + ' (auto)' : 'auto' })) : null,
           d.overlay === 'ibgp' ? h('div', { class: 'f' }, h('span', null, 'EVPN'), chk(`n-${n.id}-rr`, n.rr, v => { n.rr = v; }, 'Route reflector')) : null,
-          h('div', { class: 'f' }, h('span', null, 'Platform'), h('div', { class: 'kindtag' }, p ? `${p.family} · ${p.license === true ? 'license needed' : p.license === false ? 'no license' : 'license: check'}${p.mpls ? ' · MPLS' : ''}` : '—'))),
+          h('div', { class: 'f' }, h('span', null, 'Platform'), h('div', { class: 'kindtag' }, p ? `${p.family} · ${p.license === true ? 'license needed' : p.license === false ? 'no license' : 'license: check'}` : '—'))),
         open ? faceplate(n) : null));
     return card;
   }
@@ -458,7 +440,6 @@
   function nextEvi() { const used = new Set(project.services.map(s => Number(s.evi))); let e = 10; while (used.has(e)) e += 10; return e; }
   function renderServices() {
     const d = project.design;
-    const mpls = d.transport === 'mpls';
     const plan = gen && gen.plan;
     const ipvrfs = project.services.filter(s => s.kind === 'ip-vrf');
     const cards = project.services.map(s => {
@@ -466,7 +447,7 @@
       const sp = plan && plan.svcPlan.get(s.id);
       const common = [
         field('EVI', txt(`s-${s.id}-evi`, s.evi, v => { s.evi = v.trim(); }, { mono: true, num: true }), 'Also the RT: target:' + d.overlayAsn + ':' + s.evi),
-        !mpls ? field('VNI', txt(`s-${s.id}-vni`, s.vni, v => { s.vni = v.trim(); }, { mono: true, num: true, ph: String(s.evi) })) : null,
+        field('VNI', txt(`s-${s.id}-vni`, s.vni, v => { s.vni = v.trim(); }, { mono: true, num: true, ph: String(s.evi) })),
         field('Description', txt(`s-${s.id}-desc`, s.description, v => { s.description = v; })),
       ];
       const specific = s.kind === 'mac-vrf' ? [
@@ -474,7 +455,7 @@
         field('IRB into', sel(`s-${s.id}-irb`, s.irb, [{ v: '', l: 'None (pure L2)' }, ...ipvrfs.map(v => ({ v: v.id, l: v.name }))], v => { s.irb = v; })),
         s.irb ? field('Anycast gateway', txt(`s-${s.id}-gw`, s.gw, v => { s.gw = v.trim(); }, { mono: true, ph: sp && sp.gw ? sp.gw + ' (auto)' : 'auto' })) : null,
       ] : [
-        fieldDiv('Signalling', seg(mpls && s.signaling === 'ipvpn' ? 'ipvpn' : 'evpn', [{ v: 'evpn', l: 'EVPN IFL (RT5)' }, { v: 'ipvpn', l: 'IP-VPN', disabled: !mpls, title: mpls ? null : 'IP-VPN needs MPLS transport' }], v => { s.signaling = v; }, 'Signalling')),
+        h('div', { class: 'f' }, h('span', null, 'Signalling'), h('div', { class: 'kindtag', style: 'padding-top:8px' }, 'EVPN IFL (RT5) over VXLAN')),
       ];
       return h('div', { class: 'svc' },
         h('div', { class: 'svc-h' },
@@ -499,10 +480,10 @@
     });
     return h('div', { class: 'stack' },
       h('div', { class: 'bar' },
-        h('p', { class: 'lede', style: 'margin:0' }, mpls ? 'Services ride EVPN-MPLS (MAC-VRF, IP-VRF) or VPN-IPv4 (IP-VRF with IP-VPN) over LDP / SR-MPLS tunnels.' : 'Services ride EVPN-VXLAN on vxlan1. A MAC-VRF with an IRB gets a distributed anycast gateway in its IP-VRF (symmetric IRB).'),
+        h('p', { class: 'lede', style: 'margin:0' }, 'Services ride EVPN-VXLAN on vxlan1. A MAC-VRF with an IRB gets a distributed anycast gateway in its IP-VRF (symmetric IRB).'),
         h('div', { class: 'actions' },
           btn('MAC-VRF', () => { const e = nextEvi(); project.services.push({ id: S.nid('s'), kind: 'mac-vrf', name: `mac-vrf-${e}`, evi: e, vni: e, subnet: `172.16.${e % 256}.0/24`, gw: '', irb: ipvrfs[0] ? ipvrfs[0].id : '', extra: [], description: '' }); commit(); }, { icon: 'plus' }),
-          btn('IP-VRF', () => { const e = nextEvi(); project.services.push({ id: S.nid('s'), kind: 'ip-vrf', name: `ip-vrf-${e}`, evi: e, vni: e, signaling: mpls ? 'ipvpn' : 'evpn', extra: [], description: '' }); commit(); }, { icon: 'plus' }))),
+          btn('IP-VRF', () => { const e = nextEvi(); project.services.push({ id: S.nid('s'), kind: 'ip-vrf', name: `ip-vrf-${e}`, evi: e, vni: e, signaling: 'evpn', extra: [], description: '' }); commit(); }, { icon: 'plus' }))),
       cards.length ? h('div', { class: 'stack' }, cards) : h('div', { class: 'empty' }, 'No services yet.'));
   }
 
@@ -537,7 +518,7 @@
     if (!project.nodes.length) return '';
     const pos = new Map();
     const H = tiers.length * rowH + 16;
-    const TL = { 0: 'Super-spine', 1: 'Spine / P', 2: 'Leaf / PE', 3: 'Hosts' };
+    const TL = { 0: 'Super-spine', 1: 'Spine', 2: 'Leaf', 3: 'Hosts' };
     let out = '';
     tiers.forEach((t, ri) => {
       const ns = project.nodes.filter(n => tierOf(n) === t);

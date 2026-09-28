@@ -71,70 +71,70 @@
   const H5_BO = n => [{ ports: `odd 1-${n - 1}`, modes: ['8x100G', '4x100G'] }, { ports: `1-${n}`, modes: ['2x200G', '2x100G'] }];
 
   const PLATFORMS = [
-    { type: 'ixs-a1', family: '7215 IXS', name: '7215 IXS-A1', license: 'unknown', mpls: false,
+    { type: 'ixs-a1', family: '7215 IXS', name: '7215 IXS-A1', license: 'unknown',
       ports: [G(1, 48, 'RJ45', '1G'), G(49, 52, 'SFP+', '10G')], breakout: [] },
 
-    { type: 'ixr-d1', family: '7220 IXR-D', name: '7220 IXR-D1', license: false, mpls: false,
+    { type: 'ixr-d1', family: '7220 IXR-D', name: '7220 IXR-D1', license: false,
       ports: [G(1, 48, 'RJ45', '1G'), G(49, 52, 'SFP+', '10G')], breakout: [] },
-    { type: 'ixr-d2', family: '7220 IXR-D', name: '7220 IXR-D2', license: false, mpls: false,
+    { type: 'ixr-d2', family: '7220 IXR-D', name: '7220 IXR-D2', license: false,
       ports: [G(1, 48, 'SFP28', '25G'), G(49, 56, 'QSFP28', '100G')], breakout: [] },
-    { type: 'ixr-d2l', family: '7220 IXR-D', name: '7220 IXR-D2L', license: false, mpls: false,
+    { type: 'ixr-d2l', family: '7220 IXR-D', name: '7220 IXR-D2L', license: false,
       ports: [G(1, 48, 'SFP28', '25G'), G(49, 56, 'QSFP28', '100G'), G(57, 58, 'SFP+', '10G')], breakout: [] },
-    { type: 'ixr-d3', family: '7220 IXR-D', name: '7220 IXR-D3', license: false, mpls: false,
+    { type: 'ixr-d3', family: '7220 IXR-D', name: '7220 IXR-D3', license: false,
       ports: [G(1, 32, 'QSFP28', '100G'), G(33, 34, 'SFP+', '10G')], breakout: [{ ports: '1-32', modes: ['4x25G', '4x10G'] }] },
-    { type: 'ixr-d3l', family: '7220 IXR-D', name: '7220 IXR-D3L', license: false, mpls: false,
+    { type: 'ixr-d3l', family: '7220 IXR-D', name: '7220 IXR-D3L', license: false,
       ports: [G(1, 32, 'QSFP28', '100G'), G(33, 34, 'SFP+', '10G')], breakout: [{ ports: '1-32', modes: ['4x25G', '4x10G', '2x50G'] }] },
-    { type: 'ixr-d4', family: '7220 IXR-D', name: '7220 IXR-D4', license: false, mpls: false,
+    { type: 'ixr-d4', family: '7220 IXR-D', name: '7220 IXR-D4', license: false,
       ports: [G(1, 28, 'QSFP28', '100G'), G(29, 36, 'QSFP-DD', '400G')],
       breakout: [{ ports: '29-32', modes: ['4x100G', '4x25G', '4x10G'] }, { ports: '9,23-27', modes: ['4x25G', '4x10G'] }] },
-    { type: 'ixr-d5', family: '7220 IXR-D', name: '7220 IXR-D5', license: false, mpls: false,
+    { type: 'ixr-d5', family: '7220 IXR-D', name: '7220 IXR-D5', license: false,
       ports: [G(1, 32, 'QSFP-DD', '400G'), G(33, 34, 'SFP+', '10G')],
       breakout: [{ ports: '1-32', modes: ['4x100G', '2x200G', '2x100G', '4x50G', '2x50G', '4x25G', '4x10G'] }] },
 
-    { type: 'ixr-h2', family: '7220 IXR-H', name: '7220 IXR-H2', license: false, mpls: false,
+    { type: 'ixr-h2', family: '7220 IXR-H', name: '7220 IXR-H2', license: false,
       ports: [G(1, 128, 'QSFP28', '100G')], breakout: [] },
-    { type: 'ixr-h3', family: '7220 IXR-H', name: '7220 IXR-H3', license: false, mpls: false,
+    { type: 'ixr-h3', family: '7220 IXR-H', name: '7220 IXR-H3', license: false,
       ports: [G(1, 32, 'QSFP-DD', '400G'), G(33, 34, 'SFP+', '10G')],
       breakout: [{ ports: '1-32', modes: ['4x100G', '2x200G', '2x100G', '4x25G', '4x10G'] }] },
-    { type: 'ixr-h4', family: '7220 IXR-H', name: '7220 IXR-H4', license: false, mpls: false,
+    { type: 'ixr-h4', family: '7220 IXR-H', name: '7220 IXR-H4', license: false,
       ports: [G(1, 64, 'QSFP-DD', '400G'), G(65, 66, 'SFP+', '10G')], breakout: [{ ports: '1-64', modes: ['4x100G', '2x200G'] }] },
-    { type: 'ixr-h4-32d', family: '7220 IXR-H', name: '7220 IXR-H4-32D', license: false, mpls: false,
+    { type: 'ixr-h4-32d', family: '7220 IXR-H', name: '7220 IXR-H4-32D', license: false,
       ports: [G(1, 32, 'QSFP-DD', '400G'), G(33, 33, 'SFP+', '10G')], breakout: [{ ports: '1-32', modes: ['4x100G', '2x200G', '2x100G'] }] },
-    { type: 'ixr-h5-32d', family: '7220 IXR-H', name: '7220 IXR-H5-32D', license: false, mpls: false,
+    { type: 'ixr-h5-32d', family: '7220 IXR-H', name: '7220 IXR-H5-32D', license: false,
       ports: [G(1, 32, 'QSFP112-DD', '800G'), G(33, 34, 'SFP+', '10G')], breakout: H5_BO(32) },
-    { type: 'ixr-h5-64d', family: '7220 IXR-H', name: '7220 IXR-H5-64D', license: false, mpls: false,
+    { type: 'ixr-h5-64d', family: '7220 IXR-H', name: '7220 IXR-H5-64D', license: false,
       ports: [G(1, 64, 'QSFP112-DD', '800G'), G(65, 66, 'SFP+', '10G')], breakout: H5_BO(64) },
-    { type: 'ixr-h5-64o', family: '7220 IXR-H', name: '7220 IXR-H5-64O', license: false, mpls: false,
+    { type: 'ixr-h5-64o', family: '7220 IXR-H', name: '7220 IXR-H5-64O', license: false,
       ports: [G(1, 64, 'OSFP', '800G'), G(65, 66, 'SFP+', '10G')], breakout: H5_BO(64) },
-    { type: 'ixr-h6', family: '7220 IXR-H', name: '7220 IXR-H6-64', license: false, mpls: false,
+    { type: 'ixr-h6', family: '7220 IXR-H', name: '7220 IXR-H6-64', license: false,
       ports: [G(1, 64, 'OSFP', '1.6T')], breakout: null, portsNote: 'Port layout taken from launch material (102.4T, 64 × 1.6TE); not yet in the SR Linux hardware tables.' },
 
-    { type: 'ixr-x1b', family: '7250 IXR-X', name: '7250 IXR-X1b', license: true, mpls: true,
+    { type: 'ixr-x1b', family: '7250 IXR-X', name: '7250 IXR-X1b', license: true,
       ports: [G(1, 24, 'QSFP28', '100G'), G(25, 36, 'QSFP-DD', '400G')],
       breakout: [{ ports: '1-24', modes: ['4x25G', '4x10G'], note: 'port-group restrictions apply' }, { ports: '25-36', modes: ['4x100G', '4x25G', '4x10G'] }] },
-    { type: 'ixr-x3b', family: '7250 IXR-X', name: '7250 IXR-X3b', license: true, mpls: true,
+    { type: 'ixr-x3b', family: '7250 IXR-X', name: '7250 IXR-X3b', license: true,
       ports: [G(1, 36, 'QSFP56-DD', '400G')], breakout: [{ ports: '1-36', modes: ['4x100G', '4x25G', '4x10G'] }] },
-    { type: 'ixr-x4', family: '7250 IXR-X', name: '7250 IXR-X4 (QSFP-DD)', license: true, mpls: true,
+    { type: 'ixr-x4', family: '7250 IXR-X', name: '7250 IXR-X4 (QSFP-DD)', license: true,
       ports: [G(1, 32, 'QSFP112-DD', '800G')], breakout: null },
 
-    { type: 'ixr-6e', family: '7250 IXR-e', name: '7250 IXR-6e', license: true, mpls: true, modular: true,
+    { type: 'ixr-6e', family: '7250 IXR-e', name: '7250 IXR-6e', license: true, modular: true,
       cards: ['imm36-400g-qsfpdd', 'imm60-100g-qsfp28', 'imm2-36-400g-sync-qsfpdd', 'imm3-36-800g-qsfpdd', 'imm3-36-800g-osfp'], defaultCard: 'imm36-400g-qsfpdd' },
-    { type: 'ixr-10e', family: '7250 IXR-e', name: '7250 IXR-10e', license: true, mpls: true, modular: true,
+    { type: 'ixr-10e', family: '7250 IXR-e', name: '7250 IXR-10e', license: true, modular: true,
       cards: ['imm36-400g-qsfpdd', 'imm60-100g-qsfp28', 'imm2-36-400g-sync-qsfpdd', 'imm3-36-800g-qsfpdd', 'imm3-36-800g-osfp'], defaultCard: 'imm36-400g-qsfpdd' },
-    { type: 'ixr-18e', family: '7250 IXR-e', name: '7250 IXR-18e', license: true, mpls: true, modular: true,
+    { type: 'ixr-18e', family: '7250 IXR-e', name: '7250 IXR-18e', license: true, modular: true,
       cards: ['imm3-18-800g-qsfpdd', 'imm3-36-800g-sync-qsfpdd', 'imm3-36-800g-osfp'], defaultCard: 'imm3-18-800g-qsfpdd' },
-    { type: 'ixr-6', family: '7250 IXR (gen1)', name: '7250 IXR-6', license: true, mpls: true, modular: true,
+    { type: 'ixr-6', family: '7250 IXR (gen1)', name: '7250 IXR-6', license: true, modular: true,
       cards: ['imm32-100g-qsfp28+4-400g-qsfpdd'], defaultCard: 'imm32-100g-qsfp28+4-400g-qsfpdd', fixedCard: true },
-    { type: 'ixr-10', family: '7250 IXR (gen1)', name: '7250 IXR-10', license: true, mpls: true, modular: true,
+    { type: 'ixr-10', family: '7250 IXR (gen1)', name: '7250 IXR-10', license: true, modular: true,
       cards: ['imm32-100g-qsfp28+4-400g-qsfpdd'], defaultCard: 'imm32-100g-qsfp28+4-400g-qsfpdd', fixedCard: true },
 
-    { type: 'sxr-1d-32d', family: '7730 SXR', name: '7730 SXR-1d-32D', license: true, mpls: true,
+    { type: 'sxr-1d-32d', family: '7730 SXR', name: '7730 SXR-1d-32D', license: true,
       ports: [G(1, 16, 'QSFP28', '100G'), G(17, 20, 'QSFP-DD', '400G'), G(21, 32, 'QSFP28', '100G')],
       breakout: [{ ports: '17-20', modes: ['4x100G', '4x25G', '4x10G'] }, { ports: '1-16,21-32', modes: ['4x25G', '4x10G'], note: 'port-group restrictions apply' }] },
-    { type: 'sxr-1-32d', family: '7730 SXR', name: '7730 SXR-1-32D', license: true, mpls: true,
+    { type: 'sxr-1-32d', family: '7730 SXR', name: '7730 SXR-1-32D', license: true,
       ports: [G(1, 16, 'QSFP28', '100G'), G(17, 20, 'QSFP-DD', '400G'), G(21, 32, 'QSFP28', '100G')],
       breakout: null, portsNote: 'Same 28×QSFP28 + 4×QSFP-DD mix as the SXR-1d-32D; port order assumed identical.' },
-    { type: 'sxr-1x-44s', family: '7730 SXR', name: '7730 SXR-1x-44S', license: true, mpls: true,
+    { type: 'sxr-1x-44s', family: '7730 SXR', name: '7730 SXR-1x-44S', license: true,
       ports: [G(1, 20, 'SFP-DD', '100G'), G(21, 22, 'QSFP-DD', '400G'), G(23, 42, 'SFP-DD', '100G'), G(43, 44, 'QSFP-DD', '400G')],
       breakout: [{ ports: '21,22,43,44', modes: ['4x100G', '4x25G', '4x10G'] }] },
   ];
@@ -197,8 +197,8 @@
   }
 
   // ───────────────────────── model defaults ─────────────────────────
-  const ROLES = ['superspine', 'spine', 'leaf', 'borderleaf', 'pe', 'p'];
-  const ROLE_TIER = { superspine: 0, spine: 1, p: 1, leaf: 2, borderleaf: 2, pe: 2, host: 3 };
+  const ROLES = ['superspine', 'spine', 'leaf', 'borderleaf'];
+  const ROLE_TIER = { superspine: 0, spine: 1, leaf: 2, borderleaf: 2, host: 3 };
 
   function defaultDesign() {
     return {
@@ -208,15 +208,27 @@
       underlay: 'ebgp', isisArea: '49.0001', isisLevel: 'L2', ospfArea: '0.0.0.0', bfd: false,
       asnSpine: 65100, asnSuperspine: 65200, asnLeafBase: 65001,
       overlay: 'ibgp', overlayAsn: 65500,
-      transport: 'vxlan', ldp: true, srmpls: true, srgbStart: 16000, srgbEnd: 23999,
     };
+  }
+
+  // Bring older saved projects (which had an MPLS option and PE/P roles)
+  // in line with the EVPN-VXLAN-only model.
+  function normalize(project) {
+    const p = project || {};
+    const d = Object.assign(defaultDesign(), p.design || {});
+    ['transport', 'ldp', 'srmpls', 'srgbStart', 'srgbEnd'].forEach(k => { delete d[k]; });
+    p.design = d;
+    (p.nodes || []).forEach(n => { if (n.role === 'pe') n.role = 'leaf'; if (n.role === 'p') n.role = 'spine'; });
+    (p.services || []).forEach(sv => { if (sv.kind === 'ip-vrf') sv.signaling = 'evpn'; });
+    return p;
   }
 
   // ───────────────────────── resolution ─────────────────────────
   // Turns the editable project into a fully-addressed plan that every
   // generator reads. Issues found on the way are collected, never thrown.
   function resolve(project) {
-    const d = Object.assign(defaultDesign(), project.design || {});
+    normalize(project);
+    const d = project.design;
     const nodes = project.nodes || [];
     const links = project.links || [];
     const services = project.services || [];
@@ -413,15 +425,13 @@
       if (!/^[A-Za-z0-9][A-Za-z0-9_.-]*$/.test(s.name || '')) issues.push({ level: 'error', msg: `Service name “${s.name}” is not a valid network-instance name.` });
     });
 
-    if (d.transport !== 'mpls') {
-      const vniSeen = new Map();
-      services.forEach(s => {
-        const v = Number(s.vni) || Number(s.evi);
-        if (!(v >= 1 && v <= 16777215)) issues.push({ level: 'error', msg: `${s.name}: VNI must be 1–16777215.` });
-        if (vniSeen.has(v)) issues.push({ level: 'error', msg: `${s.name} and ${vniSeen.get(v)} use the same VNI ${v}.` });
-        vniSeen.set(v, s.name);
-      });
-    }
+    const vniSeen = new Map();
+    services.forEach(s => {
+      const v = Number(s.vni) || Number(s.evi);
+      if (!(v >= 1 && v <= 16777215)) issues.push({ level: 'error', msg: `${s.name}: VNI must be 1–16777215.` });
+      if (vniSeen.has(v)) issues.push({ level: 'error', msg: `${s.name} and ${vniSeen.get(v)} use the same VNI ${v}.` });
+      vniSeen.set(v, s.name);
+    });
 
     // Host addressing per attachment (bonds counted once)
     const hostCfg = new Map(); // host id -> {ifaces:[{dev, parent, vlan, ip, gw, svc}], bonds:[]}
@@ -463,7 +473,7 @@
     // overlay peering
     const rr = srl.filter(n => n.rr);
     const svcNodes = new Set(); svcPlan.forEach(p => p.nodes.forEach(id => svcNodes.add(id)));
-    const clients = srl.filter(n => !n.rr && (svcNodes.has(n.id) || ['leaf', 'borderleaf', 'pe'].includes(n.role)));
+    const clients = srl.filter(n => !n.rr && (svcNodes.has(n.id) || ['leaf', 'borderleaf'].includes(n.role)));
     const overlayPeers = new Map();
     if (d.overlay === 'ibgp') {
       if (rr.length) {
@@ -475,20 +485,6 @@
       }
     }
     if (services.length && d.overlay !== 'ibgp') issues.push({ level: 'warn', msg: 'Services need the iBGP EVPN overlay to exchange routes between nodes.' });
-
-    // transport checks
-    if (d.transport === 'mpls') {
-      if (d.underlay !== 'isis' && d.underlay !== 'ospf') issues.push({ level: 'error', msg: 'MPLS transport needs an IGP underlay (IS-IS or OSPF).' });
-      if (d.srmpls && d.underlay !== 'isis') issues.push({ level: 'error', msg: 'SR-MPLS in this builder is signalled with IS-IS; select the IS-IS underlay.' });
-      if (!d.ldp && !d.srmpls) issues.push({ level: 'error', msg: 'MPLS transport needs LDP, SR-MPLS or both.' });
-      srl.forEach(n => {
-        const p = PLATFORM[n.type];
-        if (p && !p.mpls) issues.push({ level: 'warn', msg: `${n.name}: ${p.name} does not run an MPLS datapath in the SR Linux container (7250 IXR and 7730 SXR types do).`, node: n.id });
-        const h = hw(n);
-        if (h && h.gen === 'gen3') issues.push({ level: 'info', msg: `${n.name}: Gen3 IMMs can require the per-type label blocks under “system mpls services network-instance dynamic-label-blocks” (26.3+). The generated config uses the shared dynamic-label-block form.`, node: n.id });
-      });
-    }
-    if (d.underlay === 'ebgp-unnumbered' && d.transport === 'mpls') issues.push({ level: 'error', msg: 'BGP unnumbered underlay is for VXLAN fabrics here; use IS-IS for MPLS.' });
 
     hosts.forEach(h => { if (!resolvedLinks.some(r => r.A === h || r.B === h)) issues.push({ level: 'info', msg: `${h.name} has no links.`, node: h.id }); });
 
@@ -506,7 +502,6 @@
     const underAsn = plan.asn.get(node.id);
     const isEbgp = d.underlay === 'ebgp' || d.underlay === 'ebgp-unnumbered';
     const unnumbered = d.underlay === 'ebgp-unnumbered';
-    const mpls = d.transport === 'mpls';
     const ov = plan.overlayPeers.get(node.id);
 
     L.push(`# ${node.name} — ${h ? h.platform.name + (h.card ? ' / ' + h.card : '') : node.type} — SR Linux ${d.version}`);
@@ -648,28 +643,6 @@
       });
     }
 
-    // MPLS label blocks
-    if (mpls) {
-      sec('MPLS label blocks');
-      if (d.srmpls) {
-        S('system mpls label-ranges static SRGB shared true');
-        S(`system mpls label-ranges static SRGB start-label ${d.srgbStart}`);
-        S(`system mpls label-ranges static SRGB end-label ${d.srgbEnd}`);
-        S('system mpls label-ranges dynamic SRLB start-label 24000');
-        S('system mpls label-ranges dynamic SRLB end-label 24999');
-      }
-      if (d.ldp) {
-        S('system mpls label-ranges dynamic D-LDP start-label 100000');
-        S('system mpls label-ranges dynamic D-LDP end-label 109999');
-      }
-      S('system mpls label-ranges dynamic D-SVC-NI start-label 110000');
-      S('system mpls label-ranges dynamic D-SVC-NI end-label 114999');
-      S('system mpls label-ranges dynamic D-SVC-EVPN start-label 115000');
-      S('system mpls label-ranges dynamic D-SVC-EVPN end-label 119999');
-      S('system mpls services network-instance dynamic-label-block D-SVC-NI');
-      S('system mpls services evpn dynamic-label-block D-SVC-EVPN');
-    }
-
     // Underlay
     const ni = 'network-instance default protocols';
     if (d.underlay === 'isis') {
@@ -687,12 +660,6 @@
         S(`${I} interface ${f.port}.0 circuit-type point-to-point`);
         if (d.bfd) S(`${I} interface ${f.port}.0 ipv4-unicast enable-bfd true`);
       });
-      if (mpls && d.srmpls) {
-        S(`${ni} isis dynamic-label-block SRLB`);
-        S('network-instance default segment-routing mpls global-block label-range SRGB');
-        S(`${I} segment-routing mpls`);
-        S(`${I} interface system0.0 segment-routing mpls ipv4-node-sid index ${plan.srl.indexOf(node) + 1}`);
-      }
     } else if (d.underlay === 'ospf') {
       sec('Underlay: OSPFv2');
       const I = `${ni} ospf instance main`;
@@ -706,15 +673,6 @@
         S(`${A} interface ${f.port}.0 admin-state enable`);
         S(`${A} interface ${f.port}.0 interface-type point-to-point`);
         if (d.bfd) S(`${A} interface ${f.port}.0 failure-detection enable-bfd true`);
-      });
-    }
-
-    if (mpls && d.ldp) {
-      sec('LDP');
-      S(`${ni} ldp admin-state enable`);
-      S(`${ni} ldp dynamic-label-block D-LDP`);
-      myFabric.forEach(f => {
-        S(`${ni} ldp discovery interfaces interface ${f.port}.0 ipv4 admin-state enable`);
       });
     }
 
@@ -767,8 +725,6 @@
         S(`${og} transport local-address ${sysIp}`);
         S(`${og} afi-safi evpn admin-state enable`);
         S(`${og} afi-safi ipv4-unicast admin-state disable`);
-        const needVpn = mpls && [...plan.svcPlan.values()].some(p => p.svc.kind === 'ip-vrf' && p.svc.signaling === 'ipvpn' && (p.nodes.has(node.id) || ov.rrClient));
-        if (needVpn) S(`${og} afi-safi l3vpn-ipv4-unicast admin-state enable`);
         if (ov.rrClient) {
           S(`${og} route-reflector client true`);
           S(`${og} route-reflector cluster-id ${sysIp}`);
@@ -785,14 +741,13 @@
     const mySvcs = [...plan.svcPlan.values()].filter(p => p.nodes.has(node.id));
     const macs = mySvcs.filter(p => p.svc.kind === 'mac-vrf');
     const ipvrfs = mySvcs.filter(p => p.svc.kind === 'ip-vrf');
-    const allowed = [d.ldp && 'ldp', d.srmpls && 'sr-isis'].filter(Boolean).join(' ');
     const rt = s => `target:${d.overlayAsn}:${s.evi}`;
     const vpn = (name, s) => {
       S(`network-instance ${name} protocols bgp-vpn bgp-instance 1 route-distinguisher rd ${sysIp}:${s.evi}`);
       S(`network-instance ${name} protocols bgp-vpn bgp-instance 1 route-target export-rt ${rt(s)}`);
       S(`network-instance ${name} protocols bgp-vpn bgp-instance 1 route-target import-rt ${rt(s)}`);
     };
-    if (!mpls && (macs.length || ipvrfs.some(p => p.svc.signaling !== 'ipvpn'))) {
+    if (macs.length || ipvrfs.length) {
       sec('VXLAN tunnel interfaces');
       macs.forEach(p => {
         const vni = Number(p.svc.vni) || Number(p.svc.evi);
@@ -808,7 +763,7 @@
     macs.forEach(p => {
       const s = p.svc, N = `network-instance ${s.name}`;
       const vni = Number(s.vni) || Number(s.evi);
-      sec(`MAC-VRF ${s.name} (EVI ${s.evi}${mpls ? ', EVPN-MPLS' : ', VNI ' + vni})`);
+      sec(`MAC-VRF ${s.name} (EVI ${s.evi}, VNI ${vni})`);
       const irbVrf = s.irb && plan.svcById.get(s.irb);
       if (irbVrf && p.gwCidr) {
         const ii = `interface irb0 subinterface ${s.evi}`;
@@ -828,13 +783,10 @@
       S(`${N} description ${q(s.description || 'L2 EVI ' + s.evi)}`);
       svcSubifs(s).forEach(x => S(`${N} interface ${x}`));
       if (irbVrf && p.gwCidr) S(`${N} interface irb0.${s.evi}`);
-      if (!mpls) S(`${N} vxlan-interface vxlan1.${vni}`);
+      S(`${N} vxlan-interface vxlan1.${vni}`);
       const bi = `${N} protocols bgp-evpn bgp-instance 1`;
       S(`${bi} admin-state enable`);
-      if (mpls) {
-        S(`${bi} encapsulation-type mpls`);
-        S(`${bi} mpls next-hop-resolution allowed-tunnel-types [ ${allowed} ]`);
-      } else S(`${bi} vxlan-interface vxlan1.${vni}`);
+      S(`${bi} vxlan-interface vxlan1.${vni}`);
       S(`${bi} evi ${s.evi}`);
       S(`${bi} ecmp 4`);
       vpn(s.name, s);
@@ -842,28 +794,19 @@
     ipvrfs.forEach(p => {
       const s = p.svc, N = `network-instance ${s.name}`;
       const vni = Number(s.vni) || Number(s.evi);
-      const ipvpn = mpls && s.signaling === 'ipvpn';
-      sec(`IP-VRF ${s.name} (${ipvpn ? 'IP-VPN' : 'EVPN IFL'} ${mpls ? 'over MPLS' : 'VNI ' + vni})`);
+      sec(`IP-VRF ${s.name} (EVPN IFL, VNI ${vni})`);
       S(`${N} type ip-vrf`);
       S(`${N} admin-state enable`);
       S(`${N} description ${q(s.description || 'L3 VRF ' + s.evi)}`);
       svcSubifs(s).forEach(x => S(`${N} interface ${x}`));
       [...plan.svcPlan.values()].filter(m => m.svc.kind === 'mac-vrf' && m.svc.irb === s.id && m.nodes.has(node.id) && m.gwCidr)
         .forEach(m => S(`${N} interface irb0.${m.svc.evi}`));
-      if (ipvpn) {
-        S(`${N} protocols bgp-ipvpn bgp-instance 1 admin-state enable`);
-        S(`${N} protocols bgp-ipvpn bgp-instance 1 mpls next-hop-resolution allowed-tunnel-types [ ${allowed} ]`);
-      } else {
-        if (!mpls) S(`${N} vxlan-interface vxlan1.${vni}`);
-        const bi = `${N} protocols bgp-evpn bgp-instance 1`;
-        S(`${bi} admin-state enable`);
-        if (mpls) {
-          S(`${bi} encapsulation-type mpls`);
-          S(`${bi} mpls next-hop-resolution allowed-tunnel-types [ ${allowed} ]`);
-        } else S(`${bi} vxlan-interface vxlan1.${vni}`);
-        S(`${bi} evi ${s.evi}`);
-        S(`${bi} ecmp 8`);
-      }
+      S(`${N} vxlan-interface vxlan1.${vni}`);
+      const bi = `${N} protocols bgp-evpn bgp-instance 1`;
+      S(`${bi} admin-state enable`);
+      S(`${bi} vxlan-interface vxlan1.${vni}`);
+      S(`${bi} evi ${s.evi}`);
+      S(`${bi} ecmp 8`);
       vpn(s.name, s);
     });
 
@@ -955,8 +898,6 @@
     if (d.underlay.startsWith('ebgp') || d.overlay === 'ibgp') cmd.push('show network-instance default protocols bgp neighbor');
     if (d.underlay === 'isis') cmd.push('show network-instance default protocols isis adjacency');
     if (d.underlay === 'ospf') cmd.push('show network-instance default protocols ospf neighbor');
-    if (d.transport === 'mpls' && d.ldp) cmd.push('show network-instance default protocols ldp neighbor');
-    if (d.transport === 'mpls') cmd.push('show network-instance default tunnel-table all');
     cmd.push('show network-instance default route-table ipv4-unicast summary');
     if (d.overlay === 'ibgp') cmd.push('show network-instance default protocols bgp routes evpn route-type summary');
     plan.svcPlan.forEach(p => {
@@ -1042,32 +983,8 @@
         links.push(mkLink(lf, nextHostPort(lf), host, 'eth1', { svc: svc.id }));
       }
     });
-    const design = Object.assign(defaultDesign(), { lab: 'evpn-vxlan-fabric', underlay: opt.underlay, transport: 'vxlan' });
+    const design = Object.assign(defaultDesign(), { lab: 'evpn-vxlan-fabric', underlay: opt.underlay });
     return { design, nodes, links, services: [macA, macB, vrf] };
-  }
-
-  function buildMplsCore() {
-    const p1 = mkNode('p1', 'srl', 'ixr-x3b', 'p', { rr: true });
-    const p2 = mkNode('p2', 'srl', 'ixr-x3b', 'p', { rr: true });
-    const pe1 = mkNode('pe1', 'srl', 'ixr-x1b', 'pe', { rr: false });
-    const pe2 = mkNode('pe2', 'srl', 'sxr-1d-32d', 'pe', { rr: false });
-    const pe3 = mkNode('pe3', 'srl', 'ixr-6e', 'pe', { rr: false, card: 'imm60-100g-qsfp28' });
-    const ce1 = mkNode('ce1', 'linux'), ce2 = mkNode('ce2', 'linux'), ce3 = mkNode('ce3', 'linux');
-    const nodes = [p1, p2, pe1, pe2, pe3, ce1, ce2, ce3];
-    const links = [
-      mkLink(p1, 'ethernet-1/1', p2, 'ethernet-1/1'),
-      mkLink(pe1, 'ethernet-1/25', p1, 'ethernet-1/2'), mkLink(pe1, 'ethernet-1/26', p2, 'ethernet-1/2'),
-      mkLink(pe2, 'ethernet-1/17', p1, 'ethernet-1/3'), mkLink(pe2, 'ethernet-1/18', p2, 'ethernet-1/3'),
-      mkLink(pe3, 'ethernet-1/1', p1, 'ethernet-1/4'), mkLink(pe3, 'ethernet-1/2', p2, 'ethernet-1/4'),
-    ];
-    const l2 = { id: nid('s'), kind: 'mac-vrf', name: 'evpn-l2-300', evi: 300, vni: 300, subnet: '10.30.0.0/24', gw: '', irb: '', extra: [], description: 'E-LAN over EVPN-MPLS' };
-    const l3 = { id: nid('s'), kind: 'ip-vrf', name: 'vpn-blue', evi: 400, vni: 400, signaling: 'ipvpn', extra: [], description: 'L3VPN (VPN-IPv4)' };
-    links.push(mkLink(pe1, 'ethernet-1/1', ce1, 'eth1', { svc: l2.id, vlan: '300' }));
-    links.push(mkLink(pe2, 'ethernet-1/1', ce2, 'eth1', { svc: l2.id, vlan: '300' }));
-    links.push(mkLink(pe1, 'ethernet-1/2', ce1, 'eth2', { svc: l3.id }));
-    links.push(mkLink(pe3, 'ethernet-1/3', ce3, 'eth1', { svc: l3.id }));
-    const design = Object.assign(defaultDesign(), { lab: 'mpls-core', underlay: 'isis', transport: 'mpls', ldp: true, srmpls: true, overlayAsn: 65000, loopbacks: '10.255.0.0/24', p2p: '10.254.0.0/24' });
-    return { design, nodes, links, services: [l2, l3] };
   }
 
   function buildAiFabric() {
@@ -1086,8 +1003,8 @@
   const SRL = {
     PLATFORMS, PLATFORM, FAMILIES, LINECARDS, ROLES, ROLE_TIER, SRL_VERSIONS, GENERIC_BREAKOUTS,
     hw, portList, portCount, portGroup, breakoutOptions, parseMode, parsePort, parsePortSpec, parseCidr, int2ip, ip2int,
-    defaultDesign, resolve, generate, nodeConfig, clabYaml, readme, hostExec,
-    mkNode, mkLink, buildClos, buildMplsCore, buildAiFabric, leafPorts, nid,
+    defaultDesign, normalize, resolve, generate, nodeConfig, clabYaml, readme, hostExec,
+    mkNode, mkLink, buildClos, buildAiFabric, leafPorts, nid,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = SRL;
   else root.SRL = SRL;

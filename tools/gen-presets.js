@@ -12,9 +12,6 @@ const closI = S.buildClos({ underlay: 'isis' }); closI.design.bfd = true;
 variants.push(['clos-isis', closI]);
 const closO = S.buildClos({ underlay: 'ospf', spineType: 'ixr-h3', leafType: 'ixr-d3l' }); closO.design.bfd = true;
 variants.push(['clos-ospf', closO]);
-variants.push(['mpls', S.buildMplsCore()]);
-const mplsLdp = S.buildMplsCore(); mplsLdp.design.srmpls = false; mplsLdp.services[1].signaling = 'evpn';
-variants.push(['mpls-ldp-ifl', mplsLdp]);
 variants.push(['ai', S.buildAiFabric()]);
 // breakout variant
 const bo = S.buildClos({ spineType: 'ixr-d5', leafType: 'ixr-d3l' });
