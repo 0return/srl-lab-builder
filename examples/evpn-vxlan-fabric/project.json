@@ -1,0 +1,345 @@
+{
+  "design": {
+    "lab": "evpn-vxlan-fabric",
+    "version": "26.7.2",
+    "image": "",
+    "license": "./license.key",
+    "linuxImage": "ghcr.io/srl-labs/network-multitool",
+    "mgmt": "",
+    "loopbacks": "10.0.0.0/24",
+    "p2p": "192.168.0.0/24",
+    "p2pLen": 31,
+    "routedPool": "172.31.0.0/16",
+    "underlay": "ebgp",
+    "isisArea": "49.0001",
+    "isisLevel": "L2",
+    "ospfArea": "0.0.0.0",
+    "bfd": false,
+    "asnSpine": 65100,
+    "asnSuperspine": 65200,
+    "asnLeafBase": 65001,
+    "overlay": "ibgp",
+    "overlayAsn": 65500,
+    "transport": "vxlan",
+    "ldp": true,
+    "srmpls": true,
+    "srgbStart": 16000,
+    "srgbEnd": 23999
+  },
+  "nodes": [
+    {
+      "id": "nmulgpv6r0",
+      "name": "spine1",
+      "kind": "srl",
+      "type": "ixr-d3l",
+      "card": null,
+      "role": "spine",
+      "asn": "",
+      "sys": "",
+      "rr": true,
+      "breakouts": {}
+    },
+    {
+      "id": "nmulgpv6r1",
+      "name": "spine2",
+      "kind": "srl",
+      "type": "ixr-d3l",
+      "card": null,
+      "role": "spine",
+      "asn": "",
+      "sys": "",
+      "rr": true,
+      "breakouts": {}
+    },
+    {
+      "id": "nmulgpv6r2",
+      "name": "leaf1",
+      "kind": "srl",
+      "type": "ixr-d2l",
+      "card": null,
+      "role": "leaf",
+      "asn": "",
+      "sys": "",
+      "rr": false,
+      "breakouts": {}
+    },
+    {
+      "id": "nmulgpv6r3",
+      "name": "leaf2",
+      "kind": "srl",
+      "type": "ixr-d2l",
+      "card": null,
+      "role": "leaf",
+      "asn": "",
+      "sys": "",
+      "rr": false,
+      "breakouts": {}
+    },
+    {
+      "id": "nmulgpv6r4",
+      "name": "leaf3",
+      "kind": "srl",
+      "type": "ixr-d2l",
+      "card": null,
+      "role": "leaf",
+      "asn": "",
+      "sys": "",
+      "rr": false,
+      "breakouts": {}
+    },
+    {
+      "id": "nmulgpv6r5",
+      "name": "leaf4",
+      "kind": "srl",
+      "type": "ixr-d2l",
+      "card": null,
+      "role": "leaf",
+      "asn": "",
+      "sys": "",
+      "rr": false,
+      "breakouts": {}
+    },
+    {
+      "id": "nmulgpv6rh",
+      "name": "host1",
+      "kind": "linux",
+      "type": null,
+      "card": null,
+      "role": "host",
+      "asn": "",
+      "sys": "",
+      "rr": false,
+      "breakouts": {}
+    },
+    {
+      "id": "nmulgpv6rk",
+      "name": "host2",
+      "kind": "linux",
+      "type": null,
+      "card": null,
+      "role": "host",
+      "asn": "",
+      "sys": "",
+      "rr": false,
+      "breakouts": {}
+    },
+    {
+      "id": "nmulgpv6rm",
+      "name": "host3",
+      "kind": "linux",
+      "type": null,
+      "card": null,
+      "role": "host",
+      "asn": "",
+      "sys": "",
+      "rr": false,
+      "breakouts": {}
+    }
+  ],
+  "links": [
+    {
+      "id": "lmulgpv6r6",
+      "a": {
+        "n": "nmulgpv6r2",
+        "p": "ethernet-1/49"
+      },
+      "b": {
+        "n": "nmulgpv6r0",
+        "p": "ethernet-1/1"
+      },
+      "svc": "",
+      "vlan": "",
+      "bond": ""
+    },
+    {
+      "id": "lmulgpv6r7",
+      "a": {
+        "n": "nmulgpv6r2",
+        "p": "ethernet-1/50"
+      },
+      "b": {
+        "n": "nmulgpv6r1",
+        "p": "ethernet-1/1"
+      },
+      "svc": "",
+      "vlan": "",
+      "bond": ""
+    },
+    {
+      "id": "lmulgpv6r8",
+      "a": {
+        "n": "nmulgpv6r3",
+        "p": "ethernet-1/49"
+      },
+      "b": {
+        "n": "nmulgpv6r0",
+        "p": "ethernet-1/2"
+      },
+      "svc": "",
+      "vlan": "",
+      "bond": ""
+    },
+    {
+      "id": "lmulgpv6r9",
+      "a": {
+        "n": "nmulgpv6r3",
+        "p": "ethernet-1/50"
+      },
+      "b": {
+        "n": "nmulgpv6r1",
+        "p": "ethernet-1/2"
+      },
+      "svc": "",
+      "vlan": "",
+      "bond": ""
+    },
+    {
+      "id": "lmulgpv6ra",
+      "a": {
+        "n": "nmulgpv6r4",
+        "p": "ethernet-1/49"
+      },
+      "b": {
+        "n": "nmulgpv6r0",
+        "p": "ethernet-1/3"
+      },
+      "svc": "",
+      "vlan": "",
+      "bond": ""
+    },
+    {
+      "id": "lmulgpv6rb",
+      "a": {
+        "n": "nmulgpv6r4",
+        "p": "ethernet-1/50"
+      },
+      "b": {
+        "n": "nmulgpv6r1",
+        "p": "ethernet-1/3"
+      },
+      "svc": "",
+      "vlan": "",
+      "bond": ""
+    },
+    {
+      "id": "lmulgpv6rc",
+      "a": {
+        "n": "nmulgpv6r5",
+        "p": "ethernet-1/49"
+      },
+      "b": {
+        "n": "nmulgpv6r0",
+        "p": "ethernet-1/4"
+      },
+      "svc": "",
+      "vlan": "",
+      "bond": ""
+    },
+    {
+      "id": "lmulgpv6rd",
+      "a": {
+        "n": "nmulgpv6r5",
+        "p": "ethernet-1/50"
+      },
+      "b": {
+        "n": "nmulgpv6r1",
+        "p": "ethernet-1/4"
+      },
+      "svc": "",
+      "vlan": "",
+      "bond": ""
+    },
+    {
+      "id": "lmulgpv6ri",
+      "a": {
+        "n": "nmulgpv6r2",
+        "p": "ethernet-1/1"
+      },
+      "b": {
+        "n": "nmulgpv6rh",
+        "p": "eth1"
+      },
+      "svc": "smulgpv6re",
+      "vlan": "",
+      "bond": "bond0"
+    },
+    {
+      "id": "lmulgpv6rj",
+      "a": {
+        "n": "nmulgpv6r3",
+        "p": "ethernet-1/1"
+      },
+      "b": {
+        "n": "nmulgpv6rh",
+        "p": "eth2"
+      },
+      "svc": "smulgpv6re",
+      "vlan": "",
+      "bond": "bond0"
+    },
+    {
+      "id": "lmulgpv6rl",
+      "a": {
+        "n": "nmulgpv6r4",
+        "p": "ethernet-1/1"
+      },
+      "b": {
+        "n": "nmulgpv6rk",
+        "p": "eth1"
+      },
+      "svc": "smulgpv6rf",
+      "vlan": "",
+      "bond": ""
+    },
+    {
+      "id": "lmulgpv6rn",
+      "a": {
+        "n": "nmulgpv6r5",
+        "p": "ethernet-1/1"
+      },
+      "b": {
+        "n": "nmulgpv6rm",
+        "p": "eth1"
+      },
+      "svc": "smulgpv6re",
+      "vlan": "",
+      "bond": ""
+    }
+  ],
+  "services": [
+    {
+      "id": "smulgpv6re",
+      "kind": "mac-vrf",
+      "name": "mac-vrf-10",
+      "evi": 10,
+      "vni": 10,
+      "subnet": "172.16.10.0/24",
+      "gw": "",
+      "irb": "smulgpv6rg",
+      "extra": [],
+      "description": "Tenant A · VLAN 10"
+    },
+    {
+      "id": "smulgpv6rf",
+      "kind": "mac-vrf",
+      "name": "mac-vrf-20",
+      "evi": 20,
+      "vni": 20,
+      "subnet": "172.16.20.0/24",
+      "gw": "",
+      "irb": "smulgpv6rg",
+      "extra": [],
+      "description": "Tenant A · VLAN 20"
+    },
+    {
+      "id": "smulgpv6rg",
+      "kind": "ip-vrf",
+      "name": "tenant-a",
+      "evi": 100,
+      "vni": 100,
+      "signaling": "evpn",
+      "extra": [],
+      "description": "Tenant A routing"
+    }
+  ]
+}
