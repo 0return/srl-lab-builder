@@ -1,0 +1,13 @@
+{
+  "name": "srl-lab-builder",
+  "version": "0.1.0",
+  "description": "Nokia SR Linux lab and startup-config generator for containerlab",
+  "private": true,
+  "scripts": {
+    "build": "python3 build.py",
+    "start": "python3 -m http.server 3000",
+    "presets": "node tools/gen-presets.js"
+  },
+  "license": "MIT",
+  "homepage": "https://0return.github.io/srl-lab-builder/"
+}

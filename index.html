@@ -1,0 +1,2111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SRL Lab Builder</title>
+<meta name="description" content="Build Nokia SR Linux containerlab topologies for every 7215, 7220, 7250 and 7730 type and generate startup configs.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Semi+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+</head>
+<body>
+<style>
+:root{
+  --bg:#EDF0F2; --surface:#FFFFFF; --surface-2:#F5F7F8; --sunken:#E6EAED;
+  --line:#D3DAE0; --line-2:#E3E8EC;
+  --ink:#15212B; --ink-2:#465665; --muted:#77868F;
+  --accent:#00788A; --accent-ink:#FFFFFF; --accent-soft:#D8EEF1;
+  --wire:#0F8A7E; --wire-2:#9AA7B2;
+  --ok:#2C7A3F; --warn:#A8670F; --err:#B83227; --info:#51606D;
+  --ok-soft:#E1F1E5; --warn-soft:#FBEFD9; --err-soft:#F9E1DE; --info-soft:#E8ECEF;
+  --chassis:#1E262F; --chassis-2:#2A343F; --chassis-ink:#C9D3DC;
+  --code-bg:#F7F9FA; --code-ink:#1E2A34; --c-com:#7D8B96; --c-kw:#9AA6B0; --c-str:#9A4E14; --c-num:#1F6F43; --c-if:#00788A; --c-key:#5B3FA6;
+  --m-rj45:#7D8995; --m-sfpp:#6F8A2A; --m-sfp28:#2F8A55; --m-sfpdd:#23847B; --m-qsfp28:#2A6FB0; --m-qsfpdd:#6A4FB3; --m-qsfp56:#7E4AB0; --m-qsfp112:#9A4AA3; --m-osfp:#B25638;
+  --radius:6px;
+  --f-ui:"Barlow", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --f-cond:"Barlow Semi Condensed", "Barlow", "Arial Narrow", system-ui, sans-serif;
+  --f-mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0E1419; --surface:#151D24; --surface-2:#1A232B; --sunken:#10171D;
+    --line:#2A3641; --line-2:#222D36;
+    --ink:#E1E7EC; --ink-2:#A9B5BF; --muted:#7A8995;
+    --accent:#3DB5C3; --accent-ink:#06181B; --accent-soft:#16343A;
+    --wire:#3FBFAE; --wire-2:#5D6C78;
+    --ok:#5CC179; --warn:#E0A443; --err:#EE6B5E; --info:#98A6B2;
+    --ok-soft:#173222; --warn-soft:#3A2A10; --err-soft:#3E1C19; --info-soft:#1F2931;
+    --chassis:#0A0F13; --chassis-2:#1B242C; --chassis-ink:#B6C2CC;
+    --code-bg:#0F161C; --code-ink:#D7DFE5; --c-com:#667682; --c-kw:#5F6E7A; --c-str:#E3A26A; --c-num:#7FD19B; --c-if:#5CCAD6; --c-key:#B9A2F2;
+    --m-rj45:#8995A0; --m-sfpp:#9BB54A; --m-sfp28:#57B97D; --m-sfpdd:#4DB6AB; --m-qsfp28:#5A9BE0; --m-qsfpdd:#9A82E6; --m-qsfp56:#AC7BE0; --m-qsfp112:#CB7BD2; --m-osfp:#E0845F;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0E1419; --surface:#151D24; --surface-2:#1A232B; --sunken:#10171D;
+  --line:#2A3641; --line-2:#222D36;
+  --ink:#E1E7EC; --ink-2:#A9B5BF; --muted:#7A8995;
+  --accent:#3DB5C3; --accent-ink:#06181B; --accent-soft:#16343A;
+  --wire:#3FBFAE; --wire-2:#5D6C78;
+  --ok:#5CC179; --warn:#E0A443; --err:#EE6B5E; --info:#98A6B2;
+  --ok-soft:#173222; --warn-soft:#3A2A10; --err-soft:#3E1C19; --info-soft:#1F2931;
+  --chassis:#0A0F13; --chassis-2:#1B242C; --chassis-ink:#B6C2CC;
+  --code-bg:#0F161C; --code-ink:#D7DFE5; --c-com:#667682; --c-kw:#5F6E7A; --c-str:#E3A26A; --c-num:#7FD19B; --c-if:#5CCAD6; --c-key:#B9A2F2;
+  --m-rj45:#8995A0; --m-sfpp:#9BB54A; --m-sfp28:#57B97D; --m-sfpdd:#4DB6AB; --m-qsfp28:#5A9BE0; --m-qsfpdd:#9A82E6; --m-qsfp56:#AC7BE0; --m-qsfp112:#CB7BD2; --m-osfp:#E0845F;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 var(--f-ui);-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+
+/* ── top bar ── */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line);
+  display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;padding-block:10px;padding-inline:16px}
+.brand{display:flex;align-items:baseline;gap:10px;min-width:0}
+.brand b{font:700 21px/1 var(--f-cond);letter-spacing:.2px;white-space:nowrap}
+.brand b i{font-style:normal;color:var(--accent)}
+.brand small{font:500 12px/1.2 var(--f-cond);letter-spacing:.8px;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.top .grow{flex:1 1 20px}
+.top .labname{display:flex;align-items:center;gap:8px}
+.top .labname label{font:600 12px var(--f-cond);letter-spacing:.8px;text-transform:uppercase;color:var(--muted)}
+.top .labname input{width:180px;font-family:var(--f-mono);font-size:14px}
+.actions{display:flex;flex-wrap:wrap;gap:8px}
+
+@media (max-width:640px){
+  .top{position:static;gap:8px 12px}
+  .brand small{display:none}
+  .top .labname input{width:150px}
+  .tab{padding:9px 10px 8px;font-size:14px}
+}
+/* ── layout ── */
+.wrap{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:16px;padding-block:16px;padding-inline:16px;max-width:1720px;margin:0 auto}
+@media (max-width:1060px){.wrap{grid-template-columns:minmax(0,1fr)}}
+.pane{min-width:0}
+.preview{position:sticky;top:calc(env(safe-area-inset-top,0px) + 74px);align-self:start;display:grid;gap:14px;max-height:calc(100vh - 90px);overflow:auto;padding-bottom:4px}
+@media (max-width:1060px){.preview{position:static;max-height:none;overflow:visible}}
+
+/* ── tabs ── */
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--line);margin-bottom:14px;overflow-x:auto}
+.tab{appearance:none;border:0;background:none;padding:10px 14px 9px;font:600 15px var(--f-cond);letter-spacing:.3px;color:var(--ink-2);cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;display:flex;gap:7px;align-items:center}
+.tab:hover{color:var(--ink)}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.count{font:600 11px/1 var(--f-mono);padding:3px 6px;border-radius:10px;background:var(--sunken);color:var(--ink-2)}
+.tab[aria-selected="true"] .count{background:var(--accent-soft);color:var(--accent)}
+
+/* ── blocks ── */
+.block{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px;display:grid;gap:14px}
+.stack{display:grid;gap:14px}
+.block h2,.panel-h{margin:0;font:700 17px/1.2 var(--f-cond);letter-spacing:.2px;text-wrap:balance}
+.block h3{margin:0;font:600 13px var(--f-cond);letter-spacing:.9px;text-transform:uppercase;color:var(--muted)}
+.lede{margin:0;color:var(--ink-2);max-width:68ch}
+.row{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:flex-end}
+.grid2{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px 14px}
+.bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px}
+
+/* ── form ── */
+.f{display:grid;gap:5px;min-width:0}
+.f > span{font:600 12px/1.2 var(--f-cond);letter-spacing:.7px;text-transform:uppercase;color:var(--muted)}
+.f > em{font-style:normal;font-size:12.5px;color:var(--muted)}
+input[type=text],input[type=number],select{width:100%;min-width:0;background:var(--surface-2);border:1px solid var(--line);border-radius:4px;padding:7px 9px;font-size:14px;line-height:1.3}
+input.mono,select.mono{font-family:var(--f-mono);font-size:13.5px}
+input::placeholder{color:var(--muted);opacity:.85}
+input:hover,select:hover{border-color:var(--wire-2)}
+input:focus,select:focus{border-color:var(--accent);outline:none;box-shadow:0 0 0 3px var(--accent-soft)}
+select{cursor:pointer}
+.check{display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-size:14px;user-select:none}
+.check input{width:16px;height:16px;accent-color:var(--accent);margin:0}
+.seg{display:inline-flex;flex-wrap:wrap;border:1px solid var(--line);border-radius:5px;overflow:hidden;background:var(--surface-2)}
+.seg button{appearance:none;border:0;border-right:1px solid var(--line);background:none;padding:7px 12px;font:600 14px var(--f-cond);letter-spacing:.2px;color:var(--ink-2);cursor:pointer}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.seg button:not([aria-pressed="true"]):hover{background:var(--sunken);color:var(--ink)}
+
+.btn{appearance:none;display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:5px;padding:7px 12px;font:600 14px/1.1 var(--f-cond);letter-spacing:.3px;cursor:pointer;white-space:nowrap}
+.btn:hover{border-color:var(--wire-2);background:var(--surface-2)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.primary:hover{filter:brightness(1.07)}
+.btn.small{padding:5px 9px;font-size:13px}
+.btn.ghost{border-color:transparent;background:none;color:var(--ink-2)}
+.btn.ghost:hover{background:var(--sunken);color:var(--ink)}
+.btn.danger:hover{color:var(--err);border-color:var(--err)}
+.btn svg{width:15px;height:15px;flex:none}
+.iconbtn{appearance:none;border:1px solid transparent;background:none;color:var(--muted);border-radius:4px;width:30px;height:30px;display:inline-grid;place-items:center;cursor:pointer;flex:none}
+.iconbtn:hover{background:var(--sunken);color:var(--err)}
+.iconbtn svg{width:15px;height:15px}
+
+/* ── templates ── */
+.tpls{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.tpl{border:1px solid var(--line);border-radius:var(--radius);padding:14px;display:grid;gap:10px;align-content:start;background:var(--surface-2)}
+.tpl h4{margin:0;font:700 16px var(--f-cond)}
+.tpl p{margin:0;color:var(--ink-2);font-size:13.5px}
+.tpl .mini{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tpl .btn{justify-self:start}
+
+/* ── node cards ── */
+.nodes{display:grid;gap:10px}
+.node{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius)}
+.node.focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.node-h{display:grid;grid-template-columns:minmax(100px,.9fr) minmax(104px,.75fr) minmax(190px,2fr) auto;gap:10px;align-items:end;padding:12px 12px 10px}
+.node-h .tail{display:flex;gap:4px;align-items:center;padding-bottom:1px}
+.node-b{border-top:1px dashed var(--line-2);padding:10px 12px 12px;display:grid;gap:12px}
+.node-meta{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px 12px;align-items:end}
+.node .kindtag{font:600 11px var(--f-mono);letter-spacing:.3px;color:var(--muted)}
+.hostcard .node-h{grid-template-columns:minmax(120px,1fr) 2fr auto}
+.hostsum{font-size:13px;color:var(--ink-2);font-family:var(--f-mono);align-self:center;overflow-wrap:anywhere}
+@media (max-width:640px){.node-h{grid-template-columns:1fr 1fr}.node-h .tail{grid-column:1/-1;justify-content:flex-end}.hostcard .node-h{grid-template-columns:1fr auto}.hostcard .hostsum{grid-column:1/-1}}
+
+/* ── faceplate ── */
+.face{background:var(--chassis);border-radius:5px;padding:10px 12px 8px;color:var(--chassis-ink);overflow-x:auto}
+.face-top{display:flex;justify-content:space-between;gap:12px;font:600 11.5px var(--f-cond);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;white-space:nowrap}
+.face-top span:last-child{color:#8895A1}
+.cages{display:grid;grid-auto-flow:column;grid-template-rows:repeat(2,auto);gap:4px 3px;justify-content:start;padding-bottom:4px}
+.cage{appearance:none;width:24px;height:19px;border-radius:2px;border:1.5px solid var(--m, #7d8995);background:var(--chassis-2);position:relative;cursor:pointer;padding:0;display:grid;place-items:center;font:600 8.5px/1 var(--f-mono);color:#8FA0AE}
+.cage.gap{margin-left:8px}
+.cage.used{background:color-mix(in srgb, var(--m) 55%, var(--chassis-2))}
+.cage.used::after{content:"";position:absolute;right:2px;top:2px;width:4px;height:4px;border-radius:50%;background:#5CE08A;box-shadow:0 0 4px #5CE08A}
+.cage.bo{background:repeating-linear-gradient(90deg,var(--chassis-2) 0 4px,color-mix(in srgb, var(--m) 45%, var(--chassis-2)) 4px 5px)}
+.cage.sel{outline:2px solid #fff;outline-offset:1px}
+.cage:hover{filter:brightness(1.3)}
+.face.compact .cage{width:19px;height:16px;font-size:7.5px;border-width:1.25px}
+.face.compact .cages{gap:3px 2px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 12px;margin-top:8px;font:500 11.5px var(--f-cond);letter-spacing:.4px}
+.legend i{display:inline-block;width:10px;height:8px;border:1.5px solid var(--m);border-radius:1px;margin-right:5px;vertical-align:0}
+.portinfo{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px 14px;align-items:end;background:var(--surface-2);border:1px solid var(--line-2);border-radius:5px;padding:10px 12px}
+.portinfo .pname{font:600 14px var(--f-mono)}
+.portinfo .pdesc{font-size:13px;color:var(--ink-2)}
+
+/* ── links ── */
+.links{display:grid;gap:8px}
+.link{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr) 24px minmax(0,1fr) minmax(0,1.25fr) 30px;gap:6px 8px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:9px 10px}
+.link .swap{color:var(--muted);text-align:center;font:600 14px var(--f-mono)}
+.link .extra{grid-column:1/-1;display:grid;grid-template-columns:auto minmax(120px,1.4fr) minmax(90px,.7fr) minmax(90px,.7fr);gap:8px;align-items:center}
+.link .extra.fabric{grid-template-columns:auto 1fr}
+.link .fabricinfo{font:500 13px var(--f-mono);color:var(--ink-2);overflow-wrap:anywhere}
+.link.bad{border-color:var(--err)}
+.kind{font:700 11px/1 var(--f-cond);letter-spacing:.9px;text-transform:uppercase;padding:4px 7px;border-radius:3px;white-space:nowrap}
+.kind.fabric{background:var(--accent-soft);color:var(--accent)}
+.kind.access{background:var(--ok-soft);color:var(--ok)}
+.kind.other{background:var(--info-soft);color:var(--info)}
+@media (max-width:640px){
+  .link{grid-template-columns:1fr 1fr 30px}
+  .link .swap{display:none}
+  .link > :nth-child(1){grid-column:1}.link > :nth-child(2){grid-column:2}
+  .link > :nth-child(4){grid-column:1}.link > :nth-child(5){grid-column:2}
+  .link > :nth-child(6){grid-column:3;grid-row:1}
+  .link .extra{grid-template-columns:1fr 1fr}
+}
+
+/* ── services ── */
+.svc{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:12px;display:grid;gap:12px}
+.svc-h{display:flex;gap:10px;align-items:center;justify-content:space-between}
+.svc-h .kind.mac{background:var(--accent-soft);color:var(--accent)}
+.svc-h .kind.ip{background:var(--warn-soft);color:var(--warn)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{appearance:none;border:1px solid var(--line);background:var(--surface-2);border-radius:14px;padding:4px 10px;font:500 13px var(--f-mono);cursor:pointer;color:var(--ink-2)}
+.chip[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+.attached{font:500 12.5px var(--f-mono);color:var(--ink-2);overflow-wrap:anywhere}
+
+/* ── preview ── */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+.panel-top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;border-bottom:1px solid var(--line-2)}
+.stats{display:flex;flex-wrap:wrap;gap:6px 16px;font:500 13px var(--f-cond);letter-spacing:.3px;color:var(--ink-2)}
+.stats b{font:600 15px var(--f-mono);color:var(--ink);margin-right:4px}
+.topo{display:block;width:100%;height:auto;background:var(--surface)}
+.topo text{font-family:var(--f-cond)}
+.topo .n rect{fill:var(--surface-2);stroke:var(--line);stroke-width:1.2}
+.topo .n.srl rect{fill:var(--surface);stroke:var(--ink-2)}
+.topo .n.rr rect{stroke:var(--accent);stroke-width:2}
+.topo .n.hostn rect{fill:var(--sunken);stroke:var(--line)}
+.topo .n:hover rect{stroke:var(--accent)}
+.topo .n{cursor:pointer}
+.topo .n .nm{font-weight:700;font-size:13px;fill:var(--ink)}
+.topo .n .ty{font-size:10.5px;fill:var(--muted);font-family:var(--f-mono)}
+.topo .tier{font-size:10.5px;fill:var(--muted);letter-spacing:1.4px;text-transform:uppercase;font-weight:600}
+.topo .l{stroke-width:1.6;fill:none}
+.topo .l.fabric{stroke:var(--wire)}
+.topo .l.access{stroke:var(--wire-2)}
+.topo .l.bond{stroke:var(--warn);stroke-dasharray:5 3}
+.topo .esband{fill:var(--warn-soft);stroke:var(--warn);stroke-dasharray:3 3}
+.topo .eslabel{font-size:10px;fill:var(--warn);font-weight:600;letter-spacing:.5px}
+
+.files{display:flex;gap:2px;overflow-x:auto;padding:0 8px;border-bottom:1px solid var(--line-2);background:var(--surface-2)}
+.ftab{appearance:none;border:0;background:none;padding:8px 10px 7px;font:500 12.5px var(--f-mono);color:var(--ink-2);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
+.ftab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent);background:var(--surface)}
+.codebar{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 12px;font:500 12px var(--f-mono);color:var(--muted);border-bottom:1px solid var(--line-2)}
+pre.code{margin:0;background:var(--code-bg);color:var(--code-ink);font:12.5px/1.6 var(--f-mono);padding:12px 14px;overflow:auto;max-height:520px;tab-size:2}
+pre.code .c{color:var(--c-com)}
+pre.code .k{color:var(--c-kw)}
+pre.code .s{color:var(--c-str)}
+pre.code .n{color:var(--c-num)}
+pre.code .i{color:var(--c-if)}
+pre.code .y{color:var(--c-key)}
+pre.code .h{color:var(--ink);font-weight:600}
+
+.issues{list-style:none;margin:0;padding:6px 0;max-height:260px;overflow:auto}
+.issues li{display:grid;grid-template-columns:auto 1fr;gap:10px;padding:6px 12px;font-size:13.5px;align-items:start}
+.issues li + li{border-top:1px solid var(--line-2)}
+.sev{font:700 10.5px/1 var(--f-cond);letter-spacing:.9px;text-transform:uppercase;padding:4px 6px;border-radius:3px;margin-top:1px;min-width:44px;text-align:center}
+.sev.error{background:var(--err-soft);color:var(--err)}
+.sev.warn{background:var(--warn-soft);color:var(--warn)}
+.sev.info{background:var(--info-soft);color:var(--info)}
+.issues .ok{display:block;color:var(--ok);font-weight:600}
+.pill{font:600 12px/1 var(--f-cond);letter-spacing:.5px;padding:4px 8px;border-radius:10px}
+.pill.error{background:var(--err-soft);color:var(--err)}
+.pill.warn{background:var(--warn-soft);color:var(--warn)}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}
+
+.note{font-size:13px;color:var(--muted)}
+.note code,.lede code{font-family:var(--f-mono);font-size:12.5px;background:var(--sunken);padding:1px 4px;border-radius:3px}
+.empty{padding:22px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:var(--radius)}
+
+.toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--surface);padding:10px 14px;border-radius:6px;font-size:14px;display:flex;gap:12px;align-items:center;box-shadow:0 6px 24px rgba(0,0,0,.25);z-index:50;max-width:calc(100% - 32px)}
+.toast button{appearance:none;border:0;background:none;color:var(--accent-soft);font:700 14px var(--f-cond);letter-spacing:.4px;cursor:pointer;text-decoration:underline}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+</style>
+<header class="top" id="top"></header>
+<main class="wrap">
+  <section class="pane" id="editor" aria-label="Lab editor"></section>
+  <aside class="pane preview" id="preview" aria-label="Generated lab"></aside>
+</main>
+<script>
+/* SRL Lab Builder — deterministic engine.
+ * Hardware catalog for every SR Linux type containerlab can boot, the lab
+ * data model, and generators for SR Linux flat CLI startup configs,
+ * the containerlab topology and a README.
+ * Plain ES2018, no dependencies: runs in the browser and in Node. */
+(function (root) {
+  'use strict';
+
+  // ───────────────────────── helpers ─────────────────────────
+  const G = (from, to, media, speed) => ({ from, to, media, speed });
+
+  function parsePortSpec(spec) {
+    const out = new Set();
+    String(spec || '').split(',').map(s => s.trim()).filter(Boolean).forEach(part => {
+      let odd = false;
+      if (part.startsWith('odd ')) { odd = true; part = part.slice(4).trim(); }
+      const m = part.match(/^(\d+)(?:-(\d+))?$/);
+      if (!m) return;
+      const a = +m[1], b = m[2] ? +m[2] : a;
+      for (let i = a; i <= b; i++) { if (odd && i % 2 === 0) continue; out.add(i); }
+    });
+    return out;
+  }
+
+  function ip2int(ip) {
+    const p = String(ip || '').trim().split('.').map(Number);
+    if (p.length !== 4 || p.some(x => !Number.isInteger(x) || x < 0 || x > 255)) return null;
+    return ((p[0] << 24) >>> 0) + (p[1] << 16) + (p[2] << 8) + p[3];
+  }
+  const int2ip = n => [n >>> 24, (n >>> 16) & 255, (n >>> 8) & 255, n & 255].join('.');
+  function parseCidr(c) {
+    const m = String(c || '').trim().match(/^(\d+\.\d+\.\d+\.\d+)\/(\d{1,2})$/);
+    if (!m) return null;
+    const ip = ip2int(m[1]); const len = +m[2];
+    if (ip === null || len > 32) return null;
+    const mask = len === 0 ? 0 : ((0xffffffff << (32 - len)) >>> 0);
+    return { ip, len, net: (ip & mask) >>> 0, size: Math.pow(2, 32 - len) };
+  }
+  const isIp = s => ip2int(s) !== null;
+  const q = s => '"' + String(s).replace(/\\/g, '\\\\').replace(/"/g, '\\"') + '"';
+  const pad3 = n => String(n).padStart(3, '0');
+
+  // Router-id -> IS-IS system-id: 10.0.0.1 -> 0100.0000.0001
+  function isisSystemId(ip) {
+    const d = String(ip).split('.').map(o => pad3(parseInt(o, 10) || 0)).join('');
+    return `${d.slice(0, 4)}.${d.slice(4, 8)}.${d.slice(8, 12)}`;
+  }
+
+  // ───────────────────────── catalog ─────────────────────────
+  // Sources: containerlab nokia_srlinux kind (types + modular line cards),
+  // SR Linux Product Overview "Hardware overview" (port counts) and
+  // Interfaces Guide "Breakout ports" (breakout modes per port).
+  const GENERIC_BREAKOUTS = ['2x400G', '4x100G', '8x100G', '2x200G', '4x200G', '2x100G', '4x25G', '4x10G'];
+
+  const LINECARDS = {
+    'imm32-100g-qsfp28+4-400g-qsfpdd': { label: '32×100G QSFP28 + 4×400G QSFP-DD', gen: 'gen1',
+      ports: [G(1, 32, 'QSFP28', '100G'), G(33, 36, 'QSFP-DD', '400G')], breakout: [] },
+    'imm36-400g-qsfpdd': { label: '36×400G QSFP-DD', gen: 'gen2cp',
+      ports: [G(1, 36, 'QSFP-DD', '400G')], breakout: [{ ports: '1-36', modes: ['4x100G', '2x100G', '4x25G', '4x10G'] }] },
+    'imm60-100g-qsfp28': { label: '60×100G QSFP28', gen: 'gen2cp',
+      ports: [G(1, 60, 'QSFP28', '100G')],
+      breakout: [{ ports: '9,12,15,18,21,24,26,27,29,30,32,35,38,39,41,42,45,48', modes: ['4x25G', '4x10G'], note: 'port-group restrictions apply' }] },
+    'imm2-36-400g-sync-qsfpdd': { label: '36×400G QSFP-DD (sync)', gen: 'gen2cp',
+      ports: [G(1, 36, 'QSFP-DD', '400G')], breakout: [{ ports: '1-36', modes: ['4x100G', '2x100G', '4x25G', '4x10G'] }] },
+    'imm3-36-800g-qsfpdd': { label: '36×800G QSFP-DD', gen: 'gen3', ports: [G(1, 36, 'QSFP-DD', '800G')], breakout: null },
+    'imm3-36-800g-osfp': { label: '36×800G OSFP', gen: 'gen3', ports: [G(1, 36, 'OSFP', '800G')], breakout: null },
+    'imm3-18-800g-qsfpdd': { label: '18×800G QSFP-DD', gen: 'gen3', ports: [G(1, 18, 'QSFP-DD', '800G')], breakout: null },
+    'imm3-36-800g-sync-qsfpdd': { label: '36×800G QSFP-DD (sync)', gen: 'gen3', ports: [G(1, 36, 'QSFP-DD', '800G')], breakout: null },
+  };
+
+  const H5_BO = n => [{ ports: `odd 1-${n - 1}`, modes: ['8x100G', '4x100G'] }, { ports: `1-${n}`, modes: ['2x200G', '2x100G'] }];
+
+  const PLATFORMS = [
+    { type: 'ixs-a1', family: '7215 IXS', name: '7215 IXS-A1', license: 'unknown', mpls: false,
+      ports: [G(1, 48, 'RJ45', '1G'), G(49, 52, 'SFP+', '10G')], breakout: [] },
+
+    { type: 'ixr-d1', family: '7220 IXR-D', name: '7220 IXR-D1', license: false, mpls: false,
+      ports: [G(1, 48, 'RJ45', '1G'), G(49, 52, 'SFP+', '10G')], breakout: [] },
+    { type: 'ixr-d2', family: '7220 IXR-D', name: '7220 IXR-D2', license: false, mpls: false,
+      ports: [G(1, 48, 'SFP28', '25G'), G(49, 56, 'QSFP28', '100G')], breakout: [] },
+    { type: 'ixr-d2l', family: '7220 IXR-D', name: '7220 IXR-D2L', license: false, mpls: false,
+      ports: [G(1, 48, 'SFP28', '25G'), G(49, 56, 'QSFP28', '100G'), G(57, 58, 'SFP+', '10G')], breakout: [] },
+    { type: 'ixr-d3', family: '7220 IXR-D', name: '7220 IXR-D3', license: false, mpls: false,
+      ports: [G(1, 32, 'QSFP28', '100G'), G(33, 34, 'SFP+', '10G')], breakout: [{ ports: '1-32', modes: ['4x25G', '4x10G'] }] },
+    { type: 'ixr-d3l', family: '7220 IXR-D', name: '7220 IXR-D3L', license: false, mpls: false,
+      ports: [G(1, 32, 'QSFP28', '100G'), G(33, 34, 'SFP+', '10G')], breakout: [{ ports: '1-32', modes: ['4x25G', '4x10G', '2x50G'] }] },
+    { type: 'ixr-d4', family: '7220 IXR-D', name: '7220 IXR-D4', license: false, mpls: false,
+      ports: [G(1, 28, 'QSFP28', '100G'), G(29, 36, 'QSFP-DD', '400G')],
+      breakout: [{ ports: '29-32', modes: ['4x100G', '4x25G', '4x10G'] }, { ports: '9,23-27', modes: ['4x25G', '4x10G'] }] },
+    { type: 'ixr-d5', family: '7220 IXR-D', name: '7220 IXR-D5', license: false, mpls: false,
+      ports: [G(1, 32, 'QSFP-DD', '400G'), G(33, 34, 'SFP+', '10G')],
+      breakout: [{ ports: '1-32', modes: ['4x100G', '2x200G', '2x100G', '4x50G', '2x50G', '4x25G', '4x10G'] }] },
+
+    { type: 'ixr-h2', family: '7220 IXR-H', name: '7220 IXR-H2', license: false, mpls: false,
+      ports: [G(1, 128, 'QSFP28', '100G')], breakout: [] },
+    { type: 'ixr-h3', family: '7220 IXR-H', name: '7220 IXR-H3', license: false, mpls: false,
+      ports: [G(1, 32, 'QSFP-DD', '400G'), G(33, 34, 'SFP+', '10G')],
+      breakout: [{ ports: '1-32', modes: ['4x100G', '2x200G', '2x100G', '4x25G', '4x10G'] }] },
+    { type: 'ixr-h4', family: '7220 IXR-H', name: '7220 IXR-H4', license: false, mpls: false,
+      ports: [G(1, 64, 'QSFP-DD', '400G'), G(65, 66, 'SFP+', '10G')], breakout: [{ ports: '1-64', modes: ['4x100G', '2x200G'] }] },
+    { type: 'ixr-h4-32d', family: '7220 IXR-H', name: '7220 IXR-H4-32D', license: false, mpls: false,
+      ports: [G(1, 32, 'QSFP-DD', '400G'), G(33, 33, 'SFP+', '10G')], breakout: [{ ports: '1-32', modes: ['4x100G', '2x200G', '2x100G'] }] },
+    { type: 'ixr-h5-32d', family: '7220 IXR-H', name: '7220 IXR-H5-32D', license: false, mpls: false,
+      ports: [G(1, 32, 'QSFP112-DD', '800G'), G(33, 34, 'SFP+', '10G')], breakout: H5_BO(32) },
+    { type: 'ixr-h5-64d', family: '7220 IXR-H', name: '7220 IXR-H5-64D', license: false, mpls: false,
+      ports: [G(1, 64, 'QSFP112-DD', '800G'), G(65, 66, 'SFP+', '10G')], breakout: H5_BO(64) },
+    { type: 'ixr-h5-64o', family: '7220 IXR-H', name: '7220 IXR-H5-64O', license: false, mpls: false,
+      ports: [G(1, 64, 'OSFP', '800G'), G(65, 66, 'SFP+', '10G')], breakout: H5_BO(64) },
+    { type: 'ixr-h6', family: '7220 IXR-H', name: '7220 IXR-H6-64', license: false, mpls: false,
+      ports: [G(1, 64, 'OSFP', '1.6T')], breakout: null, portsNote: 'Port layout taken from launch material (102.4T, 64 × 1.6TE); not yet in the SR Linux hardware tables.' },
+
+    { type: 'ixr-x1b', family: '7250 IXR-X', name: '7250 IXR-X1b', license: true, mpls: true,
+      ports: [G(1, 24, 'QSFP28', '100G'), G(25, 36, 'QSFP-DD', '400G')],
+      breakout: [{ ports: '1-24', modes: ['4x25G', '4x10G'], note: 'port-group restrictions apply' }, { ports: '25-36', modes: ['4x100G', '4x25G', '4x10G'] }] },
+    { type: 'ixr-x3b', family: '7250 IXR-X', name: '7250 IXR-X3b', license: true, mpls: true,
+      ports: [G(1, 36, 'QSFP56-DD', '400G')], breakout: [{ ports: '1-36', modes: ['4x100G', '4x25G', '4x10G'] }] },
+    { type: 'ixr-x4', family: '7250 IXR-X', name: '7250 IXR-X4 (QSFP-DD)', license: true, mpls: true,
+      ports: [G(1, 32, 'QSFP112-DD', '800G')], breakout: null },
+
+    { type: 'ixr-6e', family: '7250 IXR-e', name: '7250 IXR-6e', license: true, mpls: true, modular: true,
+      cards: ['imm36-400g-qsfpdd', 'imm60-100g-qsfp28', 'imm2-36-400g-sync-qsfpdd', 'imm3-36-800g-qsfpdd', 'imm3-36-800g-osfp'], defaultCard: 'imm36-400g-qsfpdd' },
+    { type: 'ixr-10e', family: '7250 IXR-e', name: '7250 IXR-10e', license: true, mpls: true, modular: true,
+      cards: ['imm36-400g-qsfpdd', 'imm60-100g-qsfp28', 'imm2-36-400g-sync-qsfpdd', 'imm3-36-800g-qsfpdd', 'imm3-36-800g-osfp'], defaultCard: 'imm36-400g-qsfpdd' },
+    { type: 'ixr-18e', family: '7250 IXR-e', name: '7250 IXR-18e', license: true, mpls: true, modular: true,
+      cards: ['imm3-18-800g-qsfpdd', 'imm3-36-800g-sync-qsfpdd', 'imm3-36-800g-osfp'], defaultCard: 'imm3-18-800g-qsfpdd' },
+    { type: 'ixr-6', family: '7250 IXR (gen1)', name: '7250 IXR-6', license: true, mpls: true, modular: true,
+      cards: ['imm32-100g-qsfp28+4-400g-qsfpdd'], defaultCard: 'imm32-100g-qsfp28+4-400g-qsfpdd', fixedCard: true },
+    { type: 'ixr-10', family: '7250 IXR (gen1)', name: '7250 IXR-10', license: true, mpls: true, modular: true,
+      cards: ['imm32-100g-qsfp28+4-400g-qsfpdd'], defaultCard: 'imm32-100g-qsfp28+4-400g-qsfpdd', fixedCard: true },
+
+    { type: 'sxr-1d-32d', family: '7730 SXR', name: '7730 SXR-1d-32D', license: true, mpls: true,
+      ports: [G(1, 16, 'QSFP28', '100G'), G(17, 20, 'QSFP-DD', '400G'), G(21, 32, 'QSFP28', '100G')],
+      breakout: [{ ports: '17-20', modes: ['4x100G', '4x25G', '4x10G'] }, { ports: '1-16,21-32', modes: ['4x25G', '4x10G'], note: 'port-group restrictions apply' }] },
+    { type: 'sxr-1-32d', family: '7730 SXR', name: '7730 SXR-1-32D', license: true, mpls: true,
+      ports: [G(1, 16, 'QSFP28', '100G'), G(17, 20, 'QSFP-DD', '400G'), G(21, 32, 'QSFP28', '100G')],
+      breakout: null, portsNote: 'Same 28×QSFP28 + 4×QSFP-DD mix as the SXR-1d-32D; port order assumed identical.' },
+    { type: 'sxr-1x-44s', family: '7730 SXR', name: '7730 SXR-1x-44S', license: true, mpls: true,
+      ports: [G(1, 20, 'SFP-DD', '100G'), G(21, 22, 'QSFP-DD', '400G'), G(23, 42, 'SFP-DD', '100G'), G(43, 44, 'QSFP-DD', '400G')],
+      breakout: [{ ports: '21,22,43,44', modes: ['4x100G', '4x25G', '4x10G'] }] },
+  ];
+  const PLATFORM = Object.fromEntries(PLATFORMS.map(p => [p.type, p]));
+  const FAMILIES = [...new Set(PLATFORMS.map(p => p.family))];
+
+  const SRL_VERSIONS = ['26.7.2', '26.3.3', '25.10.5', '25.7.2', '25.3.2', '24.10.4'];
+
+  // Resolved hardware view of a node: port groups + breakout rules.
+  function hw(node) {
+    const p = PLATFORM[node.type];
+    if (!p) return null;
+    if (p.modular) {
+      const cardId = (node.card && p.cards.includes(node.card)) ? node.card : p.defaultCard;
+      const c = LINECARDS[cardId];
+      return { platform: p, card: cardId, cardInfo: c, ports: c.ports, breakout: c.breakout, gen: c.gen };
+    }
+    return { platform: p, card: null, ports: p.ports, breakout: p.breakout, gen: null };
+  }
+  function portCount(node) { const h = hw(node); return h ? h.ports[h.ports.length - 1].to : 0; }
+  function portGroup(node, n) { const h = hw(node); return h ? h.ports.find(g => n >= g.from && n <= g.to) || null : null; }
+
+  // Breakout options for port n. Returns {modes, verified, note}.
+  function breakoutOptions(node, n) {
+    const h = hw(node);
+    if (!h) return { modes: [], verified: false };
+    if (h.breakout === null) {
+      const g = portGroup(node, n);
+      const multi = g && /QSFP|OSFP/.test(g.media);
+      return { modes: multi ? GENERIC_BREAKOUTS : [], verified: false, note: 'Breakout modes for this hardware are not in the SR Linux breakout table; values are not verified.' };
+    }
+    const modes = []; let note = '';
+    h.breakout.forEach(r => {
+      if (parsePortSpec(r.ports).has(n)) { r.modes.forEach(m => { if (!modes.includes(m)) modes.push(m); }); if (r.note) note = r.note; }
+    });
+    return { modes, verified: true, note };
+  }
+  function parseMode(mode) {
+    const m = String(mode || '').match(/^(\d)x(\d+G)$/);
+    return m ? { num: +m[1], speed: m[2] } : null;
+  }
+
+  // All usable port names on a node (breakout parents replaced by children).
+  function portList(node) {
+    const h = hw(node);
+    if (!h) return [];
+    const out = [];
+    h.ports.forEach(g => {
+      for (let i = g.from; i <= g.to; i++) {
+        const bo = parseMode((node.breakouts || {})[i]);
+        if (bo) { for (let c = 1; c <= bo.num; c++) out.push({ name: `ethernet-1/${i}/${c}`, parent: i, media: g.media, speed: bo.speed }); }
+        else out.push({ name: `ethernet-1/${i}`, parent: i, media: g.media, speed: g.speed });
+      }
+    });
+    return out;
+  }
+  function parsePort(name) {
+    const m = String(name || '').match(/^ethernet-(\d+)\/(\d+)(?:\/(\d+))?$/);
+    return m ? { slot: +m[1], port: +m[2], child: m[3] ? +m[3] : null } : null;
+  }
+
+  // ───────────────────────── model defaults ─────────────────────────
+  const ROLES = ['superspine', 'spine', 'leaf', 'borderleaf', 'pe', 'p'];
+  const ROLE_TIER = { superspine: 0, spine: 1, p: 1, leaf: 2, borderleaf: 2, pe: 2, host: 3 };
+
+  function defaultDesign() {
+    return {
+      lab: 'srl-fabric', version: '26.7.2', image: '', license: './license.key',
+      linuxImage: 'ghcr.io/srl-labs/network-multitool', mgmt: '',
+      loopbacks: '10.0.0.0/24', p2p: '192.168.0.0/24', p2pLen: 31, routedPool: '172.31.0.0/16',
+      underlay: 'ebgp', isisArea: '49.0001', isisLevel: 'L2', ospfArea: '0.0.0.0', bfd: false,
+      asnSpine: 65100, asnSuperspine: 65200, asnLeafBase: 65001,
+      overlay: 'ibgp', overlayAsn: 65500,
+      transport: 'vxlan', ldp: true, srmpls: true, srgbStart: 16000, srgbEnd: 23999,
+    };
+  }
+
+  // ───────────────────────── resolution ─────────────────────────
+  // Turns the editable project into a fully-addressed plan that every
+  // generator reads. Issues found on the way are collected, never thrown.
+  function resolve(project) {
+    const d = Object.assign(defaultDesign(), project.design || {});
+    const nodes = project.nodes || [];
+    const links = project.links || [];
+    const services = project.services || [];
+    const issues = [];
+    const byId = new Map(nodes.map(n => [n.id, n]));
+    const svcById = new Map(services.map(s => [s.id, s]));
+    const srl = nodes.filter(n => n.kind === 'srl');
+    const hosts = nodes.filter(n => n.kind === 'linux');
+
+    // names
+    const seen = new Set();
+    nodes.forEach(n => {
+      if (!/^[A-Za-z0-9][A-Za-z0-9_-]*$/.test(n.name || '')) issues.push({ level: 'error', msg: `Node name “${n.name}” is not valid for containerlab (use letters, digits, - and _).`, node: n.id });
+      if (seen.has(n.name)) issues.push({ level: 'error', msg: `Duplicate node name “${n.name}”.`, node: n.id });
+      seen.add(n.name);
+    });
+
+    // loopbacks
+    const lb = parseCidr(d.loopbacks);
+    if (!lb) issues.push({ level: 'error', msg: `Loopback pool “${d.loopbacks}” is not a valid IPv4 prefix.` });
+    const sys = new Map();
+    srl.forEach((n, i) => {
+      let ip = (n.sys || '').trim();
+      if (ip && !isIp(ip)) { issues.push({ level: 'error', msg: `${n.name}: system IP “${ip}” is not a valid IPv4 address.`, node: n.id }); ip = ''; }
+      if (!ip && lb) ip = int2ip(lb.net + i + 1);
+      sys.set(n.id, ip);
+    });
+    const sysSeen = new Map();
+    sys.forEach((ip, id) => { if (sysSeen.has(ip)) issues.push({ level: 'error', msg: `${byId.get(id).name} and ${byId.get(sysSeen.get(ip)).name} share system IP ${ip}.`, node: id }); sysSeen.set(ip, id); });
+
+    // ASNs (underlay eBGP) — spines share one AS per tier, others unique.
+    const asn = new Map(); let leafIdx = 0;
+    srl.forEach(n => {
+      let a = String(n.asn || '').trim();
+      if (!a) {
+        if (n.role === 'spine') a = String(d.asnSpine);
+        else if (n.role === 'superspine') a = String(d.asnSuperspine);
+        else a = String(Number(d.asnLeafBase) + (leafIdx++));
+      }
+      asn.set(n.id, a);
+    });
+
+    // hardware checks
+    srl.forEach(n => {
+      const p = PLATFORM[n.type];
+      if (!p) { issues.push({ level: 'error', msg: `${n.name}: unknown SR Linux type “${n.type}”.`, node: n.id }); return; }
+      if (p.modular && !p.fixedCard && n.card && n.card !== p.defaultCard)
+        issues.push({ level: 'info', msg: `${n.name}: line card ${n.card} is set through a containerlab “components” block, which needs a containerlab build newer than v0.79.0.`, node: n.id });
+      Object.entries(n.breakouts || {}).forEach(([port, mode]) => {
+        const o = breakoutOptions(n, +port);
+        if (!o.modes.includes(mode)) issues.push({ level: 'warn', msg: `${n.name}: breakout ${mode} on ethernet-1/${port} is not listed for this hardware.`, node: n.id });
+        else if (!o.verified) issues.push({ level: 'warn', msg: `${n.name}: breakout ${mode} on ethernet-1/${port} is not verified for ${p.name}.`, node: n.id });
+      });
+      if (p.portsNote) issues.push({ level: 'info', msg: `${n.name} (${p.name}): ${p.portsNote}`, node: n.id });
+    });
+    const needsLicense = srl.some(n => PLATFORM[n.type] && PLATFORM[n.type].license === true);
+    if (needsLicense && !String(d.license || '').trim())
+      issues.push({ level: 'warn', msg: '7250 IXR and 7730 SXR types boot only with an SR Linux license file. Set the license path in Design.' });
+
+    // links: port validation + classification
+    const used = new Map();
+    const resolvedLinks = [];
+    links.forEach((l, idx) => {
+      const A = byId.get(l.a && l.a.n), B = byId.get(l.b && l.b.n);
+      if (!A || !B) { issues.push({ level: 'warn', msg: `Link ${idx + 1} is missing an endpoint node.`, link: l.id }); return; }
+      if (A === B) { issues.push({ level: 'error', msg: `Link ${idx + 1} connects ${A.name} to itself.`, link: l.id }); return; }
+      let ok = true;
+      [[A, l.a.p], [B, l.b.p]].forEach(([n, p]) => {
+        if (!p) { issues.push({ level: 'error', msg: `Link ${idx + 1}: ${n.name} has no port selected.`, link: l.id }); ok = false; return; }
+        const key = n.id + '|' + p;
+        if (used.has(key)) { issues.push({ level: 'error', msg: `${n.name} ${p} is used by more than one link.`, link: l.id }); ok = false; }
+        used.set(key, l.id);
+        if (n.kind === 'srl') {
+          const pp = parsePort(p);
+          if (!pp) { issues.push({ level: 'error', msg: `${n.name}: “${p}” is not an SR Linux port name (ethernet-1/N or ethernet-1/N/M).`, link: l.id }); ok = false; return; }
+          if (!portList(n).some(x => x.name === p)) {
+            const bo = (n.breakouts || {})[pp.port];
+            if (pp.child && !bo) issues.push({ level: 'error', msg: `${n.name}: ${p} needs a breakout on ethernet-1/${pp.port}.`, link: l.id });
+            else if (!pp.child && bo) issues.push({ level: 'error', msg: `${n.name}: ethernet-1/${pp.port} is broken out (${bo}); use ${p}/1…`, link: l.id });
+            else issues.push({ level: 'warn', msg: `${n.name}: ${p} is outside the ${portCount(n)} ports of ${(hw(n) || {}).platform ? hw(n).platform.name : n.type}.`, link: l.id });
+          }
+        } else if (!/^eth\d+$/.test(p)) {
+          issues.push({ level: 'error', msg: `${n.name}: Linux ports are named eth1, eth2…`, link: l.id }); ok = false;
+        }
+      });
+      if (!ok) return;
+      let kind;
+      if (A.kind === 'srl' && B.kind === 'srl') kind = 'fabric';
+      else if (A.kind === 'linux' && B.kind === 'linux') kind = 'host-host';
+      else kind = 'access';
+      const srlEnd = kind === 'access' ? (A.kind === 'srl' ? 'a' : 'b') : null;
+      resolvedLinks.push({ link: l, idx, kind, A, B, srlEnd });
+    });
+
+    // fabric addressing
+    const p2p = parseCidr(d.p2p);
+    const p2pLen = Number(d.p2pLen) === 30 ? 30 : 31;
+    const step = p2pLen === 31 ? 2 : 4;
+    if (!p2p && d.underlay !== 'ebgp-unnumbered') issues.push({ level: 'error', msg: `Point-to-point pool “${d.p2p}” is not a valid IPv4 prefix.` });
+    let fi = 0;
+    const fabric = [];
+    resolvedLinks.filter(r => r.kind === 'fabric').forEach(r => {
+      const f = { link: r.link, A: r.A, B: r.B, pa: r.link.a.p, pb: r.link.b.p, ipA: null, ipB: null };
+      if (p2p && d.underlay !== 'ebgp-unnumbered') {
+        const base = p2p.net + fi * step;
+        if (fi * step + step > p2p.size) issues.push({ level: 'error', msg: `Point-to-point pool ${d.p2p} is too small for ${resolvedLinks.filter(x => x.kind === 'fabric').length} fabric links.` });
+        const a = p2pLen === 31 ? base : base + 1, b = a + 1;
+        f.ipA = int2ip(a) + '/' + p2pLen; f.ipB = int2ip(b) + '/' + p2pLen;
+      }
+      fi++;
+      fabric.push(f);
+    });
+
+    // access attachments: group bonds per host
+    const routed = parseCidr(d.routedPool);
+    let routedIdx = 0;
+    const attachments = []; // {srl, port, host, hostPort, svc, vlan, bondKey}
+    resolvedLinks.filter(r => r.kind === 'access').forEach(r => {
+      const srlN = r.srlEnd === 'a' ? r.A : r.B, host = r.srlEnd === 'a' ? r.B : r.A;
+      const sp = r.srlEnd === 'a' ? r.link.a.p : r.link.b.p, hp = r.srlEnd === 'a' ? r.link.b.p : r.link.a.p;
+      const svc = svcById.get(r.link.svc);
+      const vlanRaw = String(r.link.vlan || '').trim();
+      let vlan = null;
+      if (vlanRaw) {
+        vlan = Number(vlanRaw);
+        if (!Number.isInteger(vlan) || vlan < 1 || vlan > 4094) { issues.push({ level: 'error', msg: `Link ${r.idx + 1}: VLAN “${vlanRaw}” must be 1–4094.`, link: r.link.id }); vlan = null; }
+      }
+      if (!svc) issues.push({ level: 'warn', msg: `${srlN.name} ${sp} → ${host.name}: pick a service, otherwise the port is left unconfigured.`, link: r.link.id });
+      attachments.push({ link: r.link, srl: srlN, port: sp, host, hostPort: hp, svc: svc || null, vlan, bond: String(r.link.bond || '').trim() });
+    });
+
+    // bonds / LAGs: key = host + bond name
+    const bonds = new Map();
+    attachments.forEach(at => {
+      if (!at.bond) return;
+      const key = at.host.id + '|' + at.bond;
+      if (!bonds.has(key)) bonds.set(key, { key, host: at.host, name: at.bond, members: [] });
+      bonds.get(key).members.push(at);
+    });
+    let esIdx = 0;
+    const lagByNode = new Map(); // srl id -> [{name, members:[port], bondKey, es}]
+    bonds.forEach(b => {
+      const first = b.members[0];
+      b.members.forEach(m => {
+        if (m.svc !== first.svc || m.vlan !== first.vlan) issues.push({ level: 'error', msg: `${b.host.name} ${b.name}: all bond member links must use the same service and VLAN.`, link: m.link.id });
+      });
+      const peers = [...new Set(b.members.map(m => m.srl.id))];
+      b.peers = peers;
+      if (peers.length > 1) {
+        esIdx++;
+        b.es = { name: `ES-${b.host.name}-${b.name}`, esi: `00:11:11:11:11:11:11:00:00:${esIdx.toString(16).padStart(2, '0')}`,
+          sysMac: `02:00:00:00:00:${esIdx.toString(16).padStart(2, '0')}`, adminKey: 10 + esIdx };
+        if (peers.length > 4) issues.push({ level: 'warn', msg: `${b.host.name} ${b.name}: an Ethernet segment spans at most 4 PEs.` });
+        if (first.svc && first.svc.kind === 'ip-vrf') issues.push({ level: 'error', msg: `${b.host.name} ${b.name}: a bond homed to several nodes must attach to a MAC-VRF (use an IRB for routing).`, link: first.link.id });
+      }
+      peers.forEach(pid => {
+        const list = lagByNode.get(pid) || [];
+        const lagName = `lag${list.length + 1}`;
+        const lag = { name: lagName, bondKey: b.key, members: b.members.filter(m => m.srl.id === pid).map(m => m.port), es: b.es || null, bond: b };
+        list.push(lag); lagByNode.set(pid, list);
+        b.members.filter(m => m.srl.id === pid).forEach(m => { m.lag = lagName; });
+      });
+    });
+
+    // service subnets and host addressing
+    const svcPlan = new Map();
+    services.forEach(s => {
+      const plan = { svc: s, nodes: new Set(), hostIdx: 0 };
+      if (s.kind === 'mac-vrf') {
+        plan.subnet = parseCidr(s.subnet);
+        if (s.subnet && !plan.subnet) issues.push({ level: 'error', msg: `${s.name}: subnet “${s.subnet}” is not a valid IPv4 prefix.` });
+        if (plan.subnet) {
+          plan.gw = s.gw && isIp(s.gw) ? s.gw : int2ip(plan.subnet.net + plan.subnet.size - 2);
+          plan.gwCidr = plan.gw + '/' + plan.subnet.len;
+        }
+        if (s.irb && !svcById.get(s.irb)) issues.push({ level: 'warn', msg: `${s.name}: the IRB target IP-VRF no longer exists.` });
+      }
+      svcPlan.set(s.id, plan);
+    });
+    // service instances per SRL node
+    attachments.forEach(at => { if (at.svc) svcPlan.get(at.svc.id).nodes.add(at.srl.id); });
+    services.forEach(s => (s.extra || []).forEach(nid => { if (byId.get(nid) && byId.get(nid).kind === 'srl') svcPlan.get(s.id).nodes.add(nid); }));
+    services.filter(s => s.kind === 'mac-vrf' && s.irb && svcById.get(s.irb)).forEach(s => {
+      svcPlan.get(s.id).nodes.forEach(nid => svcPlan.get(s.irb).nodes.add(nid));
+    });
+    services.forEach(s => { if (!svcPlan.get(s.id).nodes.size) issues.push({ level: 'info', msg: `${s.name} is not attached to any node yet.` }); });
+
+    // EVI / VNI uniqueness
+    const eviSeen = new Map();
+    services.forEach(s => {
+      if (!(Number(s.evi) >= 1 && Number(s.evi) <= 65535)) issues.push({ level: 'error', msg: `${s.name}: EVI must be 1–65535.` });
+      if (eviSeen.has(Number(s.evi))) issues.push({ level: 'error', msg: `${s.name} and ${eviSeen.get(Number(s.evi))} use the same EVI ${s.evi}.` });
+      eviSeen.set(Number(s.evi), s.name);
+      if (!/^[A-Za-z0-9][A-Za-z0-9_.-]*$/.test(s.name || '')) issues.push({ level: 'error', msg: `Service name “${s.name}” is not a valid network-instance name.` });
+    });
+
+    if (d.transport !== 'mpls') {
+      const vniSeen = new Map();
+      services.forEach(s => {
+        const v = Number(s.vni) || Number(s.evi);
+        if (!(v >= 1 && v <= 16777215)) issues.push({ level: 'error', msg: `${s.name}: VNI must be 1–16777215.` });
+        if (vniSeen.has(v)) issues.push({ level: 'error', msg: `${s.name} and ${vniSeen.get(v)} use the same VNI ${v}.` });
+        vniSeen.set(v, s.name);
+      });
+    }
+
+    // Host addressing per attachment (bonds counted once)
+    const hostCfg = new Map(); // host id -> {ifaces:[{dev, parent, vlan, ip, gw, svc}], bonds:[]}
+    const bondDone = new Set();
+    attachments.forEach(at => {
+      if (!at.svc) return;
+      const h = hostCfg.get(at.host.id) || { ifaces: [], bonds: [] };
+      hostCfg.set(at.host.id, h);
+      if (at.bond) {
+        const key = at.host.id + '|' + at.bond;
+        if (bondDone.has(key)) return;
+        bondDone.add(key);
+        h.bonds.push({ name: at.bond, members: bonds.get(key).members.map(m => m.hostPort) });
+      }
+      const dev = at.bond || at.hostPort;
+      const plan = svcPlan.get(at.svc.id);
+      let ip = null, gw = null, srlIp = null;
+      if (at.svc.kind === 'mac-vrf') {
+        if (plan.subnet) { plan.hostIdx++; ip = int2ip(plan.subnet.net + plan.hostIdx) + '/' + plan.subnet.len; gw = at.svc.irb ? plan.gw : null; }
+      } else if (routed) {
+        const net = routed.net + routedIdx * 256; routedIdx++;
+        srlIp = int2ip(net + 1) + '/24'; ip = int2ip(net + 2) + '/24'; gw = int2ip(net + 1);
+      }
+      at.srlIp = srlIp;
+      if (at.bond) bonds.get(at.host.id + '|' + at.bond).members.forEach(m => { m.srlIp = srlIp; });
+      h.ifaces.push({ dev, vlan: at.vlan, ip, gw, svc: at.svc });
+    });
+
+    // IP-VRF reachability for hosts: every subnet in the same IP-VRF
+    const vrfSubnets = new Map();
+    services.filter(s => s.kind === 'mac-vrf' && s.irb).forEach(s => {
+      const p = svcPlan.get(s.id); if (!p.subnet) return;
+      const arr = vrfSubnets.get(s.irb) || []; arr.push(int2ip(p.subnet.net) + '/' + p.subnet.len); vrfSubnets.set(s.irb, arr);
+    });
+    attachments.filter(a => a.svc && a.svc.kind === 'ip-vrf' && a.srlIp).forEach(a => {
+      const arr = vrfSubnets.get(a.svc.id) || []; const c = parseCidr(a.srlIp); arr.push(int2ip(c.net) + '/24'); vrfSubnets.set(a.svc.id, arr);
+    });
+
+    // overlay peering
+    const rr = srl.filter(n => n.rr);
+    const svcNodes = new Set(); svcPlan.forEach(p => p.nodes.forEach(id => svcNodes.add(id)));
+    const clients = srl.filter(n => !n.rr && (svcNodes.has(n.id) || ['leaf', 'borderleaf', 'pe'].includes(n.role)));
+    const overlayPeers = new Map();
+    if (d.overlay === 'ibgp') {
+      if (rr.length) {
+        clients.forEach(c => overlayPeers.set(c.id, { rrClient: false, peers: rr.map(r => r.id) }));
+        rr.forEach(r => overlayPeers.set(r.id, { rrClient: true, peers: clients.map(c => c.id) }));
+      } else {
+        clients.forEach(c => overlayPeers.set(c.id, { rrClient: false, peers: clients.filter(x => x !== c).map(x => x.id) }));
+        if (clients.length > 2) issues.push({ level: 'info', msg: 'No route reflector is set, so the EVPN overlay is a full iBGP mesh. Mark spines (or P nodes) as RR to reduce sessions.' });
+      }
+    }
+    if (services.length && d.overlay !== 'ibgp') issues.push({ level: 'warn', msg: 'Services need the iBGP EVPN overlay to exchange routes between nodes.' });
+
+    // transport checks
+    if (d.transport === 'mpls') {
+      if (d.underlay !== 'isis' && d.underlay !== 'ospf') issues.push({ level: 'error', msg: 'MPLS transport needs an IGP underlay (IS-IS or OSPF).' });
+      if (d.srmpls && d.underlay !== 'isis') issues.push({ level: 'error', msg: 'SR-MPLS in this builder is signalled with IS-IS; select the IS-IS underlay.' });
+      if (!d.ldp && !d.srmpls) issues.push({ level: 'error', msg: 'MPLS transport needs LDP, SR-MPLS or both.' });
+      srl.forEach(n => {
+        const p = PLATFORM[n.type];
+        if (p && !p.mpls) issues.push({ level: 'warn', msg: `${n.name}: ${p.name} does not run an MPLS datapath in the SR Linux container (7250 IXR and 7730 SXR types do).`, node: n.id });
+        const h = hw(n);
+        if (h && h.gen === 'gen3') issues.push({ level: 'info', msg: `${n.name}: Gen3 IMMs can require the per-type label blocks under “system mpls services network-instance dynamic-label-blocks” (26.3+). The generated config uses the shared dynamic-label-block form.`, node: n.id });
+      });
+    }
+    if (d.underlay === 'ebgp-unnumbered' && d.transport === 'mpls') issues.push({ level: 'error', msg: 'BGP unnumbered underlay is for VXLAN fabrics here; use IS-IS for MPLS.' });
+
+    hosts.forEach(h => { if (!resolvedLinks.some(r => r.A === h || r.B === h)) issues.push({ level: 'info', msg: `${h.name} has no links.`, node: h.id }); });
+
+    return { design: d, nodes, srl, hosts, byId, svcById, sys, asn, fabric, attachments, lagByNode, bonds, svcPlan, hostCfg, vrfSubnets, overlayPeers, links: resolvedLinks, issues };
+  }
+
+  // ───────────────────────── SR Linux config ─────────────────────────
+  function nodeConfig(plan, node) {
+    const d = plan.design;
+    const L = [];
+    const sec = t => { L.push('', `# ── ${t} ${'─'.repeat(Math.max(4, 60 - t.length))}`); };
+    const S = s => L.push('set / ' + s);
+    const sysIp = plan.sys.get(node.id);
+    const h = hw(node);
+    const underAsn = plan.asn.get(node.id);
+    const isEbgp = d.underlay === 'ebgp' || d.underlay === 'ebgp-unnumbered';
+    const unnumbered = d.underlay === 'ebgp-unnumbered';
+    const mpls = d.transport === 'mpls';
+    const ov = plan.overlayPeers.get(node.id);
+
+    L.push(`# ${node.name} — ${h ? h.platform.name + (h.card ? ' / ' + h.card : '') : node.type} — SR Linux ${d.version}`);
+    L.push('# Partial startup config (flat CLI). containerlab applies it on top of the default config and commits once.');
+
+    sec('System');
+    S(`system name host-name ${node.name}`);
+
+    // breakouts
+    const bos = Object.entries(node.breakouts || {}).filter(([, m]) => parseMode(m));
+    if (bos.length) {
+      sec('Breakout connectors');
+      bos.forEach(([p, m]) => {
+        const bo = parseMode(m);
+        S(`interface ethernet-1/${p} admin-state enable`);
+        S(`interface ethernet-1/${p} breakout-mode num-breakout-ports ${bo.num}`);
+        S(`interface ethernet-1/${p} breakout-mode breakout-port-speed ${bo.speed}`);
+      });
+    }
+
+    // fabric interfaces
+    const myFabric = plan.fabric.filter(f => f.A === node || f.B === node).map(f => {
+      const mine = f.A === node;
+      return { port: mine ? f.pa : f.pb, ip: mine ? f.ipA : f.ipB, peer: mine ? f.B : f.A, peerPort: mine ? f.pb : f.pa, peerIp: mine ? f.ipB : f.ipA };
+    });
+    sec('Interfaces');
+    S('interface system0 admin-state enable');
+    S('interface system0 subinterface 0 admin-state enable');
+    S('interface system0 subinterface 0 ipv4 admin-state enable');
+    S(`interface system0 subinterface 0 ipv4 address ${sysIp}/32`);
+    myFabric.forEach(f => {
+      const i = `interface ${f.port}`;
+      S(`${i} admin-state enable`);
+      S(`${i} description ${q('to ' + f.peer.name + ' ' + f.peerPort)}`);
+      S(`${i} subinterface 0 admin-state enable`);
+      if (unnumbered) {
+        S(`${i} subinterface 0 ipv6 admin-state enable`);
+        S(`${i} subinterface 0 ipv6 router-advertisement router-role admin-state enable`);
+      } else if (f.ip) {
+        S(`${i} subinterface 0 ipv4 admin-state enable`);
+        S(`${i} subinterface 0 ipv4 address ${f.ip}`);
+      }
+    });
+
+    // access side
+    const myAt = plan.attachments.filter(a => a.srl === node && a.svc);
+    const myLags = plan.lagByNode.get(node.id) || [];
+    // one access subinterface per (interface, vlan); bond members share it
+    const subifs = new Map();
+    myAt.forEach(a => {
+      const ifname = a.lag || a.port;
+      const sub = a.vlan || 0;
+      const key = `${ifname}.${sub}`;
+      a.subif = key;
+      const prev = subifs.get(key);
+      if (prev) {
+        if (!(a.lag && prev.lag === a.lag)) plan.issues.push({ level: 'error', msg: `${node.name}: ${key} is used by two attachments; give one of them a different VLAN.`, node: node.id });
+        return;
+      }
+      subifs.set(key, a);
+    });
+    if (myAt.length) {
+      sec('Access interfaces');
+      const portsDone = new Set();
+      const lagDone = new Set();
+      subifs.forEach(a => {
+        const ifname = a.lag || a.port;
+        if (a.lag) {
+          const lag = myLags.find(l => l.name === a.lag);
+          if (!lagDone.has(a.lag)) {
+            lagDone.add(a.lag);
+            lag.members.forEach(m => {
+              S(`interface ${m} admin-state enable`);
+              S(`interface ${m} description ${q('member of ' + lag.name + ' to ' + a.host.name)}`);
+              S(`interface ${m} ethernet aggregate-id ${lag.name}`);
+            });
+            S(`interface ${lag.name} admin-state enable`);
+            S(`interface ${lag.name} description ${q(a.host.name + ' ' + a.bond + (lag.es ? ' (' + lag.es.name + ')' : ''))}`);
+            S(`interface ${lag.name} vlan-tagging true`);
+            S(`interface ${lag.name} lag lag-type lacp`);
+            S(`interface ${lag.name} lag lacp interval FAST`);
+            S(`interface ${lag.name} lag lacp lacp-mode ACTIVE`);
+            if (lag.es) {
+              S(`interface ${lag.name} lag lacp admin-key ${lag.es.adminKey}`);
+              S(`interface ${lag.name} lag lacp system-id-mac ${lag.es.sysMac}`);
+              S(`interface ${lag.name} lag lacp system-priority 100`);
+            }
+          }
+        } else if (!portsDone.has(a.port)) {
+          portsDone.add(a.port);
+          S(`interface ${a.port} admin-state enable`);
+          S(`interface ${a.port} description ${q('to ' + a.host.name + ' ' + a.hostPort)}`);
+          S(`interface ${a.port} vlan-tagging true`);
+        }
+        const si = `interface ${ifname} subinterface ${a.vlan || 0}`;
+        S(`${si} type ${a.svc.kind === 'mac-vrf' ? 'bridged' : 'routed'}`);
+        S(`${si} admin-state enable`);
+        if (a.vlan) S(`${si} vlan encap single-tagged vlan-id ${a.vlan}`);
+        else S(`${si} vlan encap untagged`);
+        if (a.svc.kind === 'ip-vrf' && a.srlIp) {
+          S(`${si} ipv4 admin-state enable`);
+          S(`${si} ipv4 address ${a.srlIp}`);
+        }
+      });
+    }
+    const svcSubifs = s => [...subifs.values()].filter(a => a.svc === s).map(a => a.subif);
+
+    // ES
+    const esLags = myLags.filter(l => l.es);
+    if (esLags.length) {
+      sec('EVPN multihoming');
+      esLags.forEach(l => {
+        const es = `system network-instance protocols evpn ethernet-segments bgp-instance 1 ethernet-segment ${l.es.name}`;
+        S(`${es} admin-state enable`);
+        S(`${es} esi ${l.es.esi}`);
+        S(`${es} multi-homing-mode all-active`);
+        S(`${es} interface ${l.name}`);
+      });
+      S('system network-instance protocols bgp-vpn bgp-instance 1');
+    }
+
+    // default network-instance
+    sec('Default network-instance');
+    S('network-instance default type default');
+    S('network-instance default admin-state enable');
+    S(`network-instance default router-id ${sysIp}`);
+    S('network-instance default interface system0.0');
+    myFabric.forEach(f => S(`network-instance default interface ${f.port}.0`));
+    if (unnumbered) S('network-instance default ip-forwarding receive-ipv4-check false');
+
+    // BFD
+    if (d.bfd && myFabric.length) {
+      sec('BFD');
+      myFabric.forEach(f => {
+        S(`bfd subinterface ${f.port}.0 admin-state enable`);
+        S(`bfd subinterface ${f.port}.0 desired-minimum-transmit-interval 100000`);
+        S(`bfd subinterface ${f.port}.0 required-minimum-receive 100000`);
+        S(`bfd subinterface ${f.port}.0 detection-multiplier 3`);
+      });
+    }
+
+    // MPLS label blocks
+    if (mpls) {
+      sec('MPLS label blocks');
+      if (d.srmpls) {
+        S('system mpls label-ranges static SRGB shared true');
+        S(`system mpls label-ranges static SRGB start-label ${d.srgbStart}`);
+        S(`system mpls label-ranges static SRGB end-label ${d.srgbEnd}`);
+        S('system mpls label-ranges dynamic SRLB start-label 24000');
+        S('system mpls label-ranges dynamic SRLB end-label 24999');
+      }
+      if (d.ldp) {
+        S('system mpls label-ranges dynamic D-LDP start-label 100000');
+        S('system mpls label-ranges dynamic D-LDP end-label 109999');
+      }
+      S('system mpls label-ranges dynamic D-SVC-NI start-label 110000');
+      S('system mpls label-ranges dynamic D-SVC-NI end-label 114999');
+      S('system mpls label-ranges dynamic D-SVC-EVPN start-label 115000');
+      S('system mpls label-ranges dynamic D-SVC-EVPN end-label 119999');
+      S('system mpls services network-instance dynamic-label-block D-SVC-NI');
+      S('system mpls services evpn dynamic-label-block D-SVC-EVPN');
+    }
+
+    // Underlay
+    const ni = 'network-instance default protocols';
+    if (d.underlay === 'isis') {
+      sec('Underlay: IS-IS');
+      const I = `${ni} isis instance default`;
+      const area = d.isisArea || '49.0001';
+      S(`${I} admin-state enable`);
+      S(`${I} level-capability ${d.isisLevel || 'L2'}`);
+      S(`${I} net [ ${area}.${isisSystemId(sysIp)}.00 ]`);
+      S(`${I} ipv4-unicast admin-state enable`);
+      S(`${I} interface system0.0 admin-state enable`);
+      S(`${I} interface system0.0 passive true`);
+      myFabric.forEach(f => {
+        S(`${I} interface ${f.port}.0 admin-state enable`);
+        S(`${I} interface ${f.port}.0 circuit-type point-to-point`);
+        if (d.bfd) S(`${I} interface ${f.port}.0 ipv4-unicast enable-bfd true`);
+      });
+      if (mpls && d.srmpls) {
+        S(`${ni} isis dynamic-label-block SRLB`);
+        S('network-instance default segment-routing mpls global-block label-range SRGB');
+        S(`${I} segment-routing mpls`);
+        S(`${I} interface system0.0 segment-routing mpls ipv4-node-sid index ${plan.srl.indexOf(node) + 1}`);
+      }
+    } else if (d.underlay === 'ospf') {
+      sec('Underlay: OSPFv2');
+      const I = `${ni} ospf instance main`;
+      const A = `${I} area ${d.ospfArea || '0.0.0.0'}`;
+      S(`${I} admin-state enable`);
+      S(`${I} version ospf-v2`);
+      S(`${I} router-id ${sysIp}`);
+      S(`${A} interface system0.0 admin-state enable`);
+      S(`${A} interface system0.0 passive true`);
+      myFabric.forEach(f => {
+        S(`${A} interface ${f.port}.0 admin-state enable`);
+        S(`${A} interface ${f.port}.0 interface-type point-to-point`);
+        if (d.bfd) S(`${A} interface ${f.port}.0 failure-detection enable-bfd true`);
+      });
+    }
+
+    if (mpls && d.ldp) {
+      sec('LDP');
+      S(`${ni} ldp admin-state enable`);
+      S(`${ni} ldp dynamic-label-block D-LDP`);
+      myFabric.forEach(f => {
+        S(`${ni} ldp discovery interfaces interface ${f.port}.0 ipv4 admin-state enable`);
+      });
+    }
+
+    // BGP
+    const bgp = `${ni} bgp`;
+    const needBgp = isEbgp || (d.overlay === 'ibgp' && ov && ov.peers.length);
+    if (needBgp) {
+      sec(isEbgp ? 'BGP: eBGP underlay' + (ov ? ' + iBGP EVPN overlay' : '') : 'BGP: iBGP EVPN overlay');
+      if (isEbgp) {
+        S(`routing-policy prefix-set system-loopbacks prefix ${d.loopbacks} mask-length-range 32..32`);
+        S('routing-policy policy underlay-loopbacks statement 10 match prefix prefix-set system-loopbacks');
+        S('routing-policy policy underlay-loopbacks statement 10 action policy-result accept');
+      }
+      S(`${bgp} admin-state enable`);
+      S(`${bgp} autonomous-system ${isEbgp ? underAsn : d.overlayAsn}`);
+      S(`${bgp} router-id ${sysIp}`);
+      if (isEbgp) {
+        S(`${bgp} afi-safi ipv4-unicast admin-state enable`);
+        S(`${bgp} afi-safi ipv4-unicast multipath maximum-paths 64`);
+        S(`${bgp} group underlay description ${q('eBGP underlay')}`);
+        S(`${bgp} group underlay export-policy [ underlay-loopbacks ]`);
+        S(`${bgp} group underlay import-policy [ underlay-loopbacks ]`);
+        S(`${bgp} group underlay afi-safi ipv4-unicast admin-state enable`);
+        if (d.bfd && !unnumbered) S(`${bgp} group underlay failure-detection enable-bfd true`);
+        if (unnumbered) {
+          S(`${bgp} group underlay afi-safi ipv4-unicast ipv4-unicast advertise-ipv6-next-hops true`);
+          S(`${bgp} group underlay afi-safi ipv4-unicast ipv4-unicast receive-ipv6-next-hops true`);
+          myFabric.forEach(f => {
+            S(`${bgp} dynamic-neighbors interface ${f.port}.0 peer-group underlay`);
+            S(`${bgp} dynamic-neighbors interface ${f.port}.0 allowed-peer-as [ ${plan.asn.get(f.peer.id)} ]`);
+          });
+        } else {
+          myFabric.forEach(f => {
+            if (!f.peerIp) return;
+            const nb = `${bgp} neighbor ${f.peerIp.split('/')[0]}`;
+            S(`${nb} peer-group underlay`);
+            S(`${nb} peer-as ${plan.asn.get(f.peer.id)}`);
+            S(`${nb} description ${q(f.peer.name)}`);
+          });
+          myFabric.forEach(f => {
+            if (plan.asn.get(f.peer.id) === underAsn) plan.issues.push({ level: 'warn', msg: `${node.name} and ${f.peer.name} share AS ${underAsn} on an eBGP underlay link.`, node: node.id });
+          });
+        }
+      }
+      if (d.overlay === 'ibgp' && ov && ov.peers.length) {
+        const og = `${bgp} group overlay`;
+        S(`${og} description ${q('iBGP EVPN overlay')}`);
+        S(`${og} peer-as ${d.overlayAsn}`);
+        if (isEbgp) S(`${og} local-as as-number ${d.overlayAsn}`);
+        S(`${og} transport local-address ${sysIp}`);
+        S(`${og} afi-safi evpn admin-state enable`);
+        S(`${og} afi-safi ipv4-unicast admin-state disable`);
+        const needVpn = mpls && [...plan.svcPlan.values()].some(p => p.svc.kind === 'ip-vrf' && p.svc.signaling === 'ipvpn' && (p.nodes.has(node.id) || ov.rrClient));
+        if (needVpn) S(`${og} afi-safi l3vpn-ipv4-unicast admin-state enable`);
+        if (ov.rrClient) {
+          S(`${og} route-reflector client true`);
+          S(`${og} route-reflector cluster-id ${sysIp}`);
+        }
+        ov.peers.forEach(pid => {
+          const pn = plan.byId.get(pid);
+          S(`${bgp} neighbor ${plan.sys.get(pid)} peer-group overlay`);
+          S(`${bgp} neighbor ${plan.sys.get(pid)} description ${q(pn.name + (ov.rrClient ? ' (RR client)' : pn.rr ? ' (RR)' : ''))}`);
+        });
+      }
+    }
+
+    // Services
+    const mySvcs = [...plan.svcPlan.values()].filter(p => p.nodes.has(node.id));
+    const macs = mySvcs.filter(p => p.svc.kind === 'mac-vrf');
+    const ipvrfs = mySvcs.filter(p => p.svc.kind === 'ip-vrf');
+    const allowed = [d.ldp && 'ldp', d.srmpls && 'sr-isis'].filter(Boolean).join(' ');
+    const rt = s => `target:${d.overlayAsn}:${s.evi}`;
+    const vpn = (name, s) => {
+      S(`network-instance ${name} protocols bgp-vpn bgp-instance 1 route-distinguisher rd ${sysIp}:${s.evi}`);
+      S(`network-instance ${name} protocols bgp-vpn bgp-instance 1 route-target export-rt ${rt(s)}`);
+      S(`network-instance ${name} protocols bgp-vpn bgp-instance 1 route-target import-rt ${rt(s)}`);
+    };
+    if (!mpls && (macs.length || ipvrfs.some(p => p.svc.signaling !== 'ipvpn'))) {
+      sec('VXLAN tunnel interfaces');
+      macs.forEach(p => {
+        const vni = Number(p.svc.vni) || Number(p.svc.evi);
+        S(`tunnel-interface vxlan1 vxlan-interface ${vni} type bridged`);
+        S(`tunnel-interface vxlan1 vxlan-interface ${vni} ingress vni ${vni}`);
+      });
+      ipvrfs.forEach(p => {
+        const vni = Number(p.svc.vni) || Number(p.svc.evi);
+        S(`tunnel-interface vxlan1 vxlan-interface ${vni} type routed`);
+        S(`tunnel-interface vxlan1 vxlan-interface ${vni} ingress vni ${vni}`);
+      });
+    }
+    macs.forEach(p => {
+      const s = p.svc, N = `network-instance ${s.name}`;
+      const vni = Number(s.vni) || Number(s.evi);
+      sec(`MAC-VRF ${s.name} (EVI ${s.evi}${mpls ? ', EVPN-MPLS' : ', VNI ' + vni})`);
+      const irbVrf = s.irb && plan.svcById.get(s.irb);
+      if (irbVrf && p.gwCidr) {
+        const ii = `interface irb0 subinterface ${s.evi}`;
+        S('interface irb0 admin-state enable');
+        S(`${ii} admin-state enable`);
+        S(`${ii} description ${q('gateway ' + s.name)}`);
+        S(`${ii} ipv4 admin-state enable`);
+        S(`${ii} ipv4 address ${p.gwCidr} anycast-gw true`);
+        S(`${ii} ipv4 address ${p.gwCidr} primary`);
+        S(`${ii} ipv4 arp learn-unsolicited true`);
+        S(`${ii} ipv4 arp host-route populate dynamic`);
+        S(`${ii} ipv4 arp evpn advertise dynamic`);
+        S(`${ii} anycast-gw virtual-router-id 1`);
+      }
+      S(`${N} type mac-vrf`);
+      S(`${N} admin-state enable`);
+      S(`${N} description ${q(s.description || 'L2 EVI ' + s.evi)}`);
+      svcSubifs(s).forEach(x => S(`${N} interface ${x}`));
+      if (irbVrf && p.gwCidr) S(`${N} interface irb0.${s.evi}`);
+      if (!mpls) S(`${N} vxlan-interface vxlan1.${vni}`);
+      const bi = `${N} protocols bgp-evpn bgp-instance 1`;
+      S(`${bi} admin-state enable`);
+      if (mpls) {
+        S(`${bi} encapsulation-type mpls`);
+        S(`${bi} mpls next-hop-resolution allowed-tunnel-types [ ${allowed} ]`);
+      } else S(`${bi} vxlan-interface vxlan1.${vni}`);
+      S(`${bi} evi ${s.evi}`);
+      S(`${bi} ecmp 4`);
+      vpn(s.name, s);
+    });
+    ipvrfs.forEach(p => {
+      const s = p.svc, N = `network-instance ${s.name}`;
+      const vni = Number(s.vni) || Number(s.evi);
+      const ipvpn = mpls && s.signaling === 'ipvpn';
+      sec(`IP-VRF ${s.name} (${ipvpn ? 'IP-VPN' : 'EVPN IFL'} ${mpls ? 'over MPLS' : 'VNI ' + vni})`);
+      S(`${N} type ip-vrf`);
+      S(`${N} admin-state enable`);
+      S(`${N} description ${q(s.description || 'L3 VRF ' + s.evi)}`);
+      svcSubifs(s).forEach(x => S(`${N} interface ${x}`));
+      [...plan.svcPlan.values()].filter(m => m.svc.kind === 'mac-vrf' && m.svc.irb === s.id && m.nodes.has(node.id) && m.gwCidr)
+        .forEach(m => S(`${N} interface irb0.${m.svc.evi}`));
+      if (ipvpn) {
+        S(`${N} protocols bgp-ipvpn bgp-instance 1 admin-state enable`);
+        S(`${N} protocols bgp-ipvpn bgp-instance 1 mpls next-hop-resolution allowed-tunnel-types [ ${allowed} ]`);
+      } else {
+        if (!mpls) S(`${N} vxlan-interface vxlan1.${vni}`);
+        const bi = `${N} protocols bgp-evpn bgp-instance 1`;
+        S(`${bi} admin-state enable`);
+        if (mpls) {
+          S(`${bi} encapsulation-type mpls`);
+          S(`${bi} mpls next-hop-resolution allowed-tunnel-types [ ${allowed} ]`);
+        } else S(`${bi} vxlan-interface vxlan1.${vni}`);
+        S(`${bi} evi ${s.evi}`);
+        S(`${bi} ecmp 8`);
+      }
+      vpn(s.name, s);
+    });
+
+    return L.join('\n').replace(/^\n/, '') + '\n';
+  }
+
+  // ───────────────────────── Linux hosts ─────────────────────────
+  function hostExec(plan, host) {
+    const cfg = plan.hostCfg.get(host.id);
+    if (!cfg) return [];
+    const cmds = [];
+    cfg.bonds.forEach((b, i) => {
+      cmds.push(`ip link add ${b.name} type bond mode 802.3ad lacp_rate fast xmit_hash_policy layer3+4`);
+      cmds.push(`ip link set address 00:c1:ab:00:${(plan.hosts.indexOf(host) + 1).toString(16).padStart(2, '0')}:${(i + 1).toString(16).padStart(2, '0')} dev ${b.name}`);
+      b.members.forEach(m => { cmds.push(`ip link set ${m} down`); cmds.push(`ip link set ${m} master ${b.name}`); cmds.push(`ip link set ${m} up`); });
+      cmds.push(`ip link set ${b.name} up`);
+    });
+    cfg.ifaces.forEach(f => {
+      let dev = f.dev;
+      if (f.vlan) {
+        cmds.push(`ip link add link ${f.dev} name ${f.dev}.${f.vlan} type vlan id ${f.vlan}`);
+        dev = `${f.dev}.${f.vlan}`;
+        cmds.push(`ip link set ${dev} up`);
+      }
+      if (f.ip) cmds.push(`ip addr add ${f.ip} dev ${dev}`);
+      if (f.gw) {
+        const vrf = f.svc.kind === 'mac-vrf' ? f.svc.irb : f.svc.id;
+        const own = f.ip ? (() => { const c = parseCidr(f.ip); return int2ip(c.net) + '/' + c.len; })() : null;
+        (plan.vrfSubnets.get(vrf) || []).filter(n => n !== own).forEach(n => cmds.push(`ip route add ${n} via ${f.gw}`));
+      }
+    });
+    return cmds;
+  }
+
+  // ───────────────────────── containerlab topology ─────────────────────────
+  function clabYaml(plan) {
+    const d = plan.design;
+    const img = (d.image || '').trim() || `ghcr.io/nokia/srlinux:${d.version}`;
+    const L = [`name: ${d.lab}`, ''];
+    const mg = parseCidr(d.mgmt);
+    if (mg) L.push('mgmt:', `  network: ${d.lab}-mgmt`, `  ipv4-subnet: ${int2ip(mg.net)}/${mg.len}`, '');
+    L.push('topology:', '  kinds:');
+    if (plan.srl.length) {
+      L.push('    nokia_srlinux:', `      image: ${img}`);
+      const lic = plan.srl.some(n => PLATFORM[n.type] && PLATFORM[n.type].license === true);
+      if (lic && String(d.license || '').trim()) L.push(`      license: ${d.license.trim()}  # 7250 IXR / 7730 SXR types need it`);
+    }
+    if (plan.hosts.length) L.push('    linux:', `      image: ${d.linuxImage || 'ghcr.io/srl-labs/network-multitool'}`);
+    L.push('', '  nodes:');
+    let mi = 10;
+    plan.nodes.forEach(n => {
+      L.push(`    ${n.name}:`);
+      if (n.kind === 'srl') {
+        const h = hw(n);
+        L.push('      kind: nokia_srlinux', `      type: ${n.type}`);
+        if (h && h.platform.modular && !h.platform.fixedCard && h.card !== h.platform.defaultCard) {
+          L.push('      components:  # line card selection: containerlab newer than v0.79.0', '        - slot: 1', `          type: ${h.card}`);
+        }
+        L.push(`      startup-config: configs/${n.name}.cli`);
+      } else {
+        L.push('      kind: linux');
+      }
+      if (mg) L.push(`      mgmt-ipv4: ${int2ip(mg.net + (mi++))}`);
+      if (n.kind === 'linux') {
+        const ex = hostExec(plan, n);
+        if (ex.length) { L.push('      exec:'); ex.forEach(c => L.push(`        - ${JSON.stringify(c)}`)); }
+      }
+    });
+    const valid = plan.links;
+    if (valid.length) {
+      L.push('', '  links:');
+      valid.forEach(r => L.push(`    - endpoints: ["${r.A.name}:${r.link.a.p}", "${r.B.name}:${r.link.b.p}"]`));
+    }
+    return L.join('\n') + '\n';
+  }
+
+  // ───────────────────────── README ─────────────────────────
+  function readme(plan) {
+    const d = plan.design;
+    const L = [`# ${d.lab}`, '', 'Generated by SRL Lab Builder.', '', '## Deploy', '', '```bash',
+      `sudo containerlab deploy -t ${d.lab}.clab.yml`, '```', '',
+      `SR Linux image: \`${(d.image || '').trim() || 'ghcr.io/nokia/srlinux:' + d.version}\`. Log in with \`ssh admin@clab-${d.lab}-<node>\` (password \`NokiaSrl1!\`).`, ''];
+    if (plan.srl.some(n => PLATFORM[n.type] && PLATFORM[n.type].license === true)) L.push(`7250 IXR / 7730 SXR types need the license file at \`${d.license}\`.`, '');
+    L.push('## Nodes', '', '| Node | Type | Role | System IP | AS |', '|---|---|---|---|---|');
+    plan.srl.forEach(n => { const h = hw(n); L.push(`| ${n.name} | ${h ? h.platform.name + (h.platform.modular ? ' / ' + h.card : '') : n.type} | ${n.role}${n.rr ? ' (RR)' : ''} | ${plan.sys.get(n.id)} | ${d.underlay.startsWith('ebgp') ? plan.asn.get(n.id) : d.overlayAsn} |`); });
+    plan.hosts.forEach(h => { const c = plan.hostCfg.get(h.id); L.push(`| ${h.name} | linux | host | ${c ? c.ifaces.map(f => f.ip).filter(Boolean).join(', ') : '—'} | — |`); });
+    L.push('', '## Check it', '');
+    const cmd = [];
+    if (d.underlay.startsWith('ebgp') || d.overlay === 'ibgp') cmd.push('show network-instance default protocols bgp neighbor');
+    if (d.underlay === 'isis') cmd.push('show network-instance default protocols isis adjacency');
+    if (d.underlay === 'ospf') cmd.push('show network-instance default protocols ospf neighbor');
+    if (d.transport === 'mpls' && d.ldp) cmd.push('show network-instance default protocols ldp neighbor');
+    if (d.transport === 'mpls') cmd.push('show network-instance default tunnel-table all');
+    cmd.push('show network-instance default route-table ipv4-unicast summary');
+    if (d.overlay === 'ibgp') cmd.push('show network-instance default protocols bgp routes evpn route-type summary');
+    plan.svcPlan.forEach(p => {
+      if (!p.nodes.size) return;
+      if (p.svc.kind === 'mac-vrf') cmd.push(`show network-instance ${p.svc.name} bridge-table mac-table all`);
+      else cmd.push(`show network-instance ${p.svc.name} route-table`);
+    });
+    if ([...plan.lagByNode.values()].some(l => l.some(x => x.es))) cmd.push('show system network-instance ethernet-segments');
+    if (plan.lagByNode.size) cmd.push('show lag');
+    L.push('```', ...cmd, '```', '');
+    const pings = [];
+    plan.hostCfg.forEach((c, hid) => c.ifaces.forEach(f => { if (f.ip) pings.push({ host: plan.byId.get(hid).name, ip: f.ip.split('/')[0] }); }));
+    if (pings.length > 1) {
+      L.push('From a host:', '', '```bash', `docker exec -it clab-${d.lab}-${pings[0].host} ping -c 3 ${pings[pings.length - 1].ip}`, '```', '');
+    }
+    const issues = plan.issues.filter(i => i.level !== 'info');
+    if (issues.length) { L.push('## Open items', ''); issues.forEach(i => L.push(`- ${i.msg}`)); L.push(''); }
+    return L.join('\n');
+  }
+
+  function generate(project) {
+    const plan = resolve(project);
+    const files = [];
+    files.push({ name: `${plan.design.lab}.clab.yml`, kind: 'yaml', code: clabYaml(plan) });
+    plan.srl.forEach(n => { if (PLATFORM[n.type]) files.push({ name: `configs/${n.name}.cli`, kind: 'cli', node: n.id, code: nodeConfig(plan, n) }); });
+    files.push({ name: 'README.md', kind: 'md', code: readme(plan) });
+    return { plan, files, issues: plan.issues };
+  }
+
+  // ───────────────────────── builders / presets ─────────────────────────
+  let uid = 0;
+  const nid = p => `${p}${Date.now().toString(36)}${(uid++).toString(36)}`;
+
+  function mkNode(name, kind, type, role, extra) {
+    return Object.assign({ id: nid('n'), name, kind, type: kind === 'srl' ? type : null, card: null, role: kind === 'srl' ? role : 'host', asn: '', sys: '', rr: role === 'spine' || role === 'superspine', breakouts: {} }, extra || {});
+  }
+  const mkLink = (a, pa, b, pb, extra) => Object.assign({ id: nid('l'), a: { n: a.id, p: pa }, b: { n: b.id, p: pb }, svc: '', vlan: '', bond: '' }, extra || {});
+
+  // Ports for a switch in a Clos: `up` = fabric-facing (fastest ports),
+  // `down` = host-facing. When the slower ports are too few to serve hosts,
+  // hosts take the fast ports from the start and uplinks from the end.
+  function leafPorts(type) {
+    const groups = hw({ type, card: null, breakouts: {} }).ports;
+    const rank = sp => parseFloat(sp) * (/T$/.test(sp) ? 1000 : 1);
+    const max = Math.max(...groups.map(g => rank(g.speed)));
+    const expand = gs => gs.flatMap(g => { const r = []; for (let i = g.from; i <= g.to; i++) r.push(i); return r; });
+    const fast = expand(groups.filter(g => rank(g.speed) === max));
+    const slow = expand(groups.filter(g => rank(g.speed) < max));
+    if (slow.length >= 8) return { up: fast, down: slow, fabricDown: fast };
+    return { up: fast.slice().reverse(), down: fast, fabricDown: fast };
+  }
+
+  function buildClos(o) {
+    const opt = Object.assign({ spines: 2, leaves: 4, spineType: 'ixr-d3l', leafType: 'ixr-d2l', hostsPerLeaf: 1, dualHomed: true, underlay: 'ebgp' }, o || {});
+    const nodes = [], links = [];
+    const spines = [], leaves = [];
+    for (let i = 1; i <= opt.spines; i++) spines.push(mkNode(`spine${i}`, 'srl', opt.spineType, 'spine'));
+    for (let i = 1; i <= opt.leaves; i++) leaves.push(mkNode(`leaf${i}`, 'srl', opt.leafType, 'leaf'));
+    nodes.push(...spines, ...leaves);
+    const lp = leafPorts(opt.leafType), spineDown = leafPorts(opt.spineType).fabricDown;
+    leaves.forEach((lf, li) => spines.forEach((s, si) => {
+      links.push(mkLink(lf, `ethernet-1/${lp.up[si]}`, s, `ethernet-1/${spineDown[li]}`));
+    }));
+    const macA = { id: nid('s'), kind: 'mac-vrf', name: 'mac-vrf-10', evi: 10, vni: 10, subnet: '172.16.10.0/24', gw: '', irb: '', extra: [], description: 'Tenant A · VLAN 10' };
+    const macB = { id: nid('s'), kind: 'mac-vrf', name: 'mac-vrf-20', evi: 20, vni: 20, subnet: '172.16.20.0/24', gw: '', irb: '', extra: [], description: 'Tenant A · VLAN 20' };
+    const vrf = { id: nid('s'), kind: 'ip-vrf', name: 'tenant-a', evi: 100, vni: 100, signaling: 'evpn', extra: [], description: 'Tenant A routing' };
+    macA.irb = vrf.id; macB.irb = vrf.id;
+    let h = 0; const hostPortIdx = new Map(leaves.map(l => [l.id, 0]));
+    const nextHostPort = lf => { const i = hostPortIdx.get(lf.id); hostPortIdx.set(lf.id, i + 1); return `ethernet-1/${lp.down[i]}`; };
+    let li = 0;
+    if (opt.dualHomed && leaves.length >= 2) {
+      const host = mkNode(`host${++h}`, 'linux'); nodes.push(host);
+      links.push(mkLink(leaves[0], nextHostPort(leaves[0]), host, 'eth1', { svc: macA.id, vlan: '', bond: 'bond0' }));
+      links.push(mkLink(leaves[1], nextHostPort(leaves[1]), host, 'eth2', { svc: macA.id, vlan: '', bond: 'bond0' }));
+      li = 2;
+    }
+    leaves.forEach((lf, i) => {
+      if (i < li && opt.hostsPerLeaf <= 1) return;
+      const n = i < li ? opt.hostsPerLeaf - 1 : opt.hostsPerLeaf;
+      for (let k = 0; k < n; k++) {
+        const host = mkNode(`host${++h}`, 'linux'); nodes.push(host);
+        const svc = (h % 2 === 0) ? macB : macA;
+        links.push(mkLink(lf, nextHostPort(lf), host, 'eth1', { svc: svc.id }));
+      }
+    });
+    const design = Object.assign(defaultDesign(), { lab: 'evpn-vxlan-fabric', underlay: opt.underlay, transport: 'vxlan' });
+    return { design, nodes, links, services: [macA, macB, vrf] };
+  }
+
+  function buildMplsCore() {
+    const p1 = mkNode('p1', 'srl', 'ixr-x3b', 'p', { rr: true });
+    const p2 = mkNode('p2', 'srl', 'ixr-x3b', 'p', { rr: true });
+    const pe1 = mkNode('pe1', 'srl', 'ixr-x1b', 'pe', { rr: false });
+    const pe2 = mkNode('pe2', 'srl', 'sxr-1d-32d', 'pe', { rr: false });
+    const pe3 = mkNode('pe3', 'srl', 'ixr-6e', 'pe', { rr: false, card: 'imm60-100g-qsfp28' });
+    const ce1 = mkNode('ce1', 'linux'), ce2 = mkNode('ce2', 'linux'), ce3 = mkNode('ce3', 'linux');
+    const nodes = [p1, p2, pe1, pe2, pe3, ce1, ce2, ce3];
+    const links = [
+      mkLink(p1, 'ethernet-1/1', p2, 'ethernet-1/1'),
+      mkLink(pe1, 'ethernet-1/25', p1, 'ethernet-1/2'), mkLink(pe1, 'ethernet-1/26', p2, 'ethernet-1/2'),
+      mkLink(pe2, 'ethernet-1/17', p1, 'ethernet-1/3'), mkLink(pe2, 'ethernet-1/18', p2, 'ethernet-1/3'),
+      mkLink(pe3, 'ethernet-1/1', p1, 'ethernet-1/4'), mkLink(pe3, 'ethernet-1/2', p2, 'ethernet-1/4'),
+    ];
+    const l2 = { id: nid('s'), kind: 'mac-vrf', name: 'evpn-l2-300', evi: 300, vni: 300, subnet: '10.30.0.0/24', gw: '', irb: '', extra: [], description: 'E-LAN over EVPN-MPLS' };
+    const l3 = { id: nid('s'), kind: 'ip-vrf', name: 'vpn-blue', evi: 400, vni: 400, signaling: 'ipvpn', extra: [], description: 'L3VPN (VPN-IPv4)' };
+    links.push(mkLink(pe1, 'ethernet-1/1', ce1, 'eth1', { svc: l2.id, vlan: '300' }));
+    links.push(mkLink(pe2, 'ethernet-1/1', ce2, 'eth1', { svc: l2.id, vlan: '300' }));
+    links.push(mkLink(pe1, 'ethernet-1/2', ce1, 'eth2', { svc: l3.id }));
+    links.push(mkLink(pe3, 'ethernet-1/3', ce3, 'eth1', { svc: l3.id }));
+    const design = Object.assign(defaultDesign(), { lab: 'mpls-core', underlay: 'isis', transport: 'mpls', ldp: true, srmpls: true, overlayAsn: 65000, loopbacks: '10.255.0.0/24', p2p: '10.254.0.0/24' });
+    return { design, nodes, links, services: [l2, l3] };
+  }
+
+  function buildAiFabric() {
+    const pr = buildClos({ spines: 2, leaves: 2, spineType: 'ixr-h5-64d', leafType: 'ixr-h4-32d', hostsPerLeaf: 2, dualHomed: false, underlay: 'ebgp-unnumbered' });
+    pr.design.lab = 'dc-h-series';
+    // border leaf on 7250 IXR-X3b
+    const bl = mkNode('border1', 'srl', 'ixr-x3b', 'borderleaf');
+    pr.nodes.splice(4, 0, bl);
+    const spines = pr.nodes.filter(n => n.role === 'spine');
+    spines.forEach((s, i) => pr.links.push(mkLink(bl, `ethernet-1/${35 + i}`, s, 'ethernet-1/64')));
+    const vrf = pr.services.find(s => s.kind === 'ip-vrf');
+    vrf.extra = [bl.id];
+    return pr;
+  }
+
+  const SRL = {
+    PLATFORMS, PLATFORM, FAMILIES, LINECARDS, ROLES, ROLE_TIER, SRL_VERSIONS, GENERIC_BREAKOUTS,
+    hw, portList, portCount, portGroup, breakoutOptions, parseMode, parsePort, parsePortSpec, parseCidr, int2ip, ip2int,
+    defaultDesign, resolve, generate, nodeConfig, clabYaml, readme, hostExec,
+    mkNode, mkLink, buildClos, buildMplsCore, buildAiFabric, leafPorts, nid,
+  };
+  if (typeof module !== 'undefined' && module.exports) module.exports = SRL;
+  else root.SRL = SRL;
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+<script>
+(function () {
+  'use strict';
+  const S = window.SRL;
+  const STORE = 'srl-lab-builder:v1';
+
+  // ───────────── tiny DOM helper ─────────────
+  function h(tag, attrs, ...kids) {
+    const el = document.createElement(tag);
+    let value;
+    if (attrs) for (const [k, v] of Object.entries(attrs)) {
+      if (v === null || v === undefined || v === false) continue;
+      if (k === 'class') el.className = v;
+      else if (k === 'style') el.style.cssText = v;
+      else if (k === 'html') el.innerHTML = v;
+      else if (k === 'value') value = v;
+      else if (k === 'checked') el.checked = !!v;
+      else if (k.startsWith('on')) el.addEventListener(k.slice(2), v);
+      else el.setAttribute(k, v === true ? '' : v);
+    }
+    kids.flat(Infinity).forEach(c => { if (c === null || c === undefined || c === false) return; el.append(c instanceof Node ? c : document.createTextNode(String(c))); });
+    if (value !== undefined) el.value = value;
+    return el;
+  }
+  const ICONS = {
+    plus: '<path d="M8 3v10M3 8h10"/>',
+    trash: '<path d="M3 4.5h10M6.5 4.5V3h3v1.5M4.5 4.5l.6 8.5h5.8l.6-8.5"/>',
+    down: '<path d="M8 2.5v8M4.5 7 8 10.5 11.5 7M3 13.5h10"/>',
+    up: '<path d="M8 10.5v-8M4.5 6 8 2.5 11.5 6M3 13.5h10"/>',
+    copy: '<rect x="5.5" y="5.5" width="8" height="8" rx="1"/><path d="M3.5 10.5v-7a1 1 0 0 1 1-1h7"/>',
+    ports: '<rect x="2" y="4.5" width="12" height="7" rx="1"/><path d="M4.5 7h2v2h-2zM9.5 7h2v2h-2z"/>',
+    save: '<path d="M3 2.5h8l2 2v9H3zM5.5 2.5v3h5v-3M5 13.5v-4h6v4"/>',
+  };
+  const icon = n => h('span', { 'aria-hidden': 'true', style: 'display:inline-flex', html: `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${ICONS[n]}</svg>` });
+
+  // ───────────── state ─────────────
+  function loadLocal() {
+    try {
+      const raw = localStorage.getItem(STORE);
+      if (!raw) return null;
+      const p = JSON.parse(raw);
+      return isProject(p) ? p : null;
+    } catch (e) { return null; }
+  }
+  function saveLocal() { try { localStorage.setItem(STORE, JSON.stringify(project)); } catch (e) { /* storage unavailable */ } }
+  function isProject(p) { return p && typeof p === 'object' && Array.isArray(p.nodes) && Array.isArray(p.links) && Array.isArray(p.services) && p.design && typeof p.design === 'object'; }
+
+  let project = loadLocal() || S.buildClos();
+  project.design = Object.assign(S.defaultDesign(), project.design);
+  const ui = { tab: 'design', portSel: {}, open: new Set(), file: null, focus: null, prev: null,
+    wiz: { spines: 2, leaves: 4, spineType: 'ixr-d3l', leafType: 'ixr-d2l', hostsPerLeaf: 1, dualHomed: true, underlay: 'ebgp' } };
+  try { const t = localStorage.getItem(STORE + ':tab'); if (['design', 'nodes', 'links', 'services'].includes(t)) ui.tab = t; } catch (e) { }
+  let gen = null;
+
+  function regen() {
+    try { gen = S.generate(project); }
+    catch (e) { gen = { files: [], issues: [{ level: 'error', msg: 'The generator stopped: ' + e.message }], plan: null }; console.error(e); }
+  }
+  function commit() { saveLocal(); regen(); renderEditor(); renderPreview(); }
+  let softT = null;
+  function soft() { saveLocal(); clearTimeout(softT); softT = setTimeout(() => { regen(); renderPreview(); }, 160); }
+
+  const byId = id => project.nodes.find(n => n.id === id);
+  const srlNodes = () => project.nodes.filter(n => n.kind === 'srl');
+
+  // ───────────── form controls ─────────────
+  function txt(id, value, set, o = {}) {
+    return h('input', { type: 'text', id, class: o.mono ? 'mono' : null, value: value == null ? '' : String(value), placeholder: o.ph || null,
+      spellcheck: 'false', autocomplete: 'off', inputmode: o.num ? 'numeric' : null, 'aria-label': o.label || null,
+      oninput: e => { set(e.target.value); soft(); }, onchange: () => setTimeout(commit, 0) });
+  }
+  function opt(o) { return typeof o === 'string' ? h('option', { value: o }, o) : h('option', { value: o.v, disabled: o.disabled || null }, o.l); }
+  function sel(id, value, options, set, o = {}) {
+    const s = h('select', { id, class: o.mono ? 'mono' : null, 'aria-label': o.label || null, onchange: e => { set(e.target.value); commit(); } });
+    options.forEach(x => {
+      if (x && x.group) { const g = h('optgroup', { label: x.group }); x.items.forEach(it => g.append(opt(it))); s.append(g); }
+      else s.append(opt(x));
+    });
+    s.value = value == null ? '' : String(value);
+    return s;
+  }
+  function chk(id, checked, set, label) {
+    return h('label', { class: 'check' }, h('input', { type: 'checkbox', id, checked, onchange: e => { set(e.target.checked); commit(); } }), label);
+  }
+  function seg(value, options, set, label) {
+    return h('div', { class: 'seg', role: 'group', 'aria-label': label || null },
+      options.map(o => h('button', { type: 'button', 'aria-pressed': String(o.v === value), disabled: o.disabled || null, title: o.title || null,
+        onclick: () => { if (o.v !== value) { set(o.v); commit(); } } }, o.l)));
+  }
+  const field = (label, control, hint) => h('label', { class: 'f' }, h('span', null, label), control, hint ? h('em', null, hint) : null);
+  const fieldDiv = (label, control, hint) => h('div', { class: 'f' }, h('span', null, label), control, hint ? h('em', null, hint) : null);
+  const btn = (label, onclick, o = {}) => h('button', { type: 'button', class: 'btn ' + (o.cls || ''), onclick, title: o.title || null, disabled: o.disabled || null }, o.icon ? icon(o.icon) : null, label);
+  const delBtn = (onclick, label) => h('button', { type: 'button', class: 'iconbtn', onclick, title: label, 'aria-label': label }, icon('trash'));
+
+  // ───────────── hardware labels ─────────────
+  function groupSummary(groups) {
+    const acc = [];
+    groups.forEach(g => {
+      const n = g.to - g.from + 1;
+      const prev = acc.find(a => a.media === g.media && a.speed === g.speed);
+      if (prev) prev.n += n; else acc.push({ media: g.media, speed: g.speed, n });
+    });
+    return acc.map(a => `${a.n}×${a.speed}`).join(' + ');
+  }
+  function platformOptions() {
+    return S.FAMILIES.map(f => ({ group: f, items: S.PLATFORMS.filter(p => p.family === f).map(p => ({
+      v: p.type, l: `${p.name.replace(/^\d{4} /, '')} · ${p.modular ? (p.fixedCard ? groupSummary(S.LINECARDS[p.defaultCard].ports) : 'modular, line card below') : groupSummary(p.ports)}`,
+    })) }));
+  }
+  const MEDIA_VAR = { 'RJ45': '--m-rj45', 'SFP+': '--m-sfpp', 'SFP28': '--m-sfp28', 'SFP-DD': '--m-sfpdd', 'QSFP28': '--m-qsfp28', 'QSFP-DD': '--m-qsfpdd', 'QSFP56-DD': '--m-qsfp56', 'QSFP112-DD': '--m-qsfp112', 'OSFP': '--m-osfp' };
+  const mediaColor = m => `var(${MEDIA_VAR[m] || '--m-rj45'})`;
+  const ROLE_LABEL = { superspine: 'Super-spine', spine: 'Spine', leaf: 'Leaf', borderleaf: 'Border leaf', pe: 'PE', p: 'P' };
+
+  // ───────────── top bar ─────────────
+  const topEl = document.getElementById('top');
+  let dlLabel = null, labInput = null;
+  function buildTop() {
+    labInput = txt('labname', project.design.lab, v => { project.design.lab = v.trim() || 'srl-lab'; }, { mono: true, label: 'Lab name' });
+    labInput.addEventListener('change', () => { if (!/^[A-Za-z0-9][A-Za-z0-9_.-]*$/.test(project.design.lab)) toast('Lab names should use letters, digits, “-”, “_” and “.”.'); });
+    const dl = btn('Download ZIP', downloadZip, { icon: 'down', cls: 'primary', title: 'Topology, configs/*.cli, README and project.json in one archive' });
+    dlLabel = dl.lastChild;
+    topEl.replaceChildren(
+      h('div', { class: 'brand' }, h('b', null, 'SRL ', h('i', null, 'Lab'), ' Builder'), h('small', null, 'SR Linux · containerlab')),
+      h('div', { class: 'labname' }, h('label', { for: 'labname' }, 'Lab'), labInput),
+      h('div', { class: 'grow' }),
+      h('div', { class: 'actions' },
+        btn('Import', () => fileInput.click(), { icon: 'up', cls: 'ghost', title: 'Load a project JSON exported from this builder' }),
+        btn('Export project', exportProject, { icon: 'save', cls: 'ghost', title: 'Save this design as JSON to re-import later' }),
+        dl));
+  }
+  function renderTop() {
+    if (!dlLabel) buildTop();
+    const errs = gen ? gen.issues.filter(i => i.level === 'error').length : 0;
+    dlLabel.textContent = errs ? `Download ZIP · ${errs} error${errs > 1 ? 's' : ''}` : 'Download ZIP';
+    if (document.activeElement !== labInput && labInput.value !== project.design.lab) labInput.value = project.design.lab;
+  }
+
+  // ───────────── editor ─────────────
+  const edEl = document.getElementById('editor');
+  function renderEditor() {
+    const ae = document.activeElement;
+    const fid = ae && ae.id && edEl.contains(ae) ? ae.id : null;
+    let s0 = null, s1 = null;
+    try { if (fid && typeof ae.selectionStart === 'number') { s0 = ae.selectionStart; s1 = ae.selectionEnd; } } catch (e) { }
+    const tabs = [
+      { id: 'design', l: 'Design' },
+      { id: 'nodes', l: 'Nodes', c: project.nodes.length },
+      { id: 'links', l: 'Links', c: project.links.length },
+      { id: 'services', l: 'Services', c: project.services.length },
+    ];
+    const body = { design: renderDesign, nodes: renderNodes, links: renderLinks, services: renderServices }[ui.tab]();
+    edEl.replaceChildren(
+      h('div', { class: 'tabs', role: 'tablist' }, tabs.map(t => h('button', { type: 'button', class: 'tab', role: 'tab', id: 'tab-' + t.id, 'aria-selected': String(ui.tab === t.id),
+        onclick: () => { ui.tab = t.id; try { localStorage.setItem(STORE + ':tab', t.id); } catch (e) { } renderEditor(); } }, t.l, t.c != null ? h('span', { class: 'count' }, t.c) : null))),
+      h('div', { role: 'tabpanel', 'aria-labelledby': 'tab-' + ui.tab }, body));
+    if (fid) {
+      const el = document.getElementById(fid);
+      if (el) { el.focus({ preventScroll: true }); try { if (s0 !== null) el.setSelectionRange(s0, s1); } catch (e) { } }
+    }
+  }
+
+  // ── Design tab ──
+  function replaceProject(p, msg) {
+    ui.prev = JSON.parse(JSON.stringify(project));
+    project = p; project.design = Object.assign(S.defaultDesign(), p.design);
+    ui.file = null; ui.open.clear(); ui.portSel = {};
+    commit(); renderTop();
+    toast(msg, 'Undo', () => { if (ui.prev) { project = ui.prev; ui.prev = null; commit(); renderTop(); } });
+  }
+  function fixedTypes() {
+    return S.FAMILIES.filter(f => !/IXR-e|gen1/.test(f)).map(f => ({ group: f, items: S.PLATFORMS.filter(p => p.family === f && !p.modular).map(p => ({ v: p.type, l: p.name.replace(/^\d{4} /, '') })) }));
+  }
+  function renderDesign() {
+    const d = project.design, w = ui.wiz;
+    const n = (a, b) => Array.from({ length: b - a + 1 }, (_, i) => String(a + i));
+    const tpls = h('div', { class: 'tpls' },
+      h('div', { class: 'tpl' },
+        h('h4', null, 'EVPN-VXLAN Clos'),
+        h('p', null, 'Spines and leaves, eBGP or IGP underlay, spines as EVPN route reflectors, one dual-homed host on an all-active ES, two MAC-VRFs routed through one IP-VRF.'),
+        h('div', { class: 'mini' },
+          field('Spines', sel('w-sp', w.spines, n(1, 4), v => { w.spines = +v; })),
+          field('Leaves', sel('w-lf', w.leaves, n(2, 8), v => { w.leaves = +v; })),
+          field('Spine type', sel('w-st', w.spineType, fixedTypes(), v => { w.spineType = v; })),
+          field('Leaf type', sel('w-lt', w.leafType, fixedTypes(), v => { w.leafType = v; })),
+          field('Hosts / leaf', sel('w-h', w.hostsPerLeaf, n(0, 3), v => { w.hostsPerLeaf = +v; })),
+          field('Underlay', sel('w-u', w.underlay, [{ v: 'ebgp', l: 'eBGP' }, { v: 'ebgp-unnumbered', l: 'eBGP unnumbered' }, { v: 'isis', l: 'IS-IS' }, { v: 'ospf', l: 'OSPFv2' }], v => { w.underlay = v; }))),
+        chk('w-dh', w.dualHomed, v => { w.dualHomed = v; }, 'Dual-home host1 to leaf1 + leaf2 (ESI LAG)'),
+        btn('Build this fabric', () => replaceProject(S.buildClos(Object.assign({}, w)), `Built a ${w.spines}×${w.leaves} Clos.`), { cls: 'primary' })),
+      h('div', { class: 'tpl' },
+        h('h4', null, 'DC fabric · IXR-H + border leaf'),
+        h('p', null, '7220 IXR-H5-64D spines, IXR-H4-32D leaves and a 7250 IXR-X3b border leaf. BGP unnumbered underlay over IPv6 link-local, EVPN-VXLAN overlay.'),
+        btn('Load template', () => replaceProject(S.buildAiFabric(), 'Loaded the IXR-H fabric template.'))),
+      h('div', { class: 'tpl' },
+        h('h4', null, 'MPLS core · IS-IS SR + LDP'),
+        h('p', null, '7250 IXR-X3b P routers as route reflectors; IXR-X1b, 7730 SXR-1d-32D and IXR-6e PEs. EVPN-MPLS E-LAN and a VPN-IPv4 L3VPN.'),
+        btn('Load template', () => replaceProject(S.buildMplsCore(), 'Loaded the MPLS core template.'))),
+      h('div', { class: 'tpl' },
+        h('h4', null, 'Empty lab'),
+        h('p', null, 'Two 7220 IXR-D2L nodes and nothing else. Add nodes, links and services by hand.'),
+        btn('Start empty', () => {
+          const a = S.mkNode('srl1', 'srl', 'ixr-d2l', 'leaf'), b = S.mkNode('srl2', 'srl', 'ixr-d2l', 'leaf');
+          replaceProject({ design: Object.assign(S.defaultDesign(), { lab: 'srl-lab', overlay: 'none' }), nodes: [a, b], links: [S.mkLink(a, 'ethernet-1/49', b, 'ethernet-1/49')], services: [] }, 'Started an empty lab.');
+        })));
+
+    const verOpts = S.SRL_VERSIONS.includes(d.version) ? S.SRL_VERSIONS : [d.version, ...S.SRL_VERSIONS];
+    const lab = h('div', { class: 'block' },
+      h('h2', null, 'Images and lab'),
+      h('div', { class: 'grid2' },
+        field('SR Linux release', sel('d-ver', d.version, verOpts, v => { d.version = v; }, { mono: true }), 'Tag on ghcr.io/nokia/srlinux'),
+        field('Custom image', txt('d-img', d.image, v => { d.image = v; }, { mono: true, ph: `ghcr.io/nokia/srlinux:${d.version}` }), 'Leave empty to use the release tag'),
+        field('License file', txt('d-lic', d.license, v => { d.license = v; }, { mono: true, ph: './license.key' }), 'Needed by 7250 IXR and 7730 SXR types'),
+        field('Linux host image', txt('d-lin', d.linuxImage, v => { d.linuxImage = v; }, { mono: true })),
+        field('Management subnet', txt('d-mgmt', d.mgmt, v => { d.mgmt = v; }, { mono: true, ph: 'containerlab default' }), 'Set it to pin mgmt-ipv4 per node')));
+
+    const addr = h('div', { class: 'block' },
+      h('h2', null, 'Addressing'),
+      h('div', { class: 'grid2' },
+        field('Loopbacks (system0)', txt('d-lb', d.loopbacks, v => { d.loopbacks = v; }, { mono: true }), 'Node n gets .n (in node order)'),
+        field('Fabric point-to-point', txt('d-p2p', d.p2p, v => { d.p2p = v; }, { mono: true }), d.underlay === 'ebgp-unnumbered' ? 'Unused with BGP unnumbered' : 'Carved per link in link order'),
+        fieldDiv('Link prefix length', seg(Number(d.p2pLen) === 30 ? 30 : 31, [{ v: 31, l: '/31' }, { v: 30, l: '/30' }], v => { d.p2pLen = v; }, 'Link prefix length')),
+        field('Routed attachments', txt('d-rt', d.routedPool, v => { d.routedPool = v; }, { mono: true }), 'One /24 per host link into an IP-VRF')));
+
+    const isEbgp = d.underlay === 'ebgp' || d.underlay === 'ebgp-unnumbered';
+    const under = h('div', { class: 'block' },
+      h('h2', null, 'Underlay'),
+      seg(d.underlay, [{ v: 'ebgp', l: 'eBGP' }, { v: 'ebgp-unnumbered', l: 'eBGP unnumbered' }, { v: 'isis', l: 'IS-IS' }, { v: 'ospf', l: 'OSPFv2' }, { v: 'none', l: 'None' }], v => { d.underlay = v; }, 'Underlay protocol'),
+      h('p', { class: 'lede' }, {
+        ebgp: 'Numbered eBGP on every fabric link. Spines share one AS; every other node gets its own. Only /32 system loopbacks are exchanged.',
+        'ebgp-unnumbered': 'eBGP over IPv6 link-local addresses discovered with router advertisements. IPv4 loopbacks ride with IPv6 next hops (RFC 8950), so fabric links need no IPv4.',
+        isis: 'IS-IS point-to-point adjacencies on fabric links, system0 passive. NET is derived from the system IP.',
+        ospf: 'OSPFv2 point-to-point on fabric links, system0 passive.',
+        none: 'Fabric links get addresses but no routing protocol.',
+      }[d.underlay]),
+      isEbgp ? h('div', { class: 'grid2' },
+        field('Spine AS', txt('d-as-s', d.asnSpine, v => { d.asnSpine = v; }, { mono: true, num: true })),
+        field('Super-spine AS', txt('d-as-ss', d.asnSuperspine, v => { d.asnSuperspine = v; }, { mono: true, num: true })),
+        field('First leaf / PE AS', txt('d-as-l', d.asnLeafBase, v => { d.asnLeafBase = v; }, { mono: true, num: true }), 'Increments per node')) : null,
+      d.underlay === 'isis' ? h('div', { class: 'grid2' },
+        field('Area', txt('d-isa', d.isisArea, v => { d.isisArea = v; }, { mono: true })),
+        field('Level', sel('d-isl', d.isisLevel, [{ v: 'L2', l: 'Level 2' }, { v: 'L1', l: 'Level 1' }, { v: 'L1L2', l: 'Level 1-2' }], v => { d.isisLevel = v; }))) : null,
+      d.underlay === 'ospf' ? h('div', { class: 'grid2' }, field('Area', txt('d-osa', d.ospfArea, v => { d.ospfArea = v; }, { mono: true }))) : null,
+      d.underlay !== 'none' ? chk('d-bfd', d.bfd, v => { d.bfd = v; }, 'BFD on fabric links (100 ms × 3)') : null);
+
+    const mpls = d.transport === 'mpls';
+    const over = h('div', { class: 'block' },
+      h('h2', null, 'Overlay and transport'),
+      h('div', { class: 'row' },
+        fieldDiv('EVPN overlay', seg(d.overlay, [{ v: 'ibgp', l: 'iBGP EVPN' }, { v: 'none', l: 'None' }], v => { d.overlay = v; }, 'Overlay')),
+        field('Overlay AS', txt('d-oas', d.overlayAsn, v => { d.overlayAsn = v; }, { mono: true, num: true })),
+        fieldDiv('Service transport', seg(d.transport, [{ v: 'vxlan', l: 'VXLAN' }, { v: 'mpls', l: 'MPLS' }], v => {
+          d.transport = v;
+          if (v === 'mpls' && (d.underlay !== 'isis' && d.underlay !== 'ospf')) { d.underlay = 'isis'; toast('MPLS needs an IGP: underlay switched to IS-IS.'); }
+        }, 'Transport'))),
+      h('p', { class: 'lede' }, d.overlay === 'ibgp'
+        ? 'Nodes marked RR reflect EVPN (and VPN-IPv4 with IP-VPN) to every leaf or PE. With no RR the service nodes form a full mesh. ' + (isEbgp ? 'The overlay group uses local-as so it stays iBGP on top of per-node underlay ASNs.' : '')
+        : 'No overlay: services stay local to each node.'),
+      mpls ? h('div', { class: 'stack' },
+        h('div', { class: 'row' },
+          chk('d-ldp', d.ldp, v => { d.ldp = v; }, 'LDP'),
+          chk('d-sr', d.srmpls, v => { d.srmpls = v; }, 'SR-MPLS (IS-IS node SIDs)')),
+        d.srmpls ? h('div', { class: 'grid2' },
+          field('SRGB start', txt('d-sgs', d.srgbStart, v => { d.srgbStart = v; }, { mono: true, num: true })),
+          field('SRGB end', txt('d-sge', d.srgbEnd, v => { d.srgbEnd = v; }, { mono: true, num: true }))) : null,
+        h('p', { class: 'note' }, 'Label blocks: SRGB static (shared), SRLB 24000–24999, LDP 100000–109999, services 110000–119999. In the SR Linux container the MPLS datapath runs on 7250 IXR and 7730 SXR types.')) : null);
+
+    return h('div', { class: 'stack' },
+      h('div', { class: 'block' }, h('h2', null, 'Start from a template'), h('p', { class: 'lede' }, 'Templates replace the current lab. Everything stays editable afterwards, and Undo brings the previous lab back.'), tpls),
+      lab, addr, under, over);
+  }
+
+  // ── Nodes tab ──
+  function linkUsage(node) {
+    const m = new Map();
+    project.links.forEach(l => ['a', 'b'].forEach(e => {
+      if (l[e].n !== node.id) return;
+      const o = l[e === 'a' ? 'b' : 'a'];
+      const peer = byId(o.n);
+      m.set(l[e].p, { link: l, peer: peer ? peer.name : '?', peerPort: o.p });
+    }));
+    return m;
+  }
+  function setBreakout(node, port, mode) {
+    const old = (node.breakouts || {})[port];
+    node.breakouts = node.breakouts || {};
+    if (mode) node.breakouts[port] = mode; else delete node.breakouts[port];
+    const parent = `ethernet-1/${port}`;
+    project.links.forEach(l => ['a', 'b'].forEach(e => {
+      const ep = l[e];
+      if (ep.n !== node.id) return;
+      if (mode && !old && ep.p === parent) ep.p = parent + '/1';
+      else if (!mode && ep.p === parent + '/1') ep.p = parent;
+    }));
+  }
+  function faceplate(node) {
+    const hwi = S.hw(node);
+    if (!hwi) return h('div', { class: 'empty' }, 'Unknown type.');
+    const used = linkUsage(node);
+    const usedParents = new Set([...used.keys()].map(p => (S.parsePort(p) || {}).port));
+    const selPort = ui.portSel[node.id];
+    const groups = hwi.ports.map((g, gi) => h('div', { class: 'cages', style: gi ? 'margin-left:10px' : null },
+      Array.from({ length: g.to - g.from + 1 }, (_, k) => {
+        const i = g.from + k;
+        const bo = (node.breakouts || {})[i];
+        const cls = ['cage', usedParents.has(i) ? 'used' : '', bo ? 'bo' : '', selPort === i ? 'sel' : ''].join(' ');
+        return h('button', { type: 'button', class: cls, style: `--m:${mediaColor(g.media)}`, title: `ethernet-1/${i} · ${g.media} ${g.speed}${bo ? ' · breakout ' + bo : ''}${usedParents.has(i) ? ' · in use' : ''}`,
+          'aria-label': `Port ${i}`, onclick: () => { ui.portSel[node.id] = selPort === i ? undefined : i; renderEditor(); } }, i < 100 ? i : '');
+      })));
+    const medias = [...new Set(hwi.ports.map(g => g.media + ' ' + g.speed))];
+    const cols = hwi.ports.reduce((a, g) => a + Math.ceil((g.to - g.from + 1) / 2), 0);
+    const plate = h('div', { class: 'face' + (cols > 26 ? ' compact' : '') },
+      h('div', { class: 'face-top' }, h('span', null, hwi.platform.name + (hwi.card ? ' · ' + hwi.card : '')), h('span', null, `${S.portCount(node)} ports · slot 1`)),
+      h('div', { style: 'display:flex;align-items:flex-start' }, groups),
+      h('div', { class: 'legend' }, medias.map(m => h('span', null, h('i', { style: `--m:${mediaColor(m.split(' ')[0])}` }), m)),
+        h('span', { style: 'color:#5CE08A' }, '● linked')));
+    let info = null;
+    if (selPort) {
+      const g = S.portGroup(node, selPort);
+      const o = S.breakoutOptions(node, selPort);
+      const bo = (node.breakouts || {})[selPort] || '';
+      const uses = [...used.entries()].filter(([p]) => (S.parsePort(p) || {}).port === selPort);
+      const modes = o.modes.includes(bo) || !bo ? o.modes : [bo, ...o.modes];
+      info = h('div', { class: 'portinfo' },
+        h('div', null, h('div', { class: 'pname' }, `ethernet-1/${selPort}`), h('div', { class: 'pdesc' }, g ? `${g.media} · ${g.speed}` : 'outside this hardware')),
+        h('div', { class: 'pdesc' }, uses.length ? uses.map(([p, u]) => h('div', null, `${p} → ${u.peer} ${u.peerPort}`)) : 'Not linked'),
+        modes.length ? field('Breakout', sel(`bo-${node.id}-${selPort}`, bo, [{ v: '', l: 'None' }, ...modes.map(m => ({ v: m, l: m + (o.verified ? '' : ' (unverified)') }))], v => setBreakout(node, selPort, v), { mono: true }),
+          o.note || (bo ? `Creates ethernet-1/${selPort}/1–${S.parseMode(bo).num}` : null)) : h('div', { class: 'pdesc' }, 'No breakout on this port.'));
+    }
+    return h('div', { class: 'stack', style: 'gap:10px' }, plate, info);
+  }
+  function renderNodeCard(n) {
+    const d = project.design;
+    const p = S.PLATFORM[n.type];
+    const hwi = S.hw(n);
+    const plan = gen && gen.plan;
+    const open = ui.open.has(n.id);
+    const isEbgp = d.underlay === 'ebgp' || d.underlay === 'ebgp-unnumbered';
+    const card = h('div', { class: 'node' + (ui.focus === n.id ? ' focus' : ''), id: 'node-' + n.id },
+      h('div', { class: 'node-h' },
+        field('Name', txt(`n-${n.id}-name`, n.name, v => { n.name = v.trim(); }, { mono: true })),
+        field('Role', sel(`n-${n.id}-role`, n.role, S.ROLES.map(r => ({ v: r, l: ROLE_LABEL[r] })), v => { n.role = v; n.rr = v === 'spine' || v === 'superspine' || (v === 'p' && n.rr); })),
+        field('Hardware (containerlab type)', sel(`n-${n.id}-type`, n.type, platformOptions(), v => { n.type = v; n.card = null; n.breakouts = {}; ui.portSel[n.id] = undefined; })),
+        h('div', { class: 'tail' },
+          h('button', { type: 'button', class: 'btn small ghost', 'aria-expanded': String(open), onclick: () => { open ? ui.open.delete(n.id) : ui.open.add(n.id); renderEditor(); } }, icon('ports'), open ? 'Hide ports' : 'Ports'),
+          delBtn(() => removeNode(n), `Delete ${n.name}`))),
+      h('div', { class: 'node-b' },
+        h('div', { class: 'node-meta' },
+          p && p.modular ? field('Line card (slot 1)', sel(`n-${n.id}-card`, hwi.card, p.cards.map(c => ({ v: c, l: `${c} — ${S.LINECARDS[c].label}` })), v => { n.card = v; n.breakouts = {}; }, { mono: true }), p.fixedCard ? 'Fixed on gen1 chassis' : null) : null,
+          field('System IP', txt(`n-${n.id}-sys`, n.sys, v => { n.sys = v.trim(); }, { mono: true, ph: plan && plan.sys.get(n.id) ? plan.sys.get(n.id) + ' (auto)' : 'auto' })),
+          isEbgp ? field('Underlay AS', txt(`n-${n.id}-asn`, n.asn, v => { n.asn = v.trim(); }, { mono: true, num: true, ph: plan && plan.asn.get(n.id) ? plan.asn.get(n.id) + ' (auto)' : 'auto' })) : null,
+          d.overlay === 'ibgp' ? h('div', { class: 'f' }, h('span', null, 'EVPN'), chk(`n-${n.id}-rr`, n.rr, v => { n.rr = v; }, 'Route reflector')) : null,
+          h('div', { class: 'f' }, h('span', null, 'Platform'), h('div', { class: 'kindtag' }, p ? `${p.family} · ${p.license === true ? 'license needed' : p.license === false ? 'no license' : 'license: check'}${p.mpls ? ' · MPLS' : ''}` : '—'))),
+        open ? faceplate(n) : null));
+    return card;
+  }
+  function renderHostCard(n) {
+    const plan = gen && gen.plan;
+    const c = plan && plan.hostCfg.get(n.id);
+    const sum = c && c.ifaces.length ? c.ifaces.map(f => `${f.vlan ? f.dev + '.' + f.vlan : f.dev} ${f.ip || ''} → ${f.svc.name}`).join(' · ') : 'No service attached yet';
+    return h('div', { class: 'node hostcard' + (ui.focus === n.id ? ' focus' : ''), id: 'node-' + n.id },
+      h('div', { class: 'node-h' },
+        field('Linux host', txt(`n-${n.id}-name`, n.name, v => { n.name = v.trim(); }, { mono: true })),
+        h('div', { class: 'hostsum' }, sum),
+        h('div', { class: 'tail' }, delBtn(() => removeNode(n), `Delete ${n.name}`))));
+  }
+  function uniqueName(base) {
+    const names = new Set(project.nodes.map(n => n.name));
+    let i = 1; while (names.has(base + i)) i++;
+    return base + i;
+  }
+  function removeNode(n) {
+    const snap = JSON.parse(JSON.stringify(project));
+    project.nodes = project.nodes.filter(x => x !== n);
+    project.links = project.links.filter(l => l.a.n !== n.id && l.b.n !== n.id);
+    project.services.forEach(s => { s.extra = (s.extra || []).filter(id => id !== n.id); });
+    commit();
+    toast(`Deleted ${n.name} and its links.`, 'Undo', () => { project = snap; commit(); });
+  }
+  function renderNodes() {
+    const srl = srlNodes(), hosts = project.nodes.filter(n => n.kind === 'linux');
+    return h('div', { class: 'stack' },
+      h('div', { class: 'bar' },
+        h('p', { class: 'lede', style: 'margin:0' }, 'Pick the hardware each node emulates. Open Ports to see the faceplate and set breakouts.'),
+        h('div', { class: 'actions' },
+          btn('SR Linux node', () => { const n = S.mkNode(uniqueName('leaf'), 'srl', 'ixr-d2l', 'leaf'); project.nodes.splice(srlNodes().length, 0, n); ui.focus = n.id; commit(); }, { icon: 'plus' }),
+          btn('Linux host', () => { project.nodes.push(S.mkNode(uniqueName('host'), 'linux')); commit(); }, { icon: 'plus' }))),
+      srl.length ? h('div', { class: 'nodes' }, srl.map(renderNodeCard)) : h('div', { class: 'empty' }, 'No SR Linux nodes yet.'),
+      hosts.length ? h('div', { class: 'nodes' }, hosts.map(renderHostCard)) : null);
+  }
+
+  // ── Links tab ──
+  function usedPorts(exceptLink) {
+    const u = new Set();
+    project.links.forEach(l => { if (l === exceptLink) return; u.add(l.a.n + '|' + l.a.p); u.add(l.b.n + '|' + l.b.p); });
+    return u;
+  }
+  function portOptions(node, current, exceptLink) {
+    if (!node) return [{ v: '', l: '—' }];
+    const u = usedPorts(exceptLink);
+    let list;
+    if (node.kind === 'linux') list = Array.from({ length: 16 }, (_, i) => ({ v: `eth${i + 1}`, l: `eth${i + 1}` + (u.has(node.id + '|eth' + (i + 1)) ? ' · in use' : '') }));
+    else list = S.portList(node).map(p => ({ v: p.name, l: `${p.name} · ${p.media} ${p.speed}` + (u.has(node.id + '|' + p.name) ? ' · in use' : '') }));
+    if (current && !list.some(o => o.v === current)) list.unshift({ v: current, l: `${current} (not on this hardware)` });
+    return list;
+  }
+  function firstFree(node, exceptLink) {
+    if (!node) return '';
+    const u = usedPorts(exceptLink);
+    if (node.kind === 'linux') { for (let i = 1; i < 64; i++) if (!u.has(node.id + '|eth' + i)) return 'eth' + i; return 'eth1'; }
+    const p = S.portList(node).find(x => !u.has(node.id + '|' + x.name));
+    return p ? p.name : '';
+  }
+  function renderLinks() {
+    const plan = gen && gen.plan;
+    const nodeOpts = [{ v: '', l: '— node —' }, ...project.nodes.map(n => ({ v: n.id, l: n.name + (n.kind === 'linux' ? ' (host)' : '') }))];
+    const badLinks = new Set((gen ? gen.issues : []).filter(i => i.link && i.level === 'error').map(i => i.link));
+    const rows = project.links.map((l, idx) => {
+      const A = byId(l.a.n), B = byId(l.b.n);
+      const kind = A && B ? (A.kind === 'srl' && B.kind === 'srl' ? 'fabric' : (A.kind !== B.kind ? 'access' : 'other')) : 'other';
+      let extra;
+      if (kind === 'fabric') {
+        const f = plan && plan.fabric.find(x => x.link === l || x.link.id === l.id);
+        const d = project.design;
+        extra = h('div', { class: 'extra fabric' }, h('span', { class: 'kind fabric' }, 'Fabric'),
+          h('span', { class: 'fabricinfo' }, d.underlay === 'ebgp-unnumbered' ? 'IPv6 link-local · BGP unnumbered' : f && f.ipA ? `${A.name} ${f.ipA}  ↔  ${B.name} ${f.ipB}` : '—'));
+      } else if (kind === 'access') {
+        const svcOpts = [{ v: '', l: '— no service —' }, ...project.services.map(s => ({ v: s.id, l: `${s.name} (${s.kind === 'mac-vrf' ? 'L2' : 'L3'})` }))];
+        extra = h('div', { class: 'extra' }, h('span', { class: 'kind access' }, 'Access'),
+          sel(`l-${l.id}-svc`, l.svc, svcOpts, v => { l.svc = v; }, { label: 'Service' }),
+          txt(`l-${l.id}-vlan`, l.vlan, v => { l.vlan = v.trim(); }, { mono: true, ph: 'untagged', num: true, label: 'VLAN' }),
+          txt(`l-${l.id}-bond`, l.bond, v => { l.bond = v.trim(); }, { mono: true, ph: 'no bond', label: 'Host bond name (bond0)' }));
+      } else extra = h('div', { class: 'extra fabric' }, h('span', { class: 'kind other' }, 'L1 only'), h('span', { class: 'fabricinfo' }, 'Pick nodes on both ends'));
+      return h('div', { class: 'link' + (badLinks.has(l.id) ? ' bad' : '') },
+        sel(`l-${l.id}-an`, l.a.n, nodeOpts, v => { l.a.n = v; l.a.p = firstFree(byId(v), l); }, { label: `Link ${idx + 1} node A` }),
+        sel(`l-${l.id}-ap`, l.a.p, portOptions(A, l.a.p, l), v => { l.a.p = v; }, { mono: true, label: `Link ${idx + 1} port A` }),
+        h('span', { class: 'swap', 'aria-hidden': 'true' }, '⟷'),
+        sel(`l-${l.id}-bn`, l.b.n, nodeOpts, v => { l.b.n = v; l.b.p = firstFree(byId(v), l); }, { label: `Link ${idx + 1} node B` }),
+        sel(`l-${l.id}-bp`, l.b.p, portOptions(B, l.b.p, l), v => { l.b.p = v; }, { mono: true, label: `Link ${idx + 1} port B` }),
+        delBtn(() => { project.links = project.links.filter(x => x !== l); commit(); }, `Delete link ${idx + 1}`),
+        extra);
+    });
+    return h('div', { class: 'stack' },
+      h('div', { class: 'bar' },
+        h('p', { class: 'lede', style: 'margin:0' }, 'SR Linux ↔ SR Linux links become routed fabric links. SR Linux ↔ host links are access ports: pick the service, an optional VLAN, and the same bond name on several links to build a LAG (an EVPN all-active ES when it spans nodes).'),
+        btn('Link', () => {
+          const s = srlNodes();
+          const A = s[0] || project.nodes[0], B = s[1] || project.nodes[1] || A;
+          const l = S.mkLink(A || { id: '' }, firstFree(A), B || { id: '' }, '');
+          project.links.push(l); l.b.p = firstFree(B);
+          commit();
+        }, { icon: 'plus' })),
+      rows.length ? h('div', { class: 'links' }, rows) : h('div', { class: 'empty' }, 'No links yet.'));
+  }
+
+  // ── Services tab ──
+  function nextEvi() { const used = new Set(project.services.map(s => Number(s.evi))); let e = 10; while (used.has(e)) e += 10; return e; }
+  function renderServices() {
+    const d = project.design;
+    const mpls = d.transport === 'mpls';
+    const plan = gen && gen.plan;
+    const ipvrfs = project.services.filter(s => s.kind === 'ip-vrf');
+    const cards = project.services.map(s => {
+      const attached = plan ? plan.attachments.filter(a => a.svc === s).map(a => `${a.srl.name} ${a.subif || (a.lag || a.port)}`) : [];
+      const sp = plan && plan.svcPlan.get(s.id);
+      const common = [
+        field('EVI', txt(`s-${s.id}-evi`, s.evi, v => { s.evi = v.trim(); }, { mono: true, num: true }), 'Also the RT: target:' + d.overlayAsn + ':' + s.evi),
+        !mpls ? field('VNI', txt(`s-${s.id}-vni`, s.vni, v => { s.vni = v.trim(); }, { mono: true, num: true, ph: String(s.evi) })) : null,
+        field('Description', txt(`s-${s.id}-desc`, s.description, v => { s.description = v; })),
+      ];
+      const specific = s.kind === 'mac-vrf' ? [
+        field('Subnet', txt(`s-${s.id}-sub`, s.subnet, v => { s.subnet = v.trim(); }, { mono: true }), 'Hosts get .1, .2… in link order'),
+        field('IRB into', sel(`s-${s.id}-irb`, s.irb, [{ v: '', l: 'None (pure L2)' }, ...ipvrfs.map(v => ({ v: v.id, l: v.name }))], v => { s.irb = v; })),
+        s.irb ? field('Anycast gateway', txt(`s-${s.id}-gw`, s.gw, v => { s.gw = v.trim(); }, { mono: true, ph: sp && sp.gw ? sp.gw + ' (auto)' : 'auto' })) : null,
+      ] : [
+        fieldDiv('Signalling', seg(mpls && s.signaling === 'ipvpn' ? 'ipvpn' : 'evpn', [{ v: 'evpn', l: 'EVPN IFL (RT5)' }, { v: 'ipvpn', l: 'IP-VPN', disabled: !mpls, title: mpls ? null : 'IP-VPN needs MPLS transport' }], v => { s.signaling = v; }, 'Signalling')),
+      ];
+      return h('div', { class: 'svc' },
+        h('div', { class: 'svc-h' },
+          h('div', { class: 'row', style: 'align-items:center;flex-wrap:nowrap;min-width:0;flex:1' },
+            h('span', { class: 'kind ' + (s.kind === 'mac-vrf' ? 'mac' : 'ip') }, s.kind === 'mac-vrf' ? 'MAC-VRF' : 'IP-VRF'),
+            txt(`s-${s.id}-name`, s.name, v => { s.name = v.trim(); }, { mono: true, label: 'Network-instance name' })),
+          delBtn(() => {
+            const snap = JSON.parse(JSON.stringify(project));
+            project.services = project.services.filter(x => x !== s);
+            project.services.forEach(x => { if (x.irb === s.id) x.irb = ''; });
+            project.links.forEach(l => { if (l.svc === s.id) l.svc = ''; });
+            commit(); toast(`Deleted ${s.name}.`, 'Undo', () => { project = snap; commit(); });
+          }, `Delete ${s.name}`)),
+        h('div', { class: 'grid2' }, common, specific),
+        h('div', { class: 'f' }, h('span', null, 'Also instantiate on'),
+          h('div', { class: 'chips' }, srlNodes().map(n => {
+            const on = (s.extra || []).includes(n.id);
+            return h('button', { type: 'button', class: 'chip', 'aria-pressed': String(on), onclick: () => { s.extra = on ? s.extra.filter(x => x !== n.id) : [...(s.extra || []), n.id]; commit(); } }, n.name);
+          })),
+          h('em', null, s.kind === 'ip-vrf' ? 'Nodes with attachments (or IRB MAC-VRFs) get it automatically. Add border leaves here.' : 'Nodes with attachments get it automatically.')),
+        h('div', { class: 'attached' }, attached.length ? 'Attached: ' + attached.join(' · ') : 'No access links use this service yet (Links tab).'));
+    });
+    return h('div', { class: 'stack' },
+      h('div', { class: 'bar' },
+        h('p', { class: 'lede', style: 'margin:0' }, mpls ? 'Services ride EVPN-MPLS (MAC-VRF, IP-VRF) or VPN-IPv4 (IP-VRF with IP-VPN) over LDP / SR-MPLS tunnels.' : 'Services ride EVPN-VXLAN on vxlan1. A MAC-VRF with an IRB gets a distributed anycast gateway in its IP-VRF (symmetric IRB).'),
+        h('div', { class: 'actions' },
+          btn('MAC-VRF', () => { const e = nextEvi(); project.services.push({ id: S.nid('s'), kind: 'mac-vrf', name: `mac-vrf-${e}`, evi: e, vni: e, subnet: `172.16.${e % 256}.0/24`, gw: '', irb: ipvrfs[0] ? ipvrfs[0].id : '', extra: [], description: '' }); commit(); }, { icon: 'plus' }),
+          btn('IP-VRF', () => { const e = nextEvi(); project.services.push({ id: S.nid('s'), kind: 'ip-vrf', name: `ip-vrf-${e}`, evi: e, vni: e, signaling: mpls ? 'ipvpn' : 'evpn', extra: [], description: '' }); commit(); }, { icon: 'plus' }))),
+      cards.length ? h('div', { class: 'stack' }, cards) : h('div', { class: 'empty' }, 'No services yet.'));
+  }
+
+  // ───────────── preview ─────────────
+  const pvEl = document.getElementById('preview');
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+  function hlCli(src) {
+    return src.split('\n').map(line => {
+      if (/^\s*#/.test(line)) return `<span class="c">${esc(line)}</span>`;
+      let e = esc(line);
+      e = e.replace(/^set \//, '<span class="k">set /</span>');
+      e = e.replace(/(&quot;[^&]*(?:&(?!quot;)[^&]*)*&quot;)/g, '<span class="s">$1</span>');
+      e = e.replace(/\b(\d{1,3}(?:\.\d{1,3}){3}(?:\/\d{1,2})?)(?![\w.])/g, '<span class="n">$1</span>');
+      e = e.replace(/\b((?:ethernet-\d+\/\d+(?:\/\d+)?|lag\d+|irb0|system0|vxlan1)(?:\.\d+)?)\b/g, '<span class="i">$1</span>');
+      return e;
+    }).join('\n');
+  }
+  function hlYaml(src) {
+    return src.split('\n').map(line => {
+      const m = line.match(/^(\s*-?\s*)([\w.-]+)(:)(.*)$/);
+      const tail = s => { const ci = s.indexOf('  #'); return ci >= 0 ? esc(s.slice(0, ci)) + `<span class="c">${esc(s.slice(ci))}</span>` : esc(s).replace(/(&quot;.*?&quot;)/g, '<span class="s">$1</span>'); };
+      if (m) return esc(m[1]) + `<span class="y">${esc(m[2])}</span>${m[3]}` + tail(m[4]);
+      return tail(line);
+    }).join('\n');
+  }
+  const hlMd = src => src.split('\n').map(l => /^#/.test(l) ? `<span class="h">${esc(l)}</span>` : /^```/.test(l) ? `<span class="c">${esc(l)}</span>` : esc(l)).join('\n');
+
+  function topoSvg() {
+    const W = 820, rowH = 100, boxH = 42;
+    const tierOf = n => n.kind === 'linux' ? 3 : (S.ROLE_TIER[n.role] ?? 2);
+    const tiers = [...new Set(project.nodes.map(tierOf))].sort();
+    if (!project.nodes.length) return '';
+    const pos = new Map();
+    const H = tiers.length * rowH + 16;
+    const TL = { 0: 'Super-spine', 1: 'Spine / P', 2: 'Leaf / PE', 3: 'Hosts' };
+    let out = '';
+    tiers.forEach((t, ri) => {
+      const ns = project.nodes.filter(n => tierOf(n) === t);
+      const y = 22 + ri * rowH;
+      const avail = W - 100;
+      const w = Math.min(124, avail / ns.length - 10);
+      ns.forEach((n, i) => {
+        const cx = 90 + avail * (i + 0.5) / ns.length;
+        pos.set(n.id, { cx, y, w });
+      });
+      out += `<text class="tier" x="8" y="${y + boxH / 2 + 4}">${esc(TL[t] || '')}</text>`;
+    });
+    // links
+    const plan = gen && gen.plan;
+    const bondLinks = new Set(); const esLinks = new Set();
+    if (plan) plan.bonds.forEach(b => b.members.forEach(m => { bondLinks.add(m.link.id); if (b.es) esLinks.add(m.link.id); }));
+    let lines = '';
+    const pairCount = new Map();
+    project.links.forEach(l => {
+      const A = byId(l.a.n), B = byId(l.b.n);
+      if (!A || !B || !pos.get(A.id) || !pos.get(B.id)) return;
+      let pa = pos.get(A.id), pb = pos.get(B.id);
+      const kind = A.kind === 'srl' && B.kind === 'srl' ? 'fabric' : 'access';
+      const cls = 'l ' + (bondLinks.has(l.id) ? 'bond' : kind);
+      const key = [A.id, B.id].sort().join('|');
+      const k = pairCount.get(key) || 0; pairCount.set(key, k + 1);
+      const off = (k % 2 ? 1 : -1) * Math.ceil(k / 2) * 5;
+      const title = `<title>${esc(A.name + ' ' + l.a.p + ' ↔ ' + B.name + ' ' + l.b.p)}</title>`;
+      if (pa.y === pb.y) {
+        const mid = (pa.cx + pb.cx) / 2, dip = pa.y + boxH + 14 + Math.min(26, Math.abs(pa.cx - pb.cx) / 14) + off;
+        lines += `<path class="${cls}" d="M${pa.cx} ${pa.y + boxH} Q ${mid} ${dip} ${pb.cx} ${pb.y + boxH}">${title}</path>`;
+      } else {
+        if (pa.y > pb.y) [pa, pb] = [pb, pa];
+        lines += `<line class="${cls}" x1="${pa.cx + off}" y1="${pa.y + boxH}" x2="${pb.cx + off}" y2="${pb.y}">${title}</line>`;
+      }
+    });
+    let boxes = '';
+    project.nodes.forEach(n => {
+      const p = pos.get(n.id); if (!p) return;
+      const hwi = n.kind === 'srl' ? S.hw(n) : null;
+      const maxc = Math.max(4, Math.floor(p.w / 7.2));
+      const cut = (s, m) => s.length > m ? s.slice(0, m - 1) + '…' : s;
+      const ty = n.kind === 'linux' ? 'linux' : (hwi ? hwi.platform.name.replace(/^\d{4} /, '') : n.type) + (n.rr && project.design.overlay === 'ibgp' ? ' · RR' : '');
+      boxes += `<g class="n ${n.kind === 'srl' ? 'srl' : 'hostn'}${n.rr && n.kind === 'srl' && project.design.overlay === 'ibgp' ? ' rr' : ''}" data-id="${n.id}" tabindex="0" role="button" aria-label="${esc(n.name)}">`
+        + `<rect x="${p.cx - p.w / 2}" y="${p.y}" width="${p.w}" height="${boxH}" rx="5"/>`
+        + `<text class="nm" x="${p.cx}" y="${p.y + 17}" text-anchor="middle">${esc(cut(n.name, maxc))}</text>`
+        + `<text class="ty" x="${p.cx}" y="${p.y + 32}" text-anchor="middle">${esc(cut(ty, Math.floor(p.w / 6.2)))}</text></g>`;
+    });
+    return `<svg class="topo" viewBox="0 0 ${W} ${H}" role="img" aria-label="Topology diagram">${lines}${boxes}</svg>`;
+  }
+
+  function renderPreview() {
+    renderTop();
+    if (!gen) regen();
+    const files = gen.files;
+    if (!ui.file || !files.some(f => f.name === ui.file)) ui.file = files[0] ? files[0].name : null;
+    const f = files.find(x => x.name === ui.file);
+    const plan = gen.plan;
+    const errs = gen.issues.filter(i => i.level === 'error'), warns = gen.issues.filter(i => i.level === 'warn');
+    const srl = srlNodes();
+    const lic = srl.some(n => S.PLATFORM[n.type] && S.PLATFORM[n.type].license === true);
+
+    const summary = h('div', { class: 'panel' },
+      h('div', { class: 'panel-top' },
+        h('div', { class: 'stats' },
+          h('span', null, h('b', null, srl.length), 'SR Linux'),
+          h('span', null, h('b', null, project.nodes.length - srl.length), 'hosts'),
+          h('span', null, h('b', null, project.links.length), 'links'),
+          h('span', null, h('b', null, project.services.length), 'services'),
+          h('span', null, h('b', null, files.filter(x => x.kind === 'cli').reduce((a, x) => a + x.code.split('\n').filter(l => l.startsWith('set /')).length, 0)), 'config lines')),
+        h('div', { class: 'row', style: 'gap:6px' },
+          lic ? h('span', { class: 'pill warn', title: '7250 IXR / 7730 SXR types' }, 'License needed') : h('span', { class: 'pill ok' }, 'No license needed'),
+          errs.length ? h('span', { class: 'pill error' }, `${errs.length} error${errs.length > 1 ? 's' : ''}`) : warns.length ? h('span', { class: 'pill warn' }, `${warns.length} warning${warns.length > 1 ? 's' : ''}`) : h('span', { class: 'pill ok' }, 'Ready'))),
+      h('div', { html: topoSvg() }));
+    summary.querySelectorAll('.n').forEach(g => {
+      const go = () => {
+        const id = g.getAttribute('data-id'); const n = byId(id);
+        ui.focus = id; ui.tab = 'nodes';
+        const file = n && n.kind === 'srl' ? `configs/${n.name}.cli` : null;
+        if (file && files.some(x => x.name === file)) ui.file = file;
+        renderEditor(); renderPreview();
+        const el = document.getElementById('node-' + id); if (el) el.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      };
+      g.addEventListener('click', go);
+      g.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } });
+    });
+
+    const pre = h('pre', { class: 'code', tabindex: '0', 'aria-label': ui.file || 'file' });
+    if (f) pre.innerHTML = f.kind === 'cli' ? hlCli(f.code) : f.kind === 'yaml' ? hlYaml(f.code) : hlMd(f.code);
+    const filesPanel = h('div', { class: 'panel' },
+      h('div', { class: 'files', role: 'tablist', 'aria-label': 'Generated files' }, files.map(x => h('button', { type: 'button', class: 'ftab', role: 'tab', 'aria-selected': String(x.name === ui.file), onclick: () => { ui.file = x.name; renderPreview(); } }, x.name.replace(/^configs\//, '')))),
+      h('div', { class: 'codebar' },
+        h('span', null, f ? `${f.name} · ${f.code.split('\n').length} lines` : 'No files'),
+        f ? h('button', { type: 'button', class: 'btn small ghost', onclick: e => copyText(f.code, pre, e.currentTarget) }, icon('copy'), 'Copy') : null),
+      pre);
+
+    const order = { error: 0, warn: 1, info: 2 };
+    const list = gen.issues.slice().sort((a, b) => order[a.level] - order[b.level]);
+    const issues = h('div', { class: 'panel' },
+      h('div', { class: 'panel-top' }, h('span', { class: 'panel-h' }, 'Checks'), h('span', { class: 'note' }, 'Paths validated against SR Linux 24.10 · 25.10 · 26.7 YANG')),
+      list.length ? h('ul', { class: 'issues' }, list.map(i => h('li', null, h('span', { class: 'sev ' + i.level }, i.level === 'warn' ? 'warn' : i.level), h('span', null, i.msg))))
+        : h('ul', { class: 'issues' }, h('li', null, h('span', { class: 'sev info' }, 'ok'), h('span', { class: 'ok' }, 'No problems found.'))));
+
+    pvEl.replaceChildren(summary, filesPanel, issues);
+  }
+
+  function copyText(text, pre, button) {
+    const done = () => { const old = button.lastChild.textContent; button.lastChild.textContent = 'Copied'; setTimeout(() => { button.lastChild.textContent = old; }, 1400); };
+    const fallback = () => { const r = document.createRange(); r.selectNodeContents(pre); const s = getSelection(); s.removeAllRanges(); s.addRange(r); toast('Selected. Press Ctrl/⌘+C to copy.'); };
+    try { navigator.clipboard.writeText(text).then(done, fallback); } catch (e) { fallback(); }
+  }
+
+  // ───────────── files out ─────────────
+  const CRC = (() => { const t = new Uint32Array(256); for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return t; })();
+  const crc32 = b => { let c = 0xFFFFFFFF; for (let i = 0; i < b.length; i++) c = CRC[(c ^ b[i]) & 255] ^ (c >>> 8); return (c ^ 0xFFFFFFFF) >>> 0; };
+  function zip(entries) {
+    const enc = new TextEncoder(); const parts = [], central = []; let offset = 0;
+    const now = new Date();
+    const time = (now.getHours() << 11) | (now.getMinutes() << 5) | (now.getSeconds() >> 1);
+    const date = ((now.getFullYear() - 1980) << 9) | ((now.getMonth() + 1) << 5) | now.getDate();
+    entries.forEach(e => {
+      const name = enc.encode(e.name), data = enc.encode(e.data), crc = crc32(data);
+      const lh = new DataView(new ArrayBuffer(30));
+      lh.setUint32(0, 0x04034b50, true); lh.setUint16(4, 20, true); lh.setUint16(6, 0x0800, true); lh.setUint16(8, 0, true);
+      lh.setUint16(10, time, true); lh.setUint16(12, date, true); lh.setUint32(14, crc, true);
+      lh.setUint32(18, data.length, true); lh.setUint32(22, data.length, true); lh.setUint16(26, name.length, true); lh.setUint16(28, 0, true);
+      parts.push(new Uint8Array(lh.buffer), name, data);
+      const ch = new DataView(new ArrayBuffer(46));
+      ch.setUint32(0, 0x02014b50, true); ch.setUint16(4, (3 << 8) | 20, true); ch.setUint16(6, 20, true); ch.setUint16(8, 0x0800, true);
+      ch.setUint16(10, 0, true); ch.setUint16(12, time, true); ch.setUint16(14, date, true); ch.setUint32(16, crc, true);
+      ch.setUint32(20, data.length, true); ch.setUint32(24, data.length, true); ch.setUint16(28, name.length, true);
+      ch.setUint16(30, 0, true); ch.setUint16(32, 0, true); ch.setUint16(34, 0, true); ch.setUint16(36, 0, true);
+      ch.setUint32(38, (0o100644 << 16) >>> 0, true); ch.setUint32(42, offset, true);
+      central.push(new Uint8Array(ch.buffer), name);
+      offset += 30 + name.length + data.length;
+    });
+    const size = central.reduce((a, b) => a + b.length, 0);
+    const end = new DataView(new ArrayBuffer(22));
+    end.setUint32(0, 0x06054b50, true); end.setUint16(8, entries.length, true); end.setUint16(10, entries.length, true);
+    end.setUint32(12, size, true); end.setUint32(16, offset, true);
+    return new Blob([...parts, ...central, new Uint8Array(end.buffer)], { type: 'application/zip' });
+  }
+  let dlP = null;
+  const downloadsCap = () => dlP || (dlP = (window.claude && typeof window.claude.use === 'function') ? window.claude.use('downloads').catch(() => null) : Promise.resolve(null));
+  async function offer(filename, data, mime) {
+    const dl = await downloadsCap();
+    if (dl) {
+      try { await dl.save({ filename, data }); toast(`Saved ${filename}.`); }
+      catch (e) {
+        const c = e && e.code;
+        if (c === 'declined') toast('Download cancelled.');
+        else if (c === 'rate_limited') toast('A save prompt is already open.');
+        else toast(`This view could not save the file (${c || 'unavailable'}). Copy the files from the preview instead.`);
+      }
+      return;
+    }
+    const blob = data instanceof Blob ? data : new Blob([data], { type: mime || 'application/octet-stream' });
+    const a = h('a', { href: URL.createObjectURL(blob), download: filename, style: 'display:none' });
+    document.body.append(a); a.click();
+    setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+  }
+  function downloadZip() {
+    regen();
+    const lab = project.design.lab || 'srl-lab';
+    const entries = gen.files.map(f => ({ name: `${lab}/${f.name}`, data: f.code }));
+    entries.push({ name: `${lab}/project.json`, data: JSON.stringify(project, null, 2) });
+    offer(`${lab}.zip`, zip(entries), 'application/zip');
+  }
+  function exportProject() { offer(`${project.design.lab || 'srl-lab'}.json`, JSON.stringify(project, null, 2), 'application/json'); }
+  const fileInput = h('input', { type: 'file', accept: '.json,application/json', class: 'vh', 'aria-label': 'Import project JSON',
+    onchange: e => {
+      const file = e.target.files && e.target.files[0]; if (!file) return;
+      const r = new FileReader();
+      r.onload = () => {
+        try { const p = JSON.parse(r.result); if (!isProject(p)) throw new Error('not a project'); replaceProject(p, `Imported ${file.name}.`); }
+        catch (err) { toast('That file is not a project exported from this builder.'); }
+        e.target.value = '';
+      };
+      r.readAsText(file);
+    } });
+  document.body.append(fileInput);
+
+  // ───────────── toast ─────────────
+  let toastEl = null, toastT = null;
+  function toast(msg, actionLabel, action) {
+    if (toastEl) toastEl.remove();
+    clearTimeout(toastT);
+    toastEl = h('div', { class: 'toast', role: 'status' }, h('span', null, msg),
+      actionLabel ? h('button', { type: 'button', onclick: () => { action(); if (toastEl) toastEl.remove(); toastEl = null; } }, actionLabel) : null);
+    document.body.append(toastEl);
+    toastT = setTimeout(() => { if (toastEl) toastEl.remove(); toastEl = null; }, actionLabel ? 7000 : 3200);
+  }
+
+  // ───────────── boot ─────────────
+  regen();
+  renderEditor();
+  renderPreview();
+})();
+
+</script>
+</body>
+</html>
