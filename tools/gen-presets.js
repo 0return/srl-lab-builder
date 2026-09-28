@@ -7,6 +7,7 @@ const variants = [];
 const clos = S.buildClos();
 variants.push(['clos-ebgp', clos]);
 const closU = S.buildClos({ underlay: 'ebgp-unnumbered' }); closU.design.bfd = true;
+closU.services.filter(s => s.kind === 'mac-vrf').forEach(s => { s.proxyArp = true; });
 variants.push(['clos-unnumbered', closU]);
 const closI = S.buildClos({ underlay: 'isis' }); closI.design.bfd = true;
 variants.push(['clos-isis', closI]);

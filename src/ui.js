@@ -454,6 +454,8 @@
         field('Subnet', txt(`s-${s.id}-sub`, s.subnet, v => { s.subnet = v.trim(); }, { mono: true }), 'Hosts get .1, .2… in link order'),
         field('IRB into', sel(`s-${s.id}-irb`, s.irb, [{ v: '', l: 'None (pure L2)' }, ...ipvrfs.map(v => ({ v: v.id, l: v.name }))], v => { s.irb = v; })),
         s.irb ? field('Anycast gateway', txt(`s-${s.id}-gw`, s.gw, v => { s.gw = v.trim(); }, { mono: true, ph: sp && sp.gw ? sp.gw + ' (auto)' : 'auto' })) : null,
+        s.irb ? h('div', { class: 'f' }, h('span', null, 'ARP'), chk(`s-${s.id}-parp`, !!s.proxyArp, v => { s.proxyArp = v; }, 'Proxy-ARP on the gateway'),
+          h('em', null, 'The gateway answers every ARP with the anycast MAC, so traffic inside the subnet is routed too.')) : null,
       ] : [
         h('div', { class: 'f' }, h('span', null, 'Signalling'), h('div', { class: 'kindtag', style: 'padding-top:8px' }, 'EVPN IFL (RT5) over VXLAN')),
       ];
