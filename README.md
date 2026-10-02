@@ -94,3 +94,13 @@ npm run start           # http://localhost:3000
 MIT © Jesús David Gómez Zavala
 
 Independent project, not an official Nokia tool.
+
+
+# View
+
+Versions:
+
+
+
+
+
